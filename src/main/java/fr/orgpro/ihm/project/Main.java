@@ -1,6 +1,6 @@
 package fr.orgpro.ihm.project;
 
-import fr.trellorg.api.project.Tache;
+import fr.orgpro.api.project.Tache;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,15 @@ public class Main {
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
         String[] tabArg;
         boolean quitter = false;
+
+        //////////////////////////////////////////////
+        data.addListeTache(new Tache("aze", 5));
+        data.addListeTache(new Tache("aaa", 5));
+        data.addListeTache(new Tache("bbb", 5));
+        data.addListeTache(new Tache("ccc", 5));
+        data.addListeTache(new Tache("ddd", 5));
+        //////////////////////////////////////////////
+
         while(!quitter){
             tabArg = bufferRead.readLine().split("( )+");
             if(tabArg.length > 0){

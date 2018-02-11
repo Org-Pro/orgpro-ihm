@@ -1,6 +1,6 @@
 package fr.orgpro.ihm.project;
 
-import fr.trellorg.api.project.Tache;
+import fr.orgpro.api.project.Tache;
 
 import java.util.ArrayList;
 import java.util.List;
