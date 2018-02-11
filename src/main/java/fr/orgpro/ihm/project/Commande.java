@@ -34,10 +34,10 @@ public class Commande {
                     }
                     break;
 
-                case "set":
+                case "dep":
                     if(args.length >= 5){
                         switch (args[2]){
-                            case "dep":
+                            case "set":
                                 int numTacheRecoit, numTacheDonne;
                                 try {
                                     numTacheRecoit = Integer.parseInt(args[3]);
@@ -57,7 +57,6 @@ public class Commande {
                                 int tailleList = data.getListeTache().size();
                                 if(tailleList - 1 < numTacheDonne || tailleList - 1 < numTacheRecoit){
                                     System.out.println(Message.TACHE_INVALIDE);
-                                    System.out.println("lol");
                                     return;
                                 }
                                 data.getListeTache().get(numTacheRecoit).setDependance(data.getListeTache().get(numTacheDonne));
