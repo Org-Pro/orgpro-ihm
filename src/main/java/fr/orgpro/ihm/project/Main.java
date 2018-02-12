@@ -41,6 +41,9 @@ public class Main {
             case "tache":
                 Commande.commandeTache(args, data);
                 break;
+            case "file":
+                Commande.commandeFichier(args, data);
+                break;
             case "help":
                 break;
             default:

@@ -4,84 +4,161 @@ import fr.orgpro.api.project.Tache;
 
 public class Commande {
     public static void commandeTache(String[] args, Data data){
-        if(args.length >= 2){
-            switch (args[1]){
-                case "add":
-                    // TACHE ADD nom level
-                    if(args.length >= 4){
-                        int level;
-                        try {
-                            level = Integer.parseInt(args[3]);
-                        }catch (NumberFormatException e){
-                            System.out.println(Message.ARGUMENT_INVALIDE);
+        if (verifNbArgument(2, args)){
+            return;
+        }
+        switch (args[1]){
+            case "level": {
+                // TACHE LEVEL <num> <level>
+                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (numTache < 0) {
+                    System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                    return;
+                }
+                if (data.getListeTache().size() - 1 < numTache) {
+                    System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                    return;
+                }
+                if (data.getListeTache().get(numTache).changeLevel(Integer.parseInt(args[3]))) {
+                    System.out.println(Message.TACHE_LEVEL_SUCCES);
+                } else {
+                    System.out.println(Message.TACHE_LEVEL_ECHEC);
+                }
+                break;
+            }
+
+            case "rename": {
+                // TACHE RENAME <num> <nom>
+                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
+                    return;
+                }
+                data.getListeTache().get(Integer.parseInt(args[2])).changeTitle(args[3]);
+                System.out.println(Message.TACHE_RENAME_SUCESS);
+                break;
+            }
+
+            case "add": {
+                // TACHE ADD <nom> <level>
+                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                    return;
+                }
+                data.addListeTache(new Tache(args[2], Integer.parseInt(args[3])));
+                System.out.println(Message.TACHE_AJOUT_SUCCES);
+                break;
+            }
+
+            case "list": {
+                // TACHE LIST
+                System.out.println(data.getListeTache().size() + " résultat(s).");
+                int i = 0;
+                String msg;
+                for (Tache tache : data.getListeTache()) {
+                    msg = "n°" + i + " " + tache.getTitle();
+                    if(tache.getClock() != null){
+                        //msg += " " + tach
+                    }
+                    System.out.println(msg);
+                    i++;
+                }
+                break;
+            }
+
+            case "dep": {
+                if (verifNbArgument(3, args)) {
+                    return;
+                }
+                switch (args[2]) {
+                    case "set": {
+                        // TACHE DEP SET <num> <num>
+                        if (verifNbArgument(5, args) || verifArgEstUnNombre(args[3]) || verifArgEstUnNombre(args[4])) {
                             return;
                         }
-                        Tache tache = new Tache(args[2], level);
-                        data.addListeTache(tache);
-                        System.out.println(Message.TACHE_AJOUT_SUCESS);
-                    }else{
-                        System.out.println(Message.ARGUMENT_MANQUANT);
-                    }
-                    break;
-
-                case "list":
-                    // TACHE LIST
-                    System.out.println(data.getListeTache().size() + " résultat(s).");
-                    int i = 0;
-                    for(Tache tache : data.getListeTache()){
-                        System.out.println("n°" + i + " " + tache.getTitle());
-                        i++;
-                    }
-                    break;
-
-                case "dep":
-                    if(args.length >= 5){
-                        switch (args[2]){
-                            case "set":
-                                int numTacheRecoit, numTacheDonne;
-                                try {
-                                    numTacheRecoit = Integer.parseInt(args[3]);
-                                    numTacheDonne = Integer.parseInt(args[4]);
-                                }catch (NumberFormatException e){
-                                    System.out.println(Message.ARGUMENT_INVALIDE);
-                                    return;
-                                }
-                                if(numTacheRecoit < 0 || numTacheDonne < 0){
-                                    System.out.println(Message.TACHE_INVALIDE);
-                                    return;
-                                }
-                                if(numTacheDonne == numTacheRecoit){
-                                    System.out.println(Message.TACHES_NON_IDENTIQUES);
-                                    return;
-                                }
-                                int tailleList = data.getListeTache().size();
-                                if(tailleList - 1 < numTacheDonne || tailleList - 1 < numTacheRecoit){
-                                    System.out.println(Message.TACHE_INVALIDE);
-                                    return;
-                                }
-                                data.getListeTache().get(numTacheRecoit).setDependance(data.getListeTache().get(numTacheDonne));
-                                System.out.println(Message.TACHE_SET_DEPENDANCE);
-                                break;
-                            default:
-                                System.out.println(Message.ARGUMENT_INVALIDE);
-                                break;
+                        int numTacheRecoit = Integer.parseInt(args[3]);
+                        int numTacheDonne = Integer.parseInt(args[4]);
+                        if (numTacheRecoit < 0 || numTacheDonne < 0) {
+                            System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                            return;
                         }
-                    }else{
-                        System.out.println(Message.ARGUMENT_MANQUANT);
+                        if (numTacheDonne == numTacheRecoit) {
+                            System.out.println(Message.TACHES_NON_IDENTIQUES_ECHEC);
+                            return;
+                        }
+                        int tailleList = data.getListeTache().size();
+                        if (tailleList - 1 < numTacheDonne || tailleList - 1 < numTacheRecoit) {
+                            System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                            return;
+                        }
+                        data.getListeTache().get(numTacheRecoit).setDependance(data.getListeTache().get(numTacheDonne));
+                        System.out.println(Message.TACHE_SET_DEPENDANCE_SUCCES);
+                        break;
                     }
-                    break;
-
-                case "help":
-                    System.out.println("TACHE ADD <Nom de la tâche> <Level de la tâche> -> Ajoute une tâche");
-                    System.out.println("TACHE LIST -> Affiche les tâches");
-                    System.out.println("TACHE SET DEP <Numéro de la tâche qui reçoit> <Numéro de la tâche qui donne> -> Ajoute une dépendance à la tâche");
-                    break;
-                default:
-                    System.out.println(Message.ARGUMENT_INVALIDE);
-                    break;
+                    case "remove": {
+                        // TACHE DEP REMOVE <num>
+                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                            return;
+                        }
+                        data.getListeTache().get(Integer.parseInt(args[3])).removeDependance();
+                        System.out.println(Message.TACHE_REMOVE_DEPENDANCE_SUCCES);
+                        break;
+                    }
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
             }
-        }else{
-            System.out.println(Message.ARGUMENT_MANQUANT);
+
+            case "help":
+                System.out.println(Message.TACHE_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
         }
     }
+
+    public static void commandeFichier(String[] args, Data data) {
+        if (verifNbArgument(2, args)){
+            return;
+        }
+        switch (args[1]){
+            // FILE SAVE
+            case "save" : {
+                for(Tache tache : data.getListeTache()) {
+                    tache.ecritureFichier("test.org", true);
+                }
+                System.out.println(Message.FICHIER_SAVE_SUCCES);
+                break;
+            }
+
+            case "help" :
+                break;
+        }
+
+    }
+
+    private static boolean verifArgEstUnNombre(String val){
+        try {
+            Integer.parseInt(val);
+            return false;
+        } catch (NumberFormatException e) {
+            System.out.println(Message.ARGUMENT_INVALIDE);
+            return true;
+        }
+    }
+
+    private static boolean verifNbArgument(int val, String[] args){
+        if (val > args.length){
+            System.out.println(Message.ARGUMENT_MANQUANT);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 }
