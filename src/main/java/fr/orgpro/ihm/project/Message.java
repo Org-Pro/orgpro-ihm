@@ -6,6 +6,9 @@ public enum Message {
     ARGUMENT_INVALIDE("ECHEC : Un des arguments n'est pas valide."),
 
     TACHE_AJOUT_SUCCES("SUCCES : Tâche créée avec sucess."),
+    TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
+    TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Minuteur lancé."),
+    TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Minuteur stoppé."),
     TACHE_SET_DEPENDANCE_SUCCES("SUCCES : La dépendance a bien été ajoutée / modifiée."),
     TACHE_RENAME_SUCESS("SUCCES : La tâche a bien été renommée."),
     TACHE_REMOVE_DEPENDANCE_SUCCES("SUCCES : La dépendance a bien été supprimée."),
@@ -18,7 +21,9 @@ public enum Message {
             "TACHE SET DEP <Numéro de la tâche qui reçoit> <Numéro de la tâche qui donne> -> Ajoute une dépendance à la tâche\n" +
             "TACHE DEP REMOVE <Numéro de la tâche> -> Supprime la dépendance de la tâche.\n" +
             "TACHE RENAME <Numéro de la tâche> <Nouveau titre> -> Change le titre de la tâche.\n" +
-            "TACHE LEVEL <Numéro de la tâche> <Niveau de la tâche> -> Change le niveau de la tâche."),
+            "TACHE LEVEL <Numéro de la tâche> <Niveau de la tâche> -> Change le niveau de la tâche.\n" +
+            "TACHE CLOCK RESET <Numéro de la tâche> -> Remet à zéro le minuteur de la tâche.\n" +
+            "TACHE CLOCK ... <Numéro de la tâche> -> Lance ou stop le minuteur de la tâche."),
 
     FICHIER_SAVE_SUCCES("SUCCES : Fichier enregistré.")
     ;

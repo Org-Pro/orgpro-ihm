@@ -23,8 +23,4 @@ public class Data {
         return listeTache;
     }
 
-    public void addListeTache(Tache tache) {
-        this.listeTache.add(tache);
-    }
-
 }

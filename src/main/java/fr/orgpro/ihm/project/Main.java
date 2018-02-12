@@ -16,11 +16,11 @@ public class Main {
         boolean quitter = false;
 
         //////////////////////////////////////////////
-        data.addListeTache(new Tache("aze", 5));
-        data.addListeTache(new Tache("aaa", 5));
-        data.addListeTache(new Tache("bbb", 5));
-        data.addListeTache(new Tache("ccc", 5));
-        data.addListeTache(new Tache("ddd", 5));
+        data.getListeTache().add((new Tache("aze", 5)));
+        data.getListeTache().add((new Tache("aaa", 5)));
+        data.getListeTache().add((new Tache("bbb", 5)));
+        data.getListeTache().add((new Tache("ccc", 5)));
+        data.getListeTache().add((new Tache("ddd", 5)));
         //////////////////////////////////////////////
 
         while(!quitter){

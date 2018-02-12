@@ -8,18 +8,55 @@ public class Commande {
             return;
         }
         switch (args[1]){
+            case "clock" : {
+                if (verifNbArgument(3, args)) {
+                    return;
+                }
+                switch (args[2]){
+                    case "use" : {
+                        // TACHE CLOCK USE <num>
+                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheExiste(numTache, data)) {
+                            return;
+                        }
+                        if(data.getListeTache().get(numTache).minuteur()){
+                            System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
+                        }
+                        break;
+                    }
+                    case "reset": {
+                        // TACHE CLOCK RESET <num>
+                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheExiste(numTache, data)) {
+                            return;
+                        }
+                        data.getListeTache().get(numTache).resetMinuteur();
+                        System.out.println(Message.TACHE_MINUTEUR_RESET_SUCCES);
+                        break;
+                    }
+
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
+            }
+
             case "level": {
                 // TACHE LEVEL <num> <level>
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
                     return;
                 }
                 int numTache = Integer.parseInt(args[2]);
-                if (numTache < 0) {
-                    System.out.println(Message.TACHE_INVALIDE_ECHEC);
-                    return;
-                }
-                if (data.getListeTache().size() - 1 < numTache) {
-                    System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                if(verifTacheExiste(numTache, data)){
                     return;
                 }
                 if (data.getListeTache().get(numTache).changeLevel(Integer.parseInt(args[3]))) {
@@ -35,7 +72,11 @@ public class Commande {
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
                     return;
                 }
-                data.getListeTache().get(Integer.parseInt(args[2])).changeTitle(args[3]);
+                int numTache = Integer.parseInt(args[2]);
+                if(verifTacheExiste(numTache, data)){
+                    return;
+                }
+                data.getListeTache().get(numTache).changeTitle(args[3]);
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
             }
@@ -45,7 +86,7 @@ public class Commande {
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
                     return;
                 }
-                data.addListeTache(new Tache(args[2], Integer.parseInt(args[3])));
+                data.getListeTache().add(new Tache(args[2], Integer.parseInt(args[3])));
                 System.out.println(Message.TACHE_AJOUT_SUCCES);
                 break;
             }
@@ -58,7 +99,7 @@ public class Commande {
                 for (Tache tache : data.getListeTache()) {
                     msg = "n°" + i + " " + tache.getTitle();
                     if(tache.getClock() != null){
-                        //msg += " " + tach
+                        msg += " " + tache.getClock();
                     }
                     System.out.println(msg);
                     i++;
@@ -78,17 +119,11 @@ public class Commande {
                         }
                         int numTacheRecoit = Integer.parseInt(args[3]);
                         int numTacheDonne = Integer.parseInt(args[4]);
-                        if (numTacheRecoit < 0 || numTacheDonne < 0) {
-                            System.out.println(Message.TACHE_INVALIDE_ECHEC);
+                        if(verifTacheExiste(numTacheRecoit, data) || verifTacheExiste(numTacheDonne, data)){
                             return;
                         }
                         if (numTacheDonne == numTacheRecoit) {
                             System.out.println(Message.TACHES_NON_IDENTIQUES_ECHEC);
-                            return;
-                        }
-                        int tailleList = data.getListeTache().size();
-                        if (tailleList - 1 < numTacheDonne || tailleList - 1 < numTacheRecoit) {
-                            System.out.println(Message.TACHE_INVALIDE_ECHEC);
                             return;
                         }
                         data.getListeTache().get(numTacheRecoit).setDependance(data.getListeTache().get(numTacheDonne));
@@ -100,7 +135,11 @@ public class Commande {
                         if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
                             return;
                         }
-                        data.getListeTache().get(Integer.parseInt(args[3])).removeDependance();
+                        int numTache = Integer.parseInt(args[3]);
+                        if(verifTacheExiste(numTache, data)){
+                            return;
+                        }
+                        data.getListeTache().get(numTache).removeDependance();
                         System.out.println(Message.TACHE_REMOVE_DEPENDANCE_SUCCES);
                         break;
                     }
@@ -139,6 +178,18 @@ public class Commande {
                 break;
         }
 
+    }
+
+    private static boolean verifTacheExiste(int numTache, Data data){
+        if (numTache < 0) {
+            System.out.println(Message.TACHE_INVALIDE_ECHEC);
+            return true;
+        }
+        if (data.getListeTache().size() - 1 < numTache) {
+            System.out.println(Message.TACHE_INVALIDE_ECHEC);
+            return true;
+        }
+        return false;
     }
 
     private static boolean verifArgEstUnNombre(String val){
