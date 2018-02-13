@@ -87,12 +87,8 @@ public class Commande {
             }
 
             case "add": {
-                // TACHE ADD <nom> <level>
-                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
-                    return;
-                }
-                data.getListeTache().add(new Tache(args[2], Integer.parseInt(args[3])));
-                System.out.println(Message.TACHE_AJOUT_SUCCES);
+                // TACHE ADD <nom>
+
                 break;
             }
 

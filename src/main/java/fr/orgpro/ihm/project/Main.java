@@ -11,9 +11,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         data = Data.getInstance();
-        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-        String[] tabArg;
-        boolean quitter = false;
 
         //////////////////////////////////////////////
         data.getListeTache().add((new Tache("aze", 5)));
@@ -23,17 +20,11 @@ public class Main {
         data.getListeTache().add((new Tache("ddd", 5)));
         //////////////////////////////////////////////
 
-        while(!quitter){
-            tabArg = bufferRead.readLine().split("( )+");
-            if(tabArg.length > 0){
-                if(tabArg[0].toLowerCase().equals("quit")){
-                    quitter = true;
-                }else{
-                    traitementArgs(tabArg);
-                }
-            }
-            //affichageArgs(tabArg);
+
+        if(args.length > 0){
+            traitementArgs(args);
         }
+        //affichageArgs(tabArg);
     }
 
     private static void traitementArgs(String[] args){
@@ -51,8 +42,6 @@ public class Main {
                 break;
         }
     }
-
-
 
     private static void affichageArgs(String[] args){
         for(String ele : args){
