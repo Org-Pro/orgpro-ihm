@@ -24,8 +24,8 @@ Puis :
     
 ### Lancer l'application
 A partir du répertoire courant du projet :  
-Les commandes : (Remplacer xxx.jar par le nom du fichier)  
-- java -classpath build/classes/java/main:libs/xxx.jar fr.orgpro.ihm.project.Main
+Les commandes :  
+- java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main
     
 ## Pour Windows
 
@@ -48,5 +48,5 @@ A partir du répertoire courant du projet :
 Lancer le fichier "run.bat"  
 
 Ou depuis un terminal :  
-Les commandes : (Remplacer xxx.jar par le nom du fichier)  
-- java -classpath build/classes/java/main;libs/xxx.jar fr.orgpro.ihm.project.Main
+Les commandes :  
+- java -classpath build/classes/java/main;libs/* fr.orgpro.ihm.project.Main
