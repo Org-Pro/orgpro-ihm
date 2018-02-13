@@ -26,7 +26,7 @@ public class Main {
         while(!quitter){
             tabArg = bufferRead.readLine().split("( )+");
             if(tabArg.length > 0){
-                if(tabArg[0].equals("quit")){
+                if(tabArg[0].toLowerCase().equals("quit")){
                     quitter = true;
                 }else{
                     traitementArgs(tabArg);
@@ -37,7 +37,7 @@ public class Main {
     }
 
     private static void traitementArgs(String[] args){
-        switch (args[0]){
+        switch (args[0].toLowerCase()){
             case "tache":
                 Commande.commandeTache(args, data);
                 break;

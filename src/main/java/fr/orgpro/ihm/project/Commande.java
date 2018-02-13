@@ -7,12 +7,12 @@ public class Commande {
         if (verifNbArgument(2, args)){
             return;
         }
-        switch (args[1]){
+        switch (args[1].toLowerCase()){
             case "clock" : {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
-                switch (args[2]){
+                switch (args[2].toLowerCase()){
                     case "use" : {
                         // TACHE CLOCK USE <num>
                         if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
@@ -56,13 +56,18 @@ public class Commande {
                     return;
                 }
                 int numTache = Integer.parseInt(args[2]);
+                int level = Integer.parseInt(args[3]);
+                if(level < 1){
+                    System.out.println(Message.TACHE_LEVEL_NEGATIF_ECHEC);
+                    return;
+                }
                 if(verifTacheExiste(numTache, data)){
                     return;
                 }
                 if (data.getListeTache().get(numTache).changeLevel(Integer.parseInt(args[3]))) {
                     System.out.println(Message.TACHE_LEVEL_SUCCES);
                 } else {
-                    System.out.println(Message.TACHE_LEVEL_ECHEC);
+                    System.out.println(Message.TACHE_LEVEL_DEP_ECHEC);
                 }
                 break;
             }
@@ -111,7 +116,7 @@ public class Commande {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
-                switch (args[2]) {
+                switch (args[2].toLowerCase()) {
                     case "set": {
                         // TACHE DEP SET <num> <num>
                         if (verifNbArgument(5, args) || verifArgEstUnNombre(args[3]) || verifArgEstUnNombre(args[4])) {
@@ -164,7 +169,7 @@ public class Commande {
         if (verifNbArgument(2, args)){
             return;
         }
-        switch (args[1]){
+        switch (args[1].toLowerCase()){
             // FILE SAVE
             case "save" : {
                 for(Tache tache : data.getListeTache()) {

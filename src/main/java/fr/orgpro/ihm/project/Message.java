@@ -13,7 +13,8 @@ public enum Message {
     TACHE_RENAME_SUCESS("SUCCES : La tâche a bien été renommée."),
     TACHE_REMOVE_DEPENDANCE_SUCCES("SUCCES : La dépendance a bien été supprimée."),
     TACHE_LEVEL_SUCCES("SUCCES : Le niveau de la tâche a bien été changé."),
-    TACHE_LEVEL_ECHEC("ECHEC : Une dépendance empêche le changement de niveau."),
+    TACHE_LEVEL_DEP_ECHEC("ECHEC : Une dépendance empêche le changement de niveau."),
+    TACHE_LEVEL_NEGATIF_ECHEC("ECHEC : Le niveau de la tâche doit être supérieur ou égal à 1."),
     TACHE_INVALIDE_ECHEC("ECHEC : Numéro de tâche invalide."),
     TACHES_NON_IDENTIQUES_ECHEC("ECHEC : Les tâches indiquées ne doivent pas être identiques."),
     TACHE_HELP("TACHE ADD <Nom de la tâche> <Niveau de la tâche> -> Ajoute une tâche\n" +
