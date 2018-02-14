@@ -5,6 +5,8 @@ public enum Message {
     ARGUMENT_MANQUANT("ECHEC : Il manque des arguments."),
     ARGUMENT_INVALIDE("ECHEC : Un des arguments n'est pas valide."),
 
+    MAIN_HELP(""),
+
     TACHE_AJOUT_SUCCES("SUCCES : Tâche créée avec sucess."),
     TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
     TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Minuteur lancé."),

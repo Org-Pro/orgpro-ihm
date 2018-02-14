@@ -38,6 +38,13 @@ public class CommandeTest {
     }
 
     @Test
+    public void testTacheArgsMinimum() throws Exception {
+        Main.main(new String[]{"tache"});
+        assertEquals(Message.ARGUMENT_MANQUANT.toString().trim(), outContent.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
     public void testTacheRename() throws Exception {
         Main.main(new String[]{"tache", "rename", "4", "nouveau titre"});
         assertEquals(Message.TACHE_INVALIDE_ECHEC.toString().trim(), outContent.toString().trim());
@@ -54,6 +61,20 @@ public class CommandeTest {
         outContent.reset();
 
         Main.main(new String[]{"tache", "rename", "azeaze", "nouveau titre"});
+        assertEquals(Message.ARGUMENT_INVALIDE.toString().trim(), outContent.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTacheHelp() throws Exception {
+        Main.main(new String[]{"tache", "help"});
+        assertEquals(Message.TACHE_HELP.toString().trim(), outContent.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTacheDefault() throws Exception {
+        Main.main(new String[]{"tache", "azeaze"});
         assertEquals(Message.ARGUMENT_INVALIDE.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }

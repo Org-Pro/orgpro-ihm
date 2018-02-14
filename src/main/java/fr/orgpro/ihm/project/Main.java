@@ -24,7 +24,6 @@ public class Main {
         if(args.length > 0){
             traitementArgs(args);
         }
-        //affichageArgs(tabArg);
     }
 
     private static void traitementArgs(String[] args){
@@ -36,16 +35,11 @@ public class Main {
                 Commande.commandeFichier(args, data);
                 break;
             case "help":
+                System.out.println(Message.MAIN_HELP);
                 break;
             default:
                 System.out.println(Message.COMMANDE_INCONNUE);
                 break;
-        }
-    }
-
-    private static void affichageArgs(String[] args){
-        for(String ele : args){
-            System.out.println(ele);
         }
     }
 }
