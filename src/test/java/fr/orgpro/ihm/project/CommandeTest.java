@@ -19,11 +19,15 @@ public class CommandeTest {
     @Before
     public void data(){
         data = Data.getInstance();
-        data.getListeTache().clear();
         data.getListeTache().add(new Tache("titre 1"));
         data.getListeTache().add(new Tache("test"));
         data.getListeTache().add(new Tache("je suis une tache"));
         data.getListeTache().add(new Tache("chameaux"));
+    }
+
+    @After
+    public void resetData(){
+        data.getListeTache().clear();
     }
 
     @Before
