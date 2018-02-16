@@ -34,6 +34,9 @@ public class Main {
             case "file":
                 Commande.commandeFichier(args, data);
                 break;
+            case "list":
+                Commande.commandeListe(args, data);
+                break;
             case "help":
                 System.out.println(Message.MAIN_HELP);
                 break;
