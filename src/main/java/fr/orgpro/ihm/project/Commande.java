@@ -206,7 +206,7 @@ public class Commande {
         }
     }
 
-    private static boolean verifTacheExiste(int numTache, Data data){
+    /*private static boolean verifTacheNotExiste(int numTache, Data data){
         if (numTache < 0) {
             System.out.println(Message.TACHE_INVALIDE_ECHEC);
             return true;
@@ -216,9 +216,9 @@ public class Commande {
             return true;
         }
         return false;
-    }
+    }*/
 
-    private static boolean verifArgEstUnNombre(String val){
+    /*private static boolean verifArgNotNombre(String val){
         try {
             Integer.parseInt(val);
             return false;
@@ -226,7 +226,7 @@ public class Commande {
             System.out.println(Message.ARGUMENT_INVALIDE);
             return true;
         }
-    }
+    }*/
 
     private static boolean verifNbArgument(int val, String[] args){
         if (val > args.length){
