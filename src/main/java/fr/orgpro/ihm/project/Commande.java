@@ -8,7 +8,7 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            case "clock" : {
+            /*case "clock" : {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
@@ -48,9 +48,9 @@ public class Commande {
                         break;
                 }
                 break;
-            }
+            }*/
 
-            case "level": {
+            /*case "level": {
                 // TACHE LEVEL <num> <level>
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
                     return;
@@ -70,9 +70,9 @@ public class Commande {
                     System.out.println(Message.TACHE_LEVEL_DEP_ECHEC);
                 }
                 break;
-            }
+            }*/
 
-            case "rename": {
+            /*case "rename": {
                 // TACHE RENAME <num> <nom>
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
                     return;
@@ -84,7 +84,7 @@ public class Commande {
                 data.getListeTache().get(numTache).changeTitle(args[3]);
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
-            }
+            }*/
 
             case "add": {
                 // TACHE ADD <nom>
@@ -92,7 +92,7 @@ public class Commande {
                 break;
             }
 
-            case "list": {
+            /*case "list": {
                 // TACHE LIST
                 System.out.println(data.getListeTache().size() + " résultat(s).");
                 int i = 0;
@@ -106,9 +106,9 @@ public class Commande {
                     i++;
                 }
                 break;
-            }
+            }*/
 
-            case "dep": {
+            /*case "dep": {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
@@ -149,7 +149,7 @@ public class Commande {
                         break;
                 }
                 break;
-            }
+            }*/
 
             case "help":
                 System.out.println(Message.TACHE_HELP);
@@ -161,7 +161,7 @@ public class Commande {
         }
     }
 
-    public static void commandeFichier(String[] args, Data data) {
+    /*public static void commandeFichier(String[] args, Data data) {
         if (verifNbArgument(2, args)){
             return;
         }
@@ -183,7 +183,7 @@ public class Commande {
                 break;
         }
 
-    }
+    }*/
 
     public static void commandeListe(String[] args, Data data) {
         if (verifNbArgument(2, args)){

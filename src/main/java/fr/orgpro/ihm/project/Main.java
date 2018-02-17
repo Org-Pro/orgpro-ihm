@@ -31,9 +31,9 @@ public class Main {
             case "tache":
                 Commande.commandeTache(args, data);
                 break;
-            case "file":
+            /*case "file":
                 Commande.commandeFichier(args, data);
-                break;
+                break;*/
             case "list":
                 Commande.commandeListe(args, data);
                 break;
