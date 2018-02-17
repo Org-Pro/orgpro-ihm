@@ -182,8 +182,33 @@ public class Commande {
 
             case "help" :
                 break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
         }
 
+    }
+
+    public static void commandeListe(String[] args, Data data) {
+        if (verifNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "tache" : {
+                for(Tache tache : data.getListeTache()){
+                    System.out.print(tache.toString());
+                }
+                break;
+            }
+
+            case "help" :
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
     }
 
     private static boolean verifTacheExiste(int numTache, Data data){
@@ -216,6 +241,7 @@ public class Commande {
             return false;
         }
     }
+
 
 
 }

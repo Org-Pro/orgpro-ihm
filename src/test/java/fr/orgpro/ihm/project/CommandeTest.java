@@ -83,4 +83,15 @@ public class CommandeTest {
         assertEquals(Message.ARGUMENT_INVALIDE.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testCommandeList() throws Exception {
+        StringBuilder s = new StringBuilder();
+        for (Tache tache : data.getListeTache()){
+            s.append(tache.toString());
+        }
+        Main.main(new String[]{"list", "tache"});
+        assertEquals(s.toString().trim(), outContent.toString().trim());
+        outContent.reset();
+    }
 }
