@@ -21,13 +21,13 @@ public class Main {
         //////////////////////////////////////////////
 
 
-        if(args.length > 0){
+        if (args.length > 0) {
             traitementArgs(args);
         }
     }
 
-    private static void traitementArgs(String[] args){
-        switch (args[0].toLowerCase()){
+    private static void traitementArgs(String[] args) {
+        switch (args[0].toLowerCase()) {
             case "tache":
                 Commande.commandeTache(args, data);
                 break;
