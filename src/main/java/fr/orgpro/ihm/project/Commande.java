@@ -2,6 +2,9 @@ package fr.orgpro.ihm.project;
 
 import fr.orgpro.api.project.Tache;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Commande {
     public static void commandeTache(String[] args, Data data){
         if (verifNbArgument(2, args)){
@@ -167,15 +170,52 @@ public class Commande {
         }
         switch (args[1].toLowerCase()){
             // FILE SAVE
-            case "save" : {
+            case "save": {
                 for(Tache tache : data.getListeTache()) {
                     tache.ecritureFichier("test.org", true);
                 }
                 System.out.println(Message.FICHIER_SAVE_SUCCES);
                 break;
             }
+            case "list": {
+                // FILE LIST
+                if(verifLectureFichier(data)){
+                    return;
+                }
+                File[] files = new File(data.DOSSIER_COURANT).listFiles();
+                if (files == null){
+                    System.out.println(Message.FICHIER_LISTE_VIDE);
+                }else {
+                    System.out.println(Message.FICHIER_LISTE);
+                    for (File file : files) {
+                        if (file.getName().endsWith(".org")) {
+                            System.out.println(file.getName());
+                        }
+                    }
+                }
+                break;
+            }
+            case "select": {
+                // FILE SELECT <nom>
+                if(verifNbArgument(3, args)){
+                    return;
+                }
+                String fichier = data.setFichierCourant(args[2]);
+                File file = new File(data.DOSSIER_COURANT + "/" + fichier );
+                if(!file.exists()){
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Message.FICHIER_CREATION);
+                }else{
+                    System.out.println(Message.FICHIER_LOAD);
+                }
+                break;
+            }
 
-            case "help" :
+            case "help":
                 break;
 
             default:
@@ -191,6 +231,8 @@ public class Commande {
         }
         switch (args[1].toLowerCase()){
             case "tache" : {
+                // LIST TACHE
+
                 for(Tache tache : data.getListeTache()){
                     System.out.print(tache.toString());
                 }
@@ -204,6 +246,10 @@ public class Commande {
                 System.out.println(Message.ARGUMENT_INVALIDE);
                 break;
         }
+    }
+
+    private static boolean verifLectureFichier(Data data){
+        return !data.loadFichier();
     }
 
     private static boolean verifTacheExiste(int numTache, Data data){

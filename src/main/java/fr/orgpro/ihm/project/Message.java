@@ -6,6 +6,9 @@ public enum Message {
     ARGUMENT_INVALIDE("ECHEC : Un des arguments n'est pas valide."),
 
     MAIN_HELP(""),
+    MAIN_AUNCUN_FICHIER("Vous devez créer ou charger un fichier.\n" +
+            "Commande : FILE SELECT <Nom du fichier à créer / charger>"),
+    MAIN_LISTE_FICHIER("Vous pouvez charger un fichier parmi la liste :"),
 
     TACHE_AJOUT_SUCCES("SUCCES : Tâche créée avec sucess."),
     TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
@@ -28,7 +31,11 @@ public enum Message {
             "TACHE CLOCK RESET <Numéro de la tâche> -> Remet à zéro le minuteur de la tâche.\n" +
             "TACHE CLOCK USE <Numéro de la tâche> -> Lance ou stop le minuteur de la tâche."),
 
-    FICHIER_SAVE_SUCCES("SUCCES : Fichier enregistré.")
+    FICHIER_SAVE_SUCCES("SUCCES : Fichier enregistré."),
+    FICHIER_CREATION("SUCCES : Le fichier n'existe pas mais il a bien été crée."),
+    FICHIER_LOAD("SUCCES : Chargement du fichier réussi."),
+    FICHIER_LISTE("Liste des fichiers disponibles :"),
+    FICHIER_LISTE_VIDE("Auncun fichier trouvé.")
     ;
 
     private String message;
