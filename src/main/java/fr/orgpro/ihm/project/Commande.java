@@ -92,6 +92,10 @@ public class Commande {
                     return;
                 }
                 data.getListeTache().add(new Tache(args[2]));
+                for(Tache tache : data.getListeTache()) {
+                    tache.ecritureFichier("test.org", true);
+                }
+                System.out.println(Message.FICHIER_SAVE_SUCCES);
                 System.out.println(Message.TACHE_AJOUT_SUCCES);
 
                 break;
