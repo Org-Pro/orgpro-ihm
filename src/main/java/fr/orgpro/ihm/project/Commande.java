@@ -88,6 +88,11 @@ public class Commande {
 
             case "add": {
                 // TACHE ADD <nom>
+                if (verifNbArgument(3, args)) {
+                    return;
+                }
+                data.getListeTache().add(new Tache(args[2]));
+                System.out.println(Message.TACHE_AJOUT_SUCCES);
 
                 break;
             }
