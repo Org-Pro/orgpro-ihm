@@ -4,6 +4,7 @@ public enum Message {
     COMMANDE_INCONNUE("ECHEC : La commande est inconnue."),
     ARGUMENT_MANQUANT("ECHEC : Il manque des arguments."),
     ARGUMENT_INVALIDE("ECHEC : Un des arguments n'est pas valide."),
+    PROBLEME_LECTURE("ECHEC : Problème lors de la lecture du fichier."),
 
     MAIN_HELP(""),
     MAIN_AUNCUN_FICHIER("Vous devez créer ou charger un fichier.\n" +

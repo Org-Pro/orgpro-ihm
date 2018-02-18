@@ -179,7 +179,7 @@ public class Commande {
             }
             case "list": {
                 // FILE LIST
-                if(verifLectureFichier(data)){
+                if(!verifLectureFichier(data)){
                     return;
                 }
                 File[] files = new File(data.DOSSIER_COURANT).listFiles();
@@ -249,7 +249,12 @@ public class Commande {
     }
 
     private static boolean verifLectureFichier(Data data){
-        return !data.loadFichier();
+        if (data.loadFichier()){
+            return true;
+        }else {
+            System.out.println(Message.PROBLEME_LECTURE);
+            return false;
+        }
     }
 
     private static boolean verifTacheExiste(int numTache, Data data){
