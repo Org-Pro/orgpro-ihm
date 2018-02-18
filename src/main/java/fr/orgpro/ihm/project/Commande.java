@@ -237,7 +237,9 @@ public class Commande {
         switch (args[1].toLowerCase()){
             case "tache" : {
                 // LIST TACHE
-
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
                 for(Tache tache : data.getListeTache()){
                     System.out.print(tache.toString());
                 }
