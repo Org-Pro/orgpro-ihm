@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.prefs.Preferences;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,6 +14,10 @@ import static org.junit.Assert.assertEquals;
 public class MainTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
+    private Data data;
+    private Preferences prefs;
+    private final String PREF_FICHIER_COURANT = "FILE";
 
     @Before
     public void setUpStreams() {
@@ -24,6 +29,18 @@ public class MainTest {
     public void restoreStreams() {
         System.setOut(System.out);
         System.setErr(System.err);
+    }
+
+    @Before
+    public void data(){
+        data = Data.getInstance();
+        prefs = Preferences.userNodeForPackage(fr.orgpro.ihm.project.Data.class);
+        data.setFichierCourant("test");
+    }
+
+    @After
+    public void resetData(){
+        prefs.remove(PREF_FICHIER_COURANT);
     }
 
     @Test
