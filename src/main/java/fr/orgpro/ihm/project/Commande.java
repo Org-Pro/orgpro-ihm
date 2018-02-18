@@ -91,7 +91,12 @@ public class Commande {
 
             case "add": {
                 // TACHE ADD <nom>
-
+                if (verifBadNbArgument(3, args)) {
+                    return;
+                }
+                Tache tache = new Tache(args[2]);
+                tache.ecritureFichier(data.PATH, true);
+                System.out.println(Message.TACHE_AJOUT_SUCCES);
                 break;
             }
 
