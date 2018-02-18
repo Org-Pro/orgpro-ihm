@@ -7,18 +7,18 @@ import java.io.IOException;
 
 public class Commande {
     public static void commandeTache(String[] args, Data data){
-        if (verifNbArgument(2, args)){
+        if (verifBadNbArgument(2, args)){
             return;
         }
         switch (args[1].toLowerCase()){
             /*case "clock" : {
-                if (verifNbArgument(3, args)) {
+                if (verifBadNbArgument(3, args)) {
                     return;
                 }
                 switch (args[2].toLowerCase()){
                     case "use" : {
                         // TACHE CLOCK USE <num>
-                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
                             return;
                         }
                         int numTache = Integer.parseInt(args[3]);
@@ -34,7 +34,7 @@ public class Commande {
                     }
                     case "reset": {
                         // TACHE CLOCK RESET <num>
-                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
                             return;
                         }
                         int numTache = Integer.parseInt(args[3]);
@@ -55,7 +55,7 @@ public class Commande {
 
             /*case "level": {
                 // TACHE LEVEL <num> <level>
-                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
+                if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
                     return;
                 }
                 int numTache = Integer.parseInt(args[2]);
@@ -77,7 +77,7 @@ public class Commande {
 
             /*case "rename": {
                 // TACHE RENAME <num> <nom>
-                if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
+                if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
                     return;
                 }
                 int numTache = Integer.parseInt(args[2]);
@@ -112,13 +112,13 @@ public class Commande {
             }*/
 
             /*case "dep": {
-                if (verifNbArgument(3, args)) {
+                if (verifBadNbArgument(3, args)) {
                     return;
                 }
                 switch (args[2].toLowerCase()) {
                     case "set": {
                         // TACHE DEP SET <num> <num>
-                        if (verifNbArgument(5, args) || verifArgEstUnNombre(args[3]) || verifArgEstUnNombre(args[4])) {
+                        if (verifBadNbArgument(5, args) || verifArgEstUnNombre(args[3]) || verifArgEstUnNombre(args[4])) {
                             return;
                         }
                         int numTacheRecoit = Integer.parseInt(args[3]);
@@ -136,7 +136,7 @@ public class Commande {
                     }
                     case "remove": {
                         // TACHE DEP REMOVE <num>
-                        if (verifNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
                             return;
                         }
                         int numTache = Integer.parseInt(args[3]);
@@ -165,7 +165,7 @@ public class Commande {
     }
 
     public static void commandeFichier(String[] args, Data data) {
-        if (verifNbArgument(2, args)){
+        if (verifBadNbArgument(2, args)){
             return;
         }
         switch (args[1].toLowerCase()){
@@ -179,7 +179,7 @@ public class Commande {
             }*/
             case "list": {
                 // FILE LIST
-                if(!verifLectureFichier(data)){
+                if(verifBadLectureFichier(data)){
                     return;
                 }
                 File[] files = new File(data.DOSSIER_COURANT).listFiles();
@@ -197,7 +197,7 @@ public class Commande {
             }
             case "select": {
                 // FILE SELECT <nom>
-                if(verifNbArgument(3, args)){
+                if(verifBadNbArgument(3, args)){
                     return;
                 }
                 String fichier = data.setFichierCourant(args[2]);
@@ -226,7 +226,7 @@ public class Commande {
     }
 
     public static void commandeListe(String[] args, Data data) {
-        if (verifNbArgument(2, args)){
+        if (verifBadNbArgument(2, args)){
             return;
         }
         switch (args[1].toLowerCase()){
@@ -249,17 +249,17 @@ public class Commande {
     }
 
 
-    private static boolean verifLectureFichier(Data data){
+    private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
-            return true;
+            return false;
         }else {
             System.out.println(Message.PROBLEME_LECTURE);
-            return false;
+            return true;
         }
     }
 
 
-    private static boolean verifTacheNotExiste(int numTache, Data data){
+    /*private static boolean verifTacheNotExiste(int numTache, Data data){
         if (numTache < 0) {
             System.out.println(Message.TACHE_INVALIDE_ECHEC);
             return true;
@@ -279,9 +279,9 @@ public class Commande {
             System.out.println(Message.ARGUMENT_INVALIDE);
             return true;
         }
-    }
+    }*/
 
-    private static boolean verifNbArgument(int val, String[] args){
+    private static boolean verifBadNbArgument(int val, String[] args){
         if (val > args.length){
             System.out.println(Message.ARGUMENT_MANQUANT);
             return true;
