@@ -11,7 +11,7 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            case "clock" : {
+            /*case "clock" : {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
@@ -51,9 +51,9 @@ public class Commande {
                         break;
                 }
                 break;
-            }
+            }*/
 
-            case "level": {
+            /*case "level": {
                 // TACHE LEVEL <num> <level>
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
                     return;
@@ -73,9 +73,9 @@ public class Commande {
                     System.out.println(Message.TACHE_LEVEL_DEP_ECHEC);
                 }
                 break;
-            }
+            }*/
 
-            case "rename": {
+            /*case "rename": {
                 // TACHE RENAME <num> <nom>
                 if (verifNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
                     return;
@@ -87,7 +87,7 @@ public class Commande {
                 data.getListeTache().get(numTache).changeTitle(args[3]);
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
-            }
+            }*/
 
             case "add": {
                 // TACHE ADD <nom>
@@ -95,7 +95,7 @@ public class Commande {
                 break;
             }
 
-            case "list": {
+            /*case "list": {
                 // TACHE LIST
                 System.out.println(data.getListeTache().size() + " résultat(s).");
                 int i = 0;
@@ -109,9 +109,9 @@ public class Commande {
                     i++;
                 }
                 break;
-            }
+            }*/
 
-            case "dep": {
+            /*case "dep": {
                 if (verifNbArgument(3, args)) {
                     return;
                 }
@@ -152,7 +152,7 @@ public class Commande {
                         break;
                 }
                 break;
-            }
+            }*/
 
             case "help":
                 System.out.println(Message.TACHE_HELP);
@@ -169,14 +169,14 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            // FILE SAVE
-            case "save": {
+            /*case "save": {
+                // FILE SAVE
                 for(Tache tache : data.getListeTache()) {
                     tache.ecritureFichier("test.org", true);
                 }
                 System.out.println(Message.FICHIER_SAVE_SUCCES);
                 break;
-            }
+            }*/
             case "list": {
                 // FILE LIST
                 if(!verifLectureFichier(data)){
@@ -248,6 +248,7 @@ public class Commande {
         }
     }
 
+
     private static boolean verifLectureFichier(Data data){
         if (data.loadFichier()){
             return true;
@@ -257,7 +258,8 @@ public class Commande {
         }
     }
 
-    private static boolean verifTacheExiste(int numTache, Data data){
+
+    private static boolean verifTacheNotExiste(int numTache, Data data){
         if (numTache < 0) {
             System.out.println(Message.TACHE_INVALIDE_ECHEC);
             return true;
@@ -269,7 +271,7 @@ public class Commande {
         return false;
     }
 
-    private static boolean verifArgEstUnNombre(String val){
+    private static boolean verifArgNotNombre(String val){
         try {
             Integer.parseInt(val);
             return false;
