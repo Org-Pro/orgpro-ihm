@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/Org-Pro/orgpro-ihm.svg?branch=master)](https://travis-ci.org/Org-Pro/orgpro-ihm)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0574befcbb5d4df986731b908d34ebde)](https://www.codacy.com/app/WALLOIS-Alexandre/orgpro-ihm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Org-Pro/orgpro-ihm&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.png?branch=master)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.svg?branch=master)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=master)
 
 
 # Guide d'installation
