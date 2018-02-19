@@ -27,7 +27,7 @@ A partir du répertoire courant du projet :
 Les commandes :  
 - java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main  
 Ou :  
-- alias cp="java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main"
+- alias op="java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main"
     
 ## Pour Windows
 
