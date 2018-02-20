@@ -22,12 +22,12 @@ public class Main {
         //////////////////////////////////////////////
 
 
-        if (data.getFICHIER_COURANT().isEmpty()){
+        if (data.getFichierCourant().isEmpty()){
             System.out.println(Message.MAIN_AUNCUN_FICHIER);
-            File[] files = new File(data.DOSSIER_COURANT).listFiles();
+            File[] files = new File(data.getDossierCourant()).listFiles();
             // Si le Dossier n'existe pas, on le crée
             if(files == null){
-                new File(data.DOSSIER_COURANT).mkdirs();
+                new File(data.getDossierCourant()).mkdirs();
             // Sinon, s'il existe déjà des fichiers dans le dossier, on les affiche
             }else if (files.length > 0){
                 System.out.println(Message.MAIN_LISTE_FICHIER);
@@ -46,7 +46,7 @@ public class Main {
 
     private static void traitementArgs(String[] args){
         // Si aucun fichier n'est chargé, seule la commande "file" est autorisée
-        if(data.getFICHIER_COURANT().isEmpty() && !args[0].toLowerCase().equals("file")){
+        if(data.getFichierCourant().isEmpty() && !args[0].toLowerCase().equals("file")){
             return;
         }
         switch (args[0].toLowerCase()){

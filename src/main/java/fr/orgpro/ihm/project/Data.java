@@ -9,9 +9,9 @@ import java.util.prefs.Preferences;
 
 public class Data {
     private final String PREF_FICHIER_COURANT = "FILE";
-    public final String DOSSIER_COURANT = "files";
-    private String FICHIER_COURANT;
-    public final String PATH;
+    private final String dossierCourant = "files";
+    private String fichierCourant;
+    private String path;
     private final Preferences prefs;
 
     private List<Tache> listeTache;
@@ -26,13 +26,13 @@ public class Data {
     private Data() {
         listeTache = new ArrayList<Tache>();
         prefs = Preferences.userNodeForPackage(fr.orgpro.ihm.project.Data.class);
-        FICHIER_COURANT = prefs.get(PREF_FICHIER_COURANT, "");
+        fichierCourant = prefs.get(PREF_FICHIER_COURANT, "");
         // Vérifie si le chemin vers le fichier existe
-        if(!new File(DOSSIER_COURANT + "/" + FICHIER_COURANT).exists()) {
+        if(!new File(dossierCourant + "/" + fichierCourant).exists()) {
             prefs.remove(PREF_FICHIER_COURANT);
-            FICHIER_COURANT = "";
+            fichierCourant = "";
         }
-        PATH = DOSSIER_COURANT + "/" + FICHIER_COURANT;
+        path = dossierCourant + "/" + fichierCourant;
     }
 
     public String setFichierCourant(String fichier){
@@ -40,12 +40,13 @@ public class Data {
             fichier += ".org";
         }
         prefs.put(PREF_FICHIER_COURANT, fichier);
-        FICHIER_COURANT = fichier;
+        fichierCourant = fichier;
+        path = dossierCourant + "/" + fichierCourant;
         return fichier;
     }
 
     public boolean loadFichier(){
-        listeTache = Tache.lectureFichier(PATH);
+        listeTache = Tache.lectureFichier(path);
         if(listeTache == null){
             return false;
         }else {
@@ -53,12 +54,19 @@ public class Data {
         }
     }
 
-    public String getFICHIER_COURANT() {
-        return FICHIER_COURANT;
+    public String getFichierCourant() {
+        return fichierCourant;
     }
 
     public List<Tache> getListeTache() {
         return listeTache;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public String getDossierCourant() {
+        return dossierCourant;
+    }
 }

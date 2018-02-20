@@ -95,7 +95,7 @@ public class Commande {
                     return;
                 }
                 Tache tache = new Tache(args[2]);
-                tache.ecritureFichier(data.PATH, true);
+                tache.ecritureFichier(data.getPath(), true);
                 System.out.println(Message.TACHE_AJOUT_SUCCES);
                 break;
             }
@@ -187,7 +187,7 @@ public class Commande {
                 if(verifBadLectureFichier(data)){
                     return;
                 }
-                File[] files = new File(data.DOSSIER_COURANT).listFiles();
+                File[] files = new File(data.getDossierCourant()).listFiles();
                 if (files == null){
                     System.out.println(Message.FICHIER_LISTE_VIDE);
                 }else {
@@ -206,7 +206,7 @@ public class Commande {
                     return;
                 }
                 String fichier = data.setFichierCourant(args[2]);
-                File file = new File(data.DOSSIER_COURANT + "/" + fichier );
+                File file = new File(data.getDossierCourant() + "/" + fichier );
                 if(!file.exists()){
                     try {
                         file.createNewFile();

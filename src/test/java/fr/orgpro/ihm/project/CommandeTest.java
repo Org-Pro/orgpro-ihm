@@ -1,14 +1,9 @@
 package fr.orgpro.ihm.project;
 
 import fr.orgpro.api.project.Tache;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,30 +16,34 @@ public class CommandeTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
-    private Data data;
-    private Preferences prefs;
-    private final String PREF_FICHIER_COURANT = "FILE";
+    private static Data data;
+    private static File file;
+    private static PrintWriter writer;
 
-    private File file;
+    @BeforeClass
+    public static void setup() throws Exception {
+        Main.main(new String[]{"file", "select", "test"});
+        data = Data.getInstance();
+        file = new File(data.getPath());
+        writer = new PrintWriter(data.getPath());
+    }
 
+    @AfterClass
+    public static void deleteSetup() throws Exception {
+        writer.close();
+        file.delete();
+        new File(data.getDossierCourant()).delete();
+    }
 
     @Before
-    public void data(){
-        data = Data.getInstance();
-        prefs = Preferences.userNodeForPackage(fr.orgpro.ihm.project.Data.class);
-        data.getListeTache().add(new Tache("titre 1"));
-        data.getListeTache().add(new Tache("test"));
-        data.getListeTache().add(new Tache("je suis une tache"));
-        data.getListeTache().add(new Tache("chameaux"));
-        data.setFichierCourant("test");
-        //new File(data.DOSSIER_COURANT).mkdirs();
-
+    public void data() throws Exception {
+        writer.print("");
     }
 
     @After
     public void resetData(){
-        data.getListeTache().clear();
-        prefs.remove(PREF_FICHIER_COURANT);
+        /*data.getListeTache().clear();
+        prefs.remove(PREF_FICHIER_COURANT);*/
     }
 
     @Before
