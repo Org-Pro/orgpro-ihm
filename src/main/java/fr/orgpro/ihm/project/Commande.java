@@ -100,13 +100,16 @@ public class Commande {
                 break;
             }
 
-            /*case "list": {
+            case "list": {
                 // TACHE LIST
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
                 System.out.println(data.getListeTache().size() + " résultat(s).");
                 int i = 0;
                 String msg;
                 for (Tache tache : data.getListeTache()) {
-                    msg = "n°" + i + " " + tache.getTitle();
+                    msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
                     if(tache.getClock() != null){
                         msg += " " + tache.getClock();
                     }
@@ -114,7 +117,7 @@ public class Commande {
                     i++;
                 }
                 break;
-            }*/
+            }
 
             /*case "dep": {
                 if (verifBadNbArgument(3, args)) {

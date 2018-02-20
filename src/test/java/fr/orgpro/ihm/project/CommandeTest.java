@@ -42,8 +42,7 @@ public class CommandeTest {
 
     @After
     public void resetData(){
-        /*data.getListeTache().clear();
-        prefs.remove(PREF_FICHIER_COURANT);*/
+        outContent.reset();
     }
 
     @Before
@@ -60,7 +59,7 @@ public class CommandeTest {
 
     @Test
     public void testTacheArgsMinimum() throws Exception {
-        Main.main(new String[]{"tache"});
+        Main.main(new String[]{"task"});
         assertEquals(Message.ARGUMENT_MANQUANT.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }
@@ -88,19 +87,19 @@ public class CommandeTest {
 
     @Test
     public void testTacheHelp() throws Exception {
-        Main.main(new String[]{"tache", "help"});
+        Main.main(new String[]{"task", "help"});
         assertEquals(Message.TACHE_HELP.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }
 
     @Test
     public void testTacheDefault() throws Exception {
-        Main.main(new String[]{"tache", "azeaze"});
+        Main.main(new String[]{"task", "azeaze"});
         assertEquals(Message.ARGUMENT_INVALIDE.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }
 
-    /*@Test
+   /* @Test
     public void testCommandeList() throws Exception {
         StringBuilder s = new StringBuilder();
         for (Tache tache : data.getListeTache()){
@@ -130,4 +129,27 @@ public class CommandeTest {
         File file = new File(data.PATH);
         file.delete();
     }*/
+
+    @Test
+    public void testTaskList() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 3"});
+        outContent.reset();
+        Main.main(new String[]{"task", "list"});
+        int i = 0;
+        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " résultat(s).\r\n");
+        for (Tache tache : data.getListeTache()) {
+            msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
+            if(tache.getClock() != null){
+                msg.append(" ").append(tache.getClock());
+            }
+            msg.append("\r\n");
+            i++;
+        }
+        msg = new StringBuilder(msg.toString().trim());
+        assertEquals(data.getListeTache().size(), 3);
+        assertEquals(outContent.toString().trim(), msg.toString());
+        outContent.reset();
+    }
 }

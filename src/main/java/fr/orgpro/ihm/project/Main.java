@@ -7,8 +7,9 @@ public class Main {
     private static Data data;
 
     public static void main(String[] args) throws IOException {
-        //args = new String[]{"file", "select", "testA"};
-        //args = new String[]{"tache", "help"};
+        //args = new String[]{"file", "select", "test"};
+        //args = new String[]{"task", "add", "test2"};
+        //args = new String[]{"task", "list"};
 
         data = Data.getInstance();
 
@@ -50,7 +51,7 @@ public class Main {
             return;
         }
         switch (args[0].toLowerCase()){
-            case "tache":
+            case "task":
                 Commande.commandeTache(args, data);
                 break;
             case "file":
