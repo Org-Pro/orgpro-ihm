@@ -13,4 +13,3 @@ before_install:
 
 after_success:
  - ./gradlew jacocoTestReport coveralls
- - ./gradlew test --debug
