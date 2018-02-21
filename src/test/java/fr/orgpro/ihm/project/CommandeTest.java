@@ -138,13 +138,13 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"task", "list"});
         int i = 0;
-        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " résultat(s).\r\n");
+        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " résultat(s).\n");
         for (Tache tache : data.getListeTache()) {
             msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
             if(tache.getClock() != null){
                 msg.append(" ").append(tache.getClock());
             }
-            msg.append("\r\n");
+            msg.append("\n");
             i++;
         }
         msg = new StringBuilder(msg.toString().trim());
