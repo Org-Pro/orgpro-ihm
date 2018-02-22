@@ -105,7 +105,7 @@ public class Commande {
                 if(verifBadLectureFichier(data)){
                     return;
                 }
-                System.out.println(data.getListeTache().size() + " résultat(s).");
+                System.out.print(data.getListeTache().size() + " résultat(s).\n");
                 int i = 0;
                 String msg;
                 for (Tache tache : data.getListeTache()) {
@@ -113,7 +113,7 @@ public class Commande {
                     if(tache.getClock() != null){
                         msg += " " + tache.getClock();
                     }
-                    System.out.println(msg);
+                    System.out.print(msg + "\n");
                     i++;
                 }
                 break;
