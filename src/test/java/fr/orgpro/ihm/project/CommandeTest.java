@@ -152,4 +152,30 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), msg.toString());
         outContent.reset();
     }
+
+    @Test
+    public void testDeleteTask() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 3"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "delete", "42"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "delete", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "delete", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        assertEquals(data.getListeTache().size(), 2);
+    }
 }

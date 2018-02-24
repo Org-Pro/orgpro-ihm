@@ -11,7 +11,8 @@ public enum Message {
             "Commande : FILE SELECT <Nom du fichier à créer / charger>"),
     MAIN_LISTE_FICHIER("Vous pouvez charger un fichier parmi la liste :"),
 
-    TACHE_AJOUT_SUCCES("SUCCES : Tâche créée avec succes."),
+    TACHE_AJOUT_SUCCES("SUCCES : Tâche créée."),
+    TACHE_DELETE_SUCCES("SUCCES : Tâche supprimée."),
     TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
     TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Minuteur lancé."),
     TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Minuteur stoppé."),

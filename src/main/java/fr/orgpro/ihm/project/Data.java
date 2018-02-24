@@ -54,6 +54,18 @@ public class Data {
         }
     }
 
+    public void ecritureListeTaches(){
+        boolean premier = true;
+        for (Tache t : listeTache){
+            if (premier){
+                t.ecritureFichier(path, false);
+                premier = false;
+            }else {
+                t.ecritureFichier(path, true);
+            }
+        }
+    }
+
     public String getFichierCourant() {
         return fichierCourant;
     }

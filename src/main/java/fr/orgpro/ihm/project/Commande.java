@@ -100,6 +100,21 @@ public class Commande {
                 break;
             }
 
+            case "delete": {
+                // TACHE DELETE <num>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+                data.getListeTache().remove(numTache);
+                data.ecritureListeTaches();
+                System.out.println(Message.TACHE_DELETE_SUCCES);
+                break;
+            }
+
             case "list": {
                 // TACHE LIST
                 if(verifBadLectureFichier(data)){
@@ -269,7 +284,7 @@ public class Commande {
     }
 
 
-    /*private static boolean verifTacheNotExiste(int numTache, Data data){
+    private static boolean verifTacheNotExiste(int numTache, Data data){
         if (numTache < 0) {
             System.out.println(Message.TACHE_INVALIDE_ECHEC);
             return true;
@@ -289,7 +304,7 @@ public class Commande {
             System.out.println(Message.ARGUMENT_INVALIDE);
             return true;
         }
-    }*/
+    }
 
     private static boolean verifBadNbArgument(int val, String[] args){
         if (val > args.length){
