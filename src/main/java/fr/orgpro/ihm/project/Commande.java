@@ -86,14 +86,14 @@ public class Commande {
                     return;
                 }
 
-                if(args[3].trim().equals("0")){
+                /*if(args[3].trim().equals("0")){
                     // TODO
                     //data.getListeTache().get(numTache)
 
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_DELETE_DEADLINE_SUCCES);
                     return;
-                }
+                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutDeadline(date)) {
@@ -116,14 +116,14 @@ public class Commande {
                     return;
                 }
 
-                if(args[3].trim().equals("0")){
+                /*if(args[3].trim().equals("0")){
                     // TODO
                     //data.getListeTache().get(numTache)
 
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_DELETE_CLOSED_SUCCES);
                     return;
-                }
+                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutClosed(date)) {
@@ -146,14 +146,14 @@ public class Commande {
                     return;
                 }
 
-                if(args[3].trim().equals("0")){
+                /*if(args[3].trim().equals("0")){
                     // TODO
                     //data.getListeTache().get(numTache)
 
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_DELETE_SCHEDULED_SUCCES);
                     return;
-                }
+                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutScheduled(date)) {
