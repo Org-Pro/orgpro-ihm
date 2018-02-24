@@ -18,31 +18,28 @@ public class CommandeTest {
 
     private static Data data;
     private static File file;
-    private static PrintWriter writer;
 
     @BeforeClass
     public static void setup() throws Exception {
         Main.main(new String[]{"file", "select", "test"});
         data = Data.getInstance();
         file = new File(data.getPath());
-        writer = new PrintWriter(data.getPath());
     }
 
     @AfterClass
     public static void deleteSetup() throws Exception {
-        writer.close();
-        file.delete();
         new File(data.getDossierCourant()).delete();
     }
 
     @Before
     public void data() throws Exception {
-        writer.print("");
+        file = new File(data.getPath());
     }
 
     @After
     public void resetData(){
         outContent.reset();
+        file.delete();
     }
 
     @Before
@@ -101,11 +98,14 @@ public class CommandeTest {
 
     @Test
     public void testCommandeList() throws Exception {
+        Main.main(new String[]{"task", "add", "1"});
+        Main.main(new String[]{"task", "add", "2"});
+        outContent.reset();
+        Main.main(new String[]{"list", "tache"});
         StringBuilder s = new StringBuilder();
         for (Tache tache : data.getListeTache()){
             s.append(tache.toString());
         }
-        Main.main(new String[]{"list", "tache"});
         assertEquals(s.toString().trim(), outContent.toString().trim());
         outContent.reset();
     }
@@ -157,7 +157,7 @@ public class CommandeTest {
     public void testDeleteTask() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
         Main.main(new String[]{"task", "add", "tache 2"});
-        Main.main(new String[]{"task", "add", "tache 3"});
+        Main.main(new String[]{"task", "add", "tache 32"});
         outContent.reset();
 
         Main.main(new String[]{"task", "delete"});
@@ -177,5 +177,6 @@ public class CommandeTest {
         outContent.reset();
 
         assertEquals(data.getListeTache().size(), 2);
+
     }
 }
