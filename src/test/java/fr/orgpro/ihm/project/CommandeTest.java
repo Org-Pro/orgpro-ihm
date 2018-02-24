@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.prefs.Preferences;
 
 import static org.junit.Assert.assertEquals;
@@ -106,7 +107,7 @@ public class CommandeTest {
         Main.main(new String[]{"task", "add", "1"});
         Main.main(new String[]{"task", "add", "2"});
         outContent.reset();
-        Main.main(new String[]{"list", "tache"});
+        Main.main(new String[]{"list", "task"});
         StringBuilder s = new StringBuilder();
         for (Tache tache : data.getListeTache()){
             s.append(tache.toString());
@@ -182,5 +183,39 @@ public class CommandeTest {
         outContent.reset();
 
         assertEquals(data.getListeTache().size(), 2);
+    }
+
+    @Test
+    public void testTaskDeadline() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dl", "1"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dl", "42", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dl", "0", "2018/02/42"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_DEADLINE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dl", "0", "2018/02-02"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_DEADLINE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Date date = new Date("2018/02/02");
+        assertEquals(data.getListeTache().get(0).getDeadline(), date);
+
+        Main.main(new String[]{"task", "dl", "0", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEADLINE_SUCCES.toString().trim());
+        outContent.reset();
+
+        // TODO
+        // assertEquals(data.getListeTache().get(0).getDeadline().toString(), null);
     }
 }

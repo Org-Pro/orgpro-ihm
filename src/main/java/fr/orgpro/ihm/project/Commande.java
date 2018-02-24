@@ -75,6 +75,36 @@ public class Commande {
                 break;
             }*/
 
+            case "deadline":{}
+            case "dl": {
+                // TACHE DL <num> <date ou 0>
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+
+                if(args[3].trim().equals("0")){
+                    // TODO
+                    //data.getListeTache().get(numTache)
+
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_DELETE_DEADLINE_SUCCES);
+                    return;
+                }
+
+                String date = args[3].replace("/", "-");
+                if (data.getListeTache().get(numTache).ajoutDeadline(date)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_AJOUT_DEADLINE_SUCCES);
+                } else {
+                    System.out.println(Message.TACHE_AJOUT_DEADLINE_ECHEC);
+                }
+                break;
+            }
+
             case "rename": {
                 // TACHE RENAME <num> <nom>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
@@ -193,14 +223,6 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            /*case "save": {
-                // FILE SAVE
-                for(Tache tache : data.getListeTache()) {
-                    tache.ecritureFichier("test.org", true);
-                }
-                System.out.println(Message.FICHIER_SAVE_SUCCES);
-                break;
-            }*/
             case "list": {
                 // FILE LIST
                 if(verifBadLectureFichier(data)){
@@ -254,7 +276,7 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            case "tache" : {
+            case "task" : {
                 // LIST TACHE
                 if(verifBadLectureFichier(data)){
                     return;
