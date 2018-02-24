@@ -75,8 +75,56 @@ public class Commande {
                 break;
             }*/
 
+            case "prop": {}
+            case "property": {
+                // TASK PROPERTY ADD ...
+                if (verifBadNbArgument(3, args)){
+                    return;
+                }
+                switch (args[2].toLowerCase()){
+                    case "add": {
+                        // TASK PROPERTY ADD <num> <name prop> <val prop>
+                        if (verifBadNbArgument(6, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if(data.getListeTache().get(numTache).ajoutProperty(args[4], args[5], false)){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_AJOUT_PROPRIETE_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_AJOUT_PROPRIETE_ECHEC);
+                        }
+                        break;
+                    }
+                    case "delete": {
+                        // TASK PROPERTY ADD <num> <name prop>
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if(data.getListeTache().get(numTache).supprimerProperty(args[4],  false)){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_DELETE_PROPRIETE_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_DELETE_PROPRIETE_ECHEC);
+                        }
+                        break;
+                    }
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
+            }
+
             case "tag": {
-                // TASK TAG ADD ...
+                // TASK TAG ...
                 if (verifBadNbArgument(3, args)){
                     return;
                 }

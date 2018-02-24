@@ -16,6 +16,8 @@ public enum Message {
     TACHE_AJOUT_CLOSED_SUCCES("SUCCES : Closed ajoutée/modifiée."),
     TACHE_AJOUT_SCHEDULED_SUCCES("SUCCES : Scheduled ajoutée/modifiée."),
     TACHE_AJOUT_TAG_SUCCES("SUCCES : Tag ajouté."),
+    TACHE_AJOUT_PROPRIETE_SUCCES("SUCCES : Property ajoutée."),
+    TACHE_DELETE_PROPRIETE_SUCCES("SUCCES : Property supprimée."),
     TACHE_DELETE_TAG_SUCCES("SUCCES : Tag supprimé."),
     TACHE_DELETE_SUCCES("SUCCES : Tâche supprimée."),
     TACHE_DELETE_DEADLINE_SUCCES("SUCCES : Deadline supprimée."),
@@ -28,6 +30,8 @@ public enum Message {
     TACHE_RENAME_SUCESS("SUCCES : La tâche a bien été renommée."),
     TACHE_REMOVE_DEPENDANCE_SUCCES("SUCCES : La dépendance a bien été supprimée."),
     TACHE_LEVEL_SUCCES("SUCCES : Le niveau de la tâche a bien été changé."),
+    TACHE_AJOUT_PROPRIETE_ECHEC("ECHEC : La property ne doit pas contenir : ID et DEPENDENCE."),
+    TACHE_DELETE_PROPRIETE_ECHEC("ECHEC : La property ne doit pas contenir : ID et DEPENDENCE."),
     TACHE_LEVEL_DEP_ECHEC("ECHEC : Une dépendance empêche le changement de niveau."),
     TACHE_LEVEL_NEGATIF_ECHEC("ECHEC : Le niveau de la tâche doit être supérieur ou égal à 1."),
     TACHE_INVALIDE_ECHEC("ECHEC : Numéro de tâche invalide."),
@@ -45,7 +49,7 @@ public enum Message {
             "TACHE CLOCK USE <Numéro de la tâche> -> Lance ou stop le minuteur de la tâche."*/),
 
     FICHIER_SAVE_SUCCES("SUCCES : Fichier enregistré."),
-    FICHIER_CREATION("SUCCES : Le fichier n'existe pas mais il a bien été crée."),
+    FICHIER_CREATION("SUCCES : Le fichier n'existe pas mais il a bien été créé."),
     FICHIER_LOAD("SUCCES : Chargement du fichier réussi."),
     FICHIER_LISTE("Liste des fichiers disponibles :"),
     FICHIER_LISTE_VIDE("Auncun fichier trouvé.")

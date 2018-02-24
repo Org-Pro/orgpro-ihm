@@ -351,4 +351,105 @@ public class CommandeTest {
         assertEquals("test", data.getListeTache().get(1).getTags().get(0));
         assertEquals(1, data.getListeTache().get(1).getTags().size());
     }
+
+    @Test
+    public void testTaskTag() throws Exception {
+        Main.main(new String[]{"task", "tag"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "tag", "zfzfzf"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTaskProperty() throws Exception {
+        Main.main(new String[]{"task", "property"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "zfzfzf"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTaskPropertyAdd() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "0"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "aze", "clef", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "-1", "clef", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "1", "clef", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_PROPRIETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        assertEquals("je suis une valeur", data.getListeTache().get(1).getProperties().get("clef"));
+
+        Main.main(new String[]{"task", "property", "add", "1", "iD", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_PROPRIETE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "1", "DePendence", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_PROPRIETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTaskPropertyDelete() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete", "0"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete", "aze", "clef"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete", "-1", "clef",});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "add", "1", "clef", "je suis une valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete", "1", "clef", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_PROPRIETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        assertEquals(null, data.getListeTache().get(1).getProperties().get("clef"));
+
+        Main.main(new String[]{"task", "property", "delete", "1", "iD", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_PROPRIETE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "property", "delete", "1", "DePendence", "je suis une valeur"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_PROPRIETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
 }
