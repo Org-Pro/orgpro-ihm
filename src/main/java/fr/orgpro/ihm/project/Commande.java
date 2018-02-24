@@ -105,6 +105,66 @@ public class Commande {
                 break;
             }
 
+            case "closed":{}
+            case "cl": {
+                // TACHE closed <num> <date ou 0>
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+
+                if(args[3].trim().equals("0")){
+                    // TODO
+                    //data.getListeTache().get(numTache)
+
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_DELETE_CLOSED_SUCCES);
+                    return;
+                }
+
+                String date = args[3].replace("/", "-");
+                if (data.getListeTache().get(numTache).ajoutClosed(date)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_AJOUT_CLOSED_SUCCES);
+                } else {
+                    System.out.println(Message.TACHE_AJOUT_CLOSED_ECHEC);
+                }
+                break;
+            }
+
+            case "scheduled":{}
+            case "sd": {
+                // TACHE scheduled <num> <date ou 0>
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+
+                if(args[3].trim().equals("0")){
+                    // TODO
+                    //data.getListeTache().get(numTache)
+
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_DELETE_SCHEDULED_SUCCES);
+                    return;
+                }
+
+                String date = args[3].replace("/", "-");
+                if (data.getListeTache().get(numTache).ajoutScheduled(date)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_AJOUT_SCHEDULED_SUCCES);
+                } else {
+                    System.out.println(Message.TACHE_AJOUT_SCHEDULED_ECHEC);
+                }
+                break;
+            }
+
             case "rename": {
                 // TACHE RENAME <num> <nom>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {

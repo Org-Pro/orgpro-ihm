@@ -218,4 +218,72 @@ public class CommandeTest {
         // TODO
         // assertEquals(data.getListeTache().get(0).getDeadline().toString(), null);
     }
+
+    @Test
+    public void testTaskClosed() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cl", "1"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cl", "42", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cl", "0", "2018/02/42"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_CLOSED_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cl", "0", "2018/02-02"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_CLOSED_SUCCES.toString().trim());
+        outContent.reset();
+
+        Date date = new Date("2018/02/02");
+        assertEquals(data.getListeTache().get(0).getClosed(), date);
+
+        Main.main(new String[]{"task", "cl", "0", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_CLOSED_SUCCES.toString().trim());
+        outContent.reset();
+
+        // TODO
+        // assertEquals(data.getListeTache().get(0).getDeadline().toString(), null);
+    }
+
+    @Test
+    public void testTaskScheduled() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "sd", "1"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "sd", "42", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "sd", "0", "2018/02/42"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_SCHEDULED_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "sd", "0", "2018/02-02"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_SCHEDULED_SUCCES.toString().trim());
+        outContent.reset();
+
+        Date date = new Date("2018/02/02");
+        assertEquals(data.getListeTache().get(0).getScheduled(), date);
+
+        Main.main(new String[]{"task", "sd", "0", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_SCHEDULED_SUCCES.toString().trim());
+        outContent.reset();
+
+        // TODO
+        // assertEquals(data.getListeTache().get(0).getDeadline().toString(), null);
+    }
 }

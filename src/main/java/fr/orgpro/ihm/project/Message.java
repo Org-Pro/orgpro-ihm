@@ -13,8 +13,12 @@ public enum Message {
 
     TACHE_AJOUT_SUCCES("SUCCES : Tâche créée."),
     TACHE_AJOUT_DEADLINE_SUCCES("SUCCES : Deadline ajoutée/modifiée."),
+    TACHE_AJOUT_CLOSED_SUCCES("SUCCES : Closed ajoutée/modifiée."),
+    TACHE_AJOUT_SCHEDULED_SUCCES("SUCCES : Scheduled ajoutée/modifiée."),
     TACHE_DELETE_SUCCES("SUCCES : Tâche supprimée."),
     TACHE_DELETE_DEADLINE_SUCCES("SUCCES : Deadline supprimée."),
+    TACHE_DELETE_CLOSED_SUCCES("SUCCES : Closed supprimée."),
+    TACHE_DELETE_SCHEDULED_SUCCES("SUCCES : Scheduled supprimée."),
     TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
     TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Minuteur lancé."),
     TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Minuteur stoppé."),
@@ -27,6 +31,8 @@ public enum Message {
     TACHE_INVALIDE_ECHEC("ECHEC : Numéro de tâche invalide."),
     TACHES_NON_IDENTIQUES_ECHEC("ECHEC : Les tâches indiquées ne doivent pas être identiques."),
     TACHE_AJOUT_DEADLINE_ECHEC("ECHEC : Le format de la date est incorrect. (AAAA/MM/JJ)"),
+    TACHE_AJOUT_CLOSED_ECHEC("ECHEC : Le format de la date est incorrect. (AAAA/MM/JJ)"),
+    TACHE_AJOUT_SCHEDULED_ECHEC("ECHEC : Le format de la date est incorrect. (AAAA/MM/JJ)"),
     TACHE_HELP("TACHE ADD <Nom de la tâche> -> Ajoute une tâche\n" /*+
             "TACHE LIST -> Affiche les tâches\n" +
             "TACHE DEP SET <Numéro de la tâche qui reçoit> <Numéro de la tâche qui donne> -> Ajoute une dépendance à la tâche\n" +
