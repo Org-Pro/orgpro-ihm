@@ -15,6 +15,8 @@ public enum Message {
     TACHE_AJOUT_DEADLINE_SUCCES("SUCCES : Deadline ajoutée/modifiée."),
     TACHE_AJOUT_CLOSED_SUCCES("SUCCES : Closed ajoutée/modifiée."),
     TACHE_AJOUT_SCHEDULED_SUCCES("SUCCES : Scheduled ajoutée/modifiée."),
+    TACHE_AJOUT_TAG_SUCCES("SUCCES : Tag ajouté."),
+    TACHE_DELETE_TAG_SUCCES("SUCCES : Tag supprimé."),
     TACHE_DELETE_SUCCES("SUCCES : Tâche supprimée."),
     TACHE_DELETE_DEADLINE_SUCCES("SUCCES : Deadline supprimée."),
     TACHE_DELETE_CLOSED_SUCCES("SUCCES : Closed supprimée."),

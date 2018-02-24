@@ -75,6 +75,48 @@ public class Commande {
                 break;
             }*/
 
+            case "tag": {
+                // TASK TAG ADD ...
+                if (verifBadNbArgument(3, args)){
+                    return;
+                }
+                switch (args[2].toLowerCase()){
+                    case "add": {
+                        // TASK TAG ADD <num> <tag>
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        data.getListeTache().get(numTache).ajoutTag(args[4]);
+                        data.ecritureListeTaches();
+                        System.out.println(Message.TACHE_AJOUT_TAG_SUCCES);
+                        break;
+                    }
+                    case "delete": {
+                        // TASK TAG DELETE <num> <tag>
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        data.getListeTache().get(numTache).supprimerTag(args[4]);
+                        data.ecritureListeTaches();
+                        System.out.println(Message.TACHE_DELETE_TAG_SUCCES);
+                        break;
+                    }
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+
+                break;
+            }
+
             case "deadline":{}
             case "dl": {
                 // TACHE DL <num> <date ou 0>
