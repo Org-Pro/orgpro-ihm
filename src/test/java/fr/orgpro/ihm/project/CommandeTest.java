@@ -61,26 +61,31 @@ public class CommandeTest {
         outContent.reset();
     }
 
-    /*@Test
-    public void testTacheRename() throws Exception {
-        Main.main(new String[]{"tache", "rename", "4", "nouveau titre"});
-        assertEquals(Message.TACHE_INVALIDE_ECHEC.toString().trim(), outContent.toString().trim());
+    @Test
+    public void testTaskRename() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
         outContent.reset();
 
-        data.getListeTache().add(new Tache("tache"));
-        Main.main(new String[]{"tache", "rename", "4", "nouveau titre"});
-        assertEquals(Message.TACHE_RENAME_SUCESS.toString().trim(), outContent.toString().trim());
-        assertEquals(data.getListeTache().get(4).getTitle(), "nouveau titre");
+        Main.main(new String[]{"task", "rename", "1"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"tache", "rename", "4"});
-        assertEquals(Message.ARGUMENT_MANQUANT.toString().trim(), outContent.toString().trim());
+        Main.main(new String[]{"task", "rename", "42", "test"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"tache", "rename", "azeaze", "nouveau titre"});
-        assertEquals(Message.ARGUMENT_INVALIDE.toString().trim(), outContent.toString().trim());
+        Main.main(new String[]{"task", "rename", "aze", "test"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
         outContent.reset();
-    }*/
+
+        Main.main(new String[]{"task", "rename", "1", "test"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_RENAME_SUCESS.toString().trim());
+        outContent.reset();
+
+        assertEquals(data.getListeTache().get(1).getTitle(), "test");
+    }
 
     @Test
     public void testTacheHelp() throws Exception {
@@ -154,7 +159,7 @@ public class CommandeTest {
     }
 
     @Test
-    public void testDeleteTask() throws Exception {
+    public void testTaskDelete() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
         Main.main(new String[]{"task", "add", "tache 2"});
         Main.main(new String[]{"task", "add", "tache 32"});
@@ -177,6 +182,5 @@ public class CommandeTest {
         outContent.reset();
 
         assertEquals(data.getListeTache().size(), 2);
-
     }
 }

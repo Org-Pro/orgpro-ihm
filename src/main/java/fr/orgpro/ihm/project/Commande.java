@@ -75,19 +75,20 @@ public class Commande {
                 break;
             }*/
 
-            /*case "rename": {
+            case "rename": {
                 // TACHE RENAME <num> <nom>
-                if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[2])) {
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
                 int numTache = Integer.parseInt(args[2]);
-                if(verifTacheExiste(numTache, data)){
+                if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
                 data.getListeTache().get(numTache).changeTitle(args[3]);
+                data.ecritureListeTaches();
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
-            }*/
+            }
 
             case "add": {
                 // TACHE ADD <nom>
