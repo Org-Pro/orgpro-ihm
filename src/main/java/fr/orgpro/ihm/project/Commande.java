@@ -290,7 +290,7 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
-                data.getListeTache().remove(numTache);
+                Tache.supprimerTache(data.getListeTache(), numTache);
                 data.ecritureListeTaches();
                 System.out.println(Message.TACHE_DELETE_SUCCES);
                 break;
