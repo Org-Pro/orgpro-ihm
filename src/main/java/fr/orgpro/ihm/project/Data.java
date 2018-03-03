@@ -3,6 +3,8 @@ package fr.orgpro.ihm.project;
 import fr.orgpro.api.project.Tache;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -54,8 +56,19 @@ public class Data {
         }
     }
 
-    public void ecritureListeTaches(){
+    public void ecritureListeTaches() {
         boolean premier = true;
+        if (listeTache.isEmpty()){
+            FileWriter fw = null;
+            try {
+                fw = new FileWriter(path, false);
+                fw.write("");
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         for (Tache t : listeTache){
             if (premier){
                 t.ecritureFichier(path, false);
