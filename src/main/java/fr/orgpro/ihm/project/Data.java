@@ -48,6 +48,11 @@ public class Data {
     }
 
     public boolean loadFichier(){
+        File file = new File(path);
+        if(file.length() == 0){
+            listeTache = new ArrayList<Tache>();
+            return true;
+        }
         listeTache = Tache.lectureFichier(path);
         if(listeTache == null){
             return false;
