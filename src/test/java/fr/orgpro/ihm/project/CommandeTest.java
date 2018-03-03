@@ -601,6 +601,35 @@ public class CommandeTest {
         outContent.reset();
     }
 
+    @Test
+    public void testTaskAdd() throws Exception {
+        Main.main(new String[]{"task", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "add", "aze", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "add", "test", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "add", "test"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_SUCCES.toString().trim());
+        outContent.reset();
+
+        data.loadFichier();
+        assertEquals(data.getListeTache().size(), 1);
+
+        Main.main(new String[]{"task", "add", "tache avec dep", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_AVEC_DEP_SUCCES.toString().trim());
+        outContent.reset();
+
+        data.loadFichier();
+        assertEquals(data.getListeTache().size(), 2);
+    }
+
 
 
 }

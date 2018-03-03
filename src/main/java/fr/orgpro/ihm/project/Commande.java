@@ -275,13 +275,27 @@ public class Commande {
             }
 
             case "add": {
-                // TACHE ADD <nom>
-                if (verifBadNbArgument(3, args)) {
-                    return;
+                // TACHE ADD <nom> (dep)
+                if(args.length == 4){
+                    if (verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                        return;
+                    }
+                    int numTache = Integer.parseInt(args[3]);
+                    if (verifTacheNotExiste(numTache, data)){
+                        return;
+                    }
+                    data.getListeTache().add(new Tache(args[2]));
+                    Tache.setDependanceListe(data.getListeTache(), data.getListeTache().size() - 1, numTache);
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
+                }else{
+                    if (verifBadNbArgument(3, args)) {
+                        return;
+                    }
+                    Tache tache = new Tache(args[2]);
+                    tache.ecritureFichier(data.getPath(), true);
+                    System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
-                Tache tache = new Tache(args[2]);
-                tache.ecritureFichier(data.getPath(), true);
-                System.out.println(Message.TACHE_AJOUT_SUCCES);
                 break;
             }
 
