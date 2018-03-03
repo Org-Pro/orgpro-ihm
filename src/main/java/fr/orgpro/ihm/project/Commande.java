@@ -53,27 +53,6 @@ public class Commande {
                 break;
             }*/
 
-            /*case "level": {
-                // TACHE LEVEL <num> <level>
-                if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[2]) || verifArgEstUnNombre(args[3])) {
-                    return;
-                }
-                int numTache = Integer.parseInt(args[2]);
-                int level = Integer.parseInt(args[3]);
-                if(level < 1){
-                    System.out.println(Message.TACHE_LEVEL_NEGATIF_ECHEC);
-                    return;
-                }
-                if(verifTacheExiste(numTache, data)){
-                    return;
-                }
-                if (data.getListeTache().get(numTache).changeLevel(Integer.parseInt(args[3]))) {
-                    System.out.println(Message.TACHE_LEVEL_SUCCES);
-                } else {
-                    System.out.println(Message.TACHE_LEVEL_DEP_ECHEC);
-                }
-                break;
-            }*/
 
             case "prop": {}
             case "property": {
@@ -315,40 +294,48 @@ public class Commande {
                 break;
             }
 
-            /*case "dep": {
+            case "dep": {
                 if (verifBadNbArgument(3, args)) {
                     return;
                 }
                 switch (args[2].toLowerCase()) {
                     case "set": {
                         // TACHE DEP SET <num> <num>
-                        if (verifBadNbArgument(5, args) || verifArgEstUnNombre(args[3]) || verifArgEstUnNombre(args[4])) {
-                            return;
-                        }
-                        int numTacheRecoit = Integer.parseInt(args[3]);
-                        int numTacheDonne = Integer.parseInt(args[4]);
-                        if(verifTacheExiste(numTacheRecoit, data) || verifTacheExiste(numTacheDonne, data)){
-                            return;
-                        }
-                        if (numTacheDonne == numTacheRecoit) {
-                            System.out.println(Message.TACHES_NON_IDENTIQUES_ECHEC);
-                            return;
-                        }
-                        data.getListeTache().get(numTacheRecoit).setDependance(data.getListeTache().get(numTacheDonne));
-                        System.out.println(Message.TACHE_SET_DEPENDANCE_SUCCES);
-                        break;
-                    }
-                    case "remove": {
-                        // TACHE DEP REMOVE <num>
-                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifArgNotNombre(args[4]) || verifBadLectureFichier(data)) {
                             return;
                         }
                         int numTache = Integer.parseInt(args[3]);
-                        if(verifTacheExiste(numTache, data)){
+                        int numTacheDep = Integer.parseInt(args[4]);
+                        if(verifTacheNotExiste(numTache, data) || verifTacheNotExiste(numTacheDep, data)){
                             return;
                         }
-                        data.getListeTache().get(numTache).removeDependance();
-                        System.out.println(Message.TACHE_REMOVE_DEPENDANCE_SUCCES);
+                        if (numTacheDep == numTache) {
+                            System.out.println(Message.TACHES_NON_IDENTIQUES_ECHEC);
+                            return;
+                        }
+                        if (Tache.setDependanceListe(data.getListeTache(), numTache, numTacheDep)){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_SET_DEPENDANCE_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_SET_DEPENDANCE_ECHEC);
+                        }
+                        break;
+                    }
+                    case "delete": {
+                        // TACHE DEP DELETE <num>
+                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if(verifTacheNotExiste(numTache, data)){
+                            return;
+                        }
+                        if(Tache.deleteDependanceListe(data.getListeTache(), numTache)){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_DELETE_DEPENDANCE_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_DELETE_DEPENDANCE_ECHEC);
+                        }
                         break;
                     }
                     default:
@@ -356,7 +343,7 @@ public class Commande {
                         break;
                 }
                 break;
-            }*/
+            }
 
             case "help":
                 System.out.println(Message.TACHE_HELP);

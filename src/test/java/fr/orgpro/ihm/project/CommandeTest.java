@@ -452,4 +452,78 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_PROPRIETE_ECHEC.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testTaskDep() throws Exception {
+        Main.main(new String[]{"task", "dep"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "zfzfzf"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTaskDepSet() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "aze", "clef"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "-1", "2",});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "1", "1",});
+        assertEquals(outContent.toString().trim(), Message.TACHES_NON_IDENTIQUES_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "0", "1",});
+        assertEquals(outContent.toString().trim(), Message.TACHE_SET_DEPENDANCE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "0", "1",});
+        assertEquals(outContent.toString().trim(), Message.TACHE_SET_DEPENDANCE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTaskDepDelete() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "delete", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "delete", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "set", "0", "1"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "delete", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEPENDANCE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "dep", "delete", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEPENDANCE_SUCCES.toString().trim());
+        outContent.reset();
+    }
 }
