@@ -562,13 +562,18 @@ public class CommandeTest {
     }
 
     @Test
-    public void testListTS() throws Exception {
+    public void testListTSIF() throws Exception {
         Main.main(new String[]{"list","ts"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
+    }
+
+    @Test
+    public void testListTS() throws Exception {
         Main.main(new String[]{"list","ts","TODO"});
         assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
         outContent.reset();
+
         String title = "tache 1";
         Main.main(new String[]{"task", "add", title});
         outContent.reset();
@@ -596,4 +601,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), msg.toString());
         outContent.reset();
     }
+
+
+
 }

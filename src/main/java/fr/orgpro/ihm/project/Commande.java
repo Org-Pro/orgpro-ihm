@@ -451,7 +451,7 @@ public class Commande {
 
             case "ts" : {
                 // LIST TS <State>
-                if(verifBadLectureFichier(data) || (verifBadNbArgument(3, args))){
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
                 }
                 List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(args[2]));
