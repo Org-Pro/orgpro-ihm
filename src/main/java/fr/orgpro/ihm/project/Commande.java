@@ -451,11 +451,16 @@ public class Commande {
 
             case "ts" : {
                 // LIST TS <State>
-                if(verifBadLectureFichier(data) && (verifBadNbArgument(3, args))){
+                if(verifBadLectureFichier(data) || (verifBadNbArgument(3, args))){
                     return;
                 }
                 List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(args[2]));
+                if(taches.isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
                 int i = 0;
+                int j = 0;
                 String msg;
                 for (Tache tache : data.getListeTache()) {
                     if(taches.contains(tache)) {
@@ -464,9 +469,17 @@ public class Commande {
                             msg += " " + tache.getClock();
                         }
                         System.out.print(msg + "\n");
-                        i++;
+                        j++;
                     }
+                    i++;
                 }
+                if(j == 0){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                }
+                else{
+                    System.out.print(j + " résultat(s).\n");
+                }
+                break;
             }
 
             case "help" :

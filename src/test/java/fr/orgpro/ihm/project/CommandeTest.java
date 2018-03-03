@@ -7,7 +7,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import static org.junit.Assert.assertEquals;
@@ -556,6 +558,42 @@ public class CommandeTest {
 
         Main.main(new String[]{"task", "state", "0", "ongoing"});
         assertEquals(outContent.toString().trim(), Message.STATE_UPDATE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListTS() throws Exception {
+        Main.main(new String[]{"list","ts"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"list","ts","TODO"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+        String title = "tache 1";
+        Main.main(new String[]{"task", "add", title});
+        outContent.reset();
+        Main.main(new String[]{"list","ts","DONE"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"list", "ts", "TODO"});
+        List<Tache> taches = new ArrayList<Tache>();
+        Tache t = data.getListeTache().get(0);
+        taches.add(t);
+        StringBuilder msg = new StringBuilder();
+        int i = 0;
+        for (Tache tache : data.getListeTache()) {
+            if(taches.contains(tache)) {
+                msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
+                if (tache.getClock() != null) {
+                    msg.append(" ").append(tache.getClock());
+                }
+                msg.append("\n");
+            }
+            i++;
+        }
+        msg.append(data.getListeTache().size() + " résultat(s).\n");
+        msg = new StringBuilder(msg.toString().trim());
+        assertEquals(outContent.toString().trim(), msg.toString());
         outContent.reset();
     }
 }

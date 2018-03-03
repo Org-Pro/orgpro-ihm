@@ -56,7 +56,7 @@ public enum Message {
     FICHIER_LISTE("Liste des fichiers disponibles :"),
     FICHIER_LISTE_VIDE("Auncun fichier trouvé."),
 
-
+    LIST_AUCUN_RESULTAT("Aucun résultat(s)."),
     LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
     "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state"),
 
