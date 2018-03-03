@@ -54,7 +54,10 @@ public enum Message {
     FICHIER_CREATION("SUCCES : Le fichier n'existe pas mais il a bien été créé."),
     FICHIER_LOAD("SUCCES : Chargement du fichier réussi."),
     FICHIER_LISTE("Liste des fichiers disponibles :"),
-    FICHIER_LISTE_VIDE("Auncun fichier trouvé.")
+    FICHIER_LISTE_VIDE("Auncun fichier trouvé."),
+
+    LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
+    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state"),
     ;
 
     private String message;

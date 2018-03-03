@@ -1,9 +1,12 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
+import fr.orgpro.api.scrum.Scrum;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Commande {
     public static void commandeTache(String[] args, Data data){
@@ -424,7 +427,28 @@ public class Commande {
                 break;
             }
 
+            case "ts" : {
+                // LIST TS <State>
+                if(verifBadLectureFichier(data) && (verifBadNbArgument(3, args))){
+                    return;
+                }
+                List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(args[2]));
+                int i = 0;
+                String msg;
+                for (Tache tache : data.getListeTache()) {
+                    if(taches.contains(tache)) {
+                        msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
+                        if (tache.getClock() != null) {
+                            msg += " " + tache.getClock();
+                        }
+                        System.out.print(msg + "\n");
+                        i++;
+                    }
+                }
+            }
+
             case "help" :
+                System.out.println(Message.LIST_HELP);
                 break;
 
             default:
