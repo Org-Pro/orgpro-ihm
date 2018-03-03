@@ -526,4 +526,36 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEPENDANCE_SUCCES.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testTaskState() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"task", "add", "tache 2"});
+        Main.main(new String[]{"task", "add", "tache 32"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "aze", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "-1", "todo"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "azeaez"});
+        assertEquals(outContent.toString().trim(), Message.STATE_INTROUVABLE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "ongoing"});
+        assertEquals(outContent.toString().trim(), Message.STATE_UPDATE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "ongoing"});
+        assertEquals(outContent.toString().trim(), Message.STATE_UPDATE_ECHEC.toString().trim());
+        outContent.reset();
+    }
 }
