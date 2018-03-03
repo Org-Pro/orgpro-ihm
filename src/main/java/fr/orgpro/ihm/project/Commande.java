@@ -455,10 +455,10 @@ public class Commande {
                     return;
                 }
                 List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(args[2]));
-                if(taches.isEmpty()){
+                /*if(taches.isEmpty()){
                     System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
                     break;
-                }
+                }*/
                 int i = 0;
                 int j = 0;
                 String msg;
