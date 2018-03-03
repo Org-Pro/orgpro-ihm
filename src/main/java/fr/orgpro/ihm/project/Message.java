@@ -54,7 +54,11 @@ public enum Message {
     FICHIER_CREATION("SUCCES : Le fichier n'existe pas mais il a bien été créé."),
     FICHIER_LOAD("SUCCES : Chargement du fichier réussi."),
     FICHIER_LISTE("Liste des fichiers disponibles :"),
-    FICHIER_LISTE_VIDE("Auncun fichier trouvé.")
+    FICHIER_LISTE_VIDE("Auncun fichier trouvé."),
+
+    STATE_UPDATE_SUCCES("SUCCES : State modifiée."),
+    STATE_UPDATE_ECHEC("ECHEC : State non modifiée."),
+    STATE_INTROUVABLE("ECHEC : La State n'existe pas.")
     ;
 
     private String message;

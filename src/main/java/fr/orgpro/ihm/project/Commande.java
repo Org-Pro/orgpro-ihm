@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 
 import java.io.File;
@@ -53,10 +54,32 @@ public class Commande {
                 break;
             }*/
 
+            case "state": {
+                // TASK STATE <num> <state ou next>
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+                State state = State.stringIsState(args[3]);
+                if(state == null){
+                    System.out.println(Message.STATE_INTROUVABLE);
+                    return;
+                }
+                if(data.getListeTache().get(numTache).changeState(state)){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.STATE_UPDATE_SUCCES);
+                }else{
+                    System.out.println(Message.STATE_UPDATE_ECHEC);
+                }
+                break;
+            }
 
             case "prop": {}
             case "property": {
-                // TASK PROPERTY ADD ...
+                // TASK PROPERTY ...
                 if (verifBadNbArgument(3, args)){
                     return;
                 }
