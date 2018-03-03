@@ -478,12 +478,7 @@ public class Commande {
                     }
                     i++;
                 }
-                if(j == 0){
-                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
-                }
-                else{
-                    System.out.print(j + " résultat(s).\n");
-                }
+                System.out.print(j + " résultat(s).\n");
                 break;
             }
 
