@@ -12,7 +12,7 @@ public enum Message {
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
 
     TACHE_AJOUT_SUCCES("SUCCESS : Task created."),
-    TACHE_AJOUT_AVEC_DEP_SUCCES("SUCCESS : Task created with the dependence."),
+    TACHE_AJOUT_AVEC_DEP_SUCCES("SUCCESS : Task created with dependency."),
     TACHE_AJOUT_DEADLINE_SUCCES("SUCCESS : Deadline add/modified."),
     TACHE_AJOUT_CLOSED_SUCCES("SUCCESS : Closed add/modified."),
     TACHE_AJOUT_SCHEDULED_SUCCES("SUCCESS : Scheduled add/modified."),
