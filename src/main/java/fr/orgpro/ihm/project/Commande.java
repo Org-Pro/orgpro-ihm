@@ -14,38 +14,27 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
-            /*case "clock" : {
+            case "clock" : {
                 if (verifBadNbArgument(3, args)) {
                     return;
                 }
                 switch (args[2].toLowerCase()){
                     case "use" : {
                         // TACHE CLOCK USE <num>
-                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
+                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                             return;
                         }
                         int numTache = Integer.parseInt(args[3]);
-                        if (verifTacheExiste(numTache, data)) {
+                        if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if(data.getListeTache().get(numTache).minuteur()){
+                        if (data.getListeTache().get(numTache).minuteurParPropriete()) {
+                            data.ecritureListeTaches();
                             System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
-                        }else{
+                        } else {
+                            data.ecritureListeTaches();
                             System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
                         }
-                        break;
-                    }
-                    case "reset": {
-                        // TACHE CLOCK RESET <num>
-                        if (verifBadNbArgument(4, args) || verifArgEstUnNombre(args[3])) {
-                            return;
-                        }
-                        int numTache = Integer.parseInt(args[3]);
-                        if (verifTacheExiste(numTache, data)) {
-                            return;
-                        }
-                        data.getListeTache().get(numTache).resetMinuteur();
-                        System.out.println(Message.TACHE_MINUTEUR_RESET_SUCCES);
                         break;
                     }
 
@@ -54,7 +43,7 @@ public class Commande {
                         break;
                 }
                 break;
-            }*/
+            }
 
             case "state": {
                 // TASK STATE <num> <state ou next>
@@ -67,14 +56,14 @@ public class Commande {
                 }
                 State state = State.stringIsState(args[3]);
                 if(state == null){
-                    System.out.println(Message.STATE_INTROUVABLE);
+                    System.out.println(Message.TACHE_STATE_INTROUVABLE_ECHEC);
                     return;
                 }
                 if(data.getListeTache().get(numTache).changeState(state)){
                     data.ecritureListeTaches();
-                    System.out.println(Message.STATE_UPDATE_SUCCES);
+                    System.out.println(Message.TACHE_STATE_UPDATE_SUCCES);
                 }else{
-                    System.out.println(Message.STATE_UPDATE_ECHEC);
+                    System.out.println(Message.TACHE_STATE_UPDATE_ECHEC);
                 }
                 break;
             }

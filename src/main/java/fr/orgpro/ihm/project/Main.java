@@ -10,6 +10,9 @@ public class Main {
         //args = new String[]{"file", "select", "test"};
         //args = new String[]{"task", "add", "test2"};
         //args = new String[]{"task", "list"};
+        //args = new String[]{"task", "clock", "use", "0"};
+        //args = new String[]{"task", "dep", "set", "0", "2"};
+        //args = new String[]{"list", "task"};
 
         data = Data.getInstance();
 

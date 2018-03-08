@@ -549,15 +549,15 @@ public class CommandeTest {
         outContent.reset();
 
         Main.main(new String[]{"task", "state", "0", "azeaez"});
-        assertEquals(outContent.toString().trim(), Message.STATE_INTROUVABLE.toString().trim());
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_INTROUVABLE_ECHEC.toString().trim());
         outContent.reset();
 
         Main.main(new String[]{"task", "state", "0", "ongoing"});
-        assertEquals(outContent.toString().trim(), Message.STATE_UPDATE_SUCCES.toString().trim());
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_UPDATE_SUCCES.toString().trim());
         outContent.reset();
 
         Main.main(new String[]{"task", "state", "0", "ongoing"});
-        assertEquals(outContent.toString().trim(), Message.STATE_UPDATE_ECHEC.toString().trim());
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_UPDATE_ECHEC.toString().trim());
         outContent.reset();
     }
 
@@ -630,6 +630,36 @@ public class CommandeTest {
         assertEquals(data.getListeTache().size(), 2);
     }
 
+    @Test
+    public void testClock() throws Exception {
+        Main.main(new String[]{"task","clock"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
 
+    @Test
+    public void testClockUse() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
 
+        Main.main(new String[]{"task", "clock", "use"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "clock", "use", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "clock", "use", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "clock", "use", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_LANCER_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "clock", "use", "0"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_STOPPER_SUCCES.toString().trim());
+        outContent.reset();
+    }
 }
