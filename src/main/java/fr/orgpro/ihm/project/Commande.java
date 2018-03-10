@@ -461,27 +461,22 @@ public class Commande {
                     System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
                     break;
                 }
-                List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(args[2]));
+                affichageState(data, args[2]);
+                break;
+            }
 
-                if(taches.isEmpty()){
+            case "ats" : {
+                // LIST ATS
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
                     System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
                     break;
                 }
-                int i = 0;
-                int j = 0;
-                String msg;
-                for (Tache tache : data.getListeTache()) {
-                    if(taches.contains(tache)) {
-                        msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
-                        if (tache.getClock() != null) {
-                            msg += " " + tache.getClock();
-                        }
-                        System.out.print(msg + "\n");
-                        j++;
-                    }
-                    i++;
-                }
-                System.out.print(j + " résultat(s).\n");
+                affichageState(data, "TODO");
+                affichageState(data, "ONGOING");
+                affichageState(data, "DONE");
+                affichageState(data, "CANCELLED");
+
                 break;
             }
 
@@ -535,6 +530,40 @@ public class Commande {
         }else{
             return false;
         }
+    }
+
+    private static void affichageState(Data data,String state){
+        List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(state));
+
+        if(taches.isEmpty()){
+            System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+            return;
+        }
+        if(State.TODO.toString().equals(state)){
+            System.out.print("\n" + Message.LIST_STATE_TODO + "\n");
+        }else if(State.ONGOING.toString().equals(state)){
+            System.out.print("\n" + Message.LIST_STATE_ONGOING + "\n");
+        }else if(State.DONE.toString().equals(state)){
+            System.out.print("\n" + Message.LIST_STATE_DONE + "\n");
+        }else if(State.CANCELLED.toString().equals(state)){
+            System.out.print("\n" + Message.LIST_STATE_CANCELLED + "\n");
+        }
+        int i = 0;
+        int j = 0;
+        String msg;
+        for (Tache tache : data.getListeTache()) {
+            if(taches.contains(tache)) {
+                msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
+                if (tache.getClock() != null) {
+                    msg += " " + tache.getClock();
+                }
+                System.out.print(msg + "\n");
+                j++;
+            }
+            i++;
+        }
+        System.out.print(j + " résultat(s).\n");
+        return;
     }
 
 

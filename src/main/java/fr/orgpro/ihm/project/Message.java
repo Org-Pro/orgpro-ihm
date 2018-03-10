@@ -2,7 +2,8 @@ package fr.orgpro.ihm.project;
 
 public enum Message {
     COMMANDE_INCONNUE("FAILURE : Unknown command."),
-    ARGUMENT_MANQUANT("FAILURE : Missing argument(s)."),
+    ARGUMENT_MANQUANT("FAILURE : Wrong argument(s)."),
+    //ARGUMENT_SUP("FAILURE : too much argument(s)."),
     ARGUMENT_INVALIDE("FAILURE : One of the argument is invalid."),
     PROBLEME_LECTURE("FAILURE : Trouble reading the file."),
 
@@ -57,8 +58,13 @@ public enum Message {
     FICHIER_LISTE_VIDE("No file found."),
 
     LIST_AUCUN_RESULTAT("No result."),
+    LIST_STATE_TODO("TODO list"),
+    LIST_STATE_ONGOING("ONGOING list"),
+    LIST_STATE_DONE("DONE list"),
+    LIST_STATE_CANCELLED("CANCELLED list"),
     LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
-    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state"),
+    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state" +
+    "LIST ATS -> displays all the task sort by state"),
 
 
 
