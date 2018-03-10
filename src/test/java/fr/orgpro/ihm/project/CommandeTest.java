@@ -739,4 +739,24 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_STOPPER_SUCCES.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testListDefault() throws Exception {
+        Main.main(new String[]{"list", "zzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"zzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.COMMANDE_INCONNUE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListHelp() throws Exception {
+        Main.main(new String[]{"list", "help"});
+        assertEquals(outContent.toString().trim(), Message.LIST_HELP.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"help"});
+        assertEquals(outContent.toString().trim(), Message.MAIN_HELP.toString().trim());
+        outContent.reset();
+    }
 }
