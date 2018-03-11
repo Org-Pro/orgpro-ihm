@@ -190,6 +190,17 @@ public class CommandeTest {
     }
 
     @Test
+    public void testTaskDeleteOneTask() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+        Main.main(new String[]{"task", "delete", "0"});
+        outContent.reset();
+        File fw = null;
+        fw = new File(data.getPath());
+        assertEquals(fw.length(),0);
+    }
+
+    @Test
     public void testTaskDeadline() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
         Main.main(new String[]{"task", "add", "tache 2"});
