@@ -14,6 +14,56 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
+
+            case "collaborator" : {}
+            case "col" : {
+                if (verifBadNbArgument(3, args)) {
+                    return;
+                }
+                switch (args[2].toLowerCase()) {
+                    // TASK COL ADD <num> <col>
+                    case "add": {
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if(data.getListeTache().get(numTache).ajoutCollaborateur(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_ECHEC);
+                        }
+                        break;
+                    }
+
+                    case "delete": {
+                        // TASK COL DELETE <num> <col>
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if(data.getListeTache().get(numTache).supprimerCollaborateur(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_DELETE_COLLABORATEUR_SUCCES);
+                        }else{
+                            System.out.println(Message.TACHE_DELETE_COLLABORATEUR_ECHEC);
+                        }
+                        break;
+                    }
+
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
+            }
+
             case "clock" : {
                 if (verifBadNbArgument(3, args)) {
                     return;

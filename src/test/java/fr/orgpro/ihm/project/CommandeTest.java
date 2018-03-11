@@ -635,6 +635,10 @@ public class CommandeTest {
         Main.main(new String[]{"task","clock"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
+
+        Main.main(new String[]{"task","clock", "aaezaeaea"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
     }
 
     @Test
@@ -660,6 +664,69 @@ public class CommandeTest {
 
         Main.main(new String[]{"task", "clock", "use", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_STOPPER_SUCCES.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaborator() throws Exception {
+        Main.main(new String[]{"task","col"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task","col", "aaezaeaea"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorAdd() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "add", "aze", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "add", "-1", "aze"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col","add", "0", "bob:"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_COLLABORATEUR_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "add", "0", "bob"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_COLLABORATEUR_SUCCES.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorDelete() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "delete", "aze", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "delete", "-1", "aze"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "delete", "0", "bob:"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_COLLABORATEUR_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "col", "delete", "0", "bob"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_COLLABORATEUR_SUCCES.toString().trim());
         outContent.reset();
     }
 }
