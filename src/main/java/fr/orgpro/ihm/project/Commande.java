@@ -480,6 +480,19 @@ public class Commande {
                 break;
             }
 
+            case "sd" : {
+                // LIST SD
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
+                List<Tache> taches = Scrum.listerTacheScheduled(data.getListeTache());
+                System.out.print(affichage(data, taches));
+
+                break;
+            }
+
             case "help" :
                 System.out.println(Message.LIST_HELP);
                 break;
@@ -548,24 +561,31 @@ public class Commande {
         }else if(State.CANCELLED.toString().equals(state)){
             System.out.print("\n" + Message.LIST_STATE_CANCELLED + "\n");
         }
+        System.out.print(affichage(data,taches));
+        return;
+    }
+
+    public static String affichage(Data data,List<Tache> taches){
         int i = 0;
         int j = 0;
-        String msg;
+        String msg = "";
         for (Tache tache : data.getListeTache()) {
             if(taches.contains(tache)) {
-                msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
+                msg += "n°" + i + " " + tache.getTitle() + " " + tache.getId();
                 if (tache.getClock() != null) {
                     msg += " " + tache.getClock();
                 }
-                System.out.print(msg + "\n");
+                //System.out.print(msg + "\n");
+                msg += "\n";
                 j++;
             }
             i++;
         }
-        System.out.print(j + " résultat(s).\n");
-        return;
-    }
+        //System.out.print(j + " résultat(s).\n");
+        msg += j + " résultat(s).\n";
 
+        return msg;
+    }
 
 
 }

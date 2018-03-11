@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -675,6 +677,47 @@ public class CommandeTest {
 
         msg = new StringBuilder(msg.toString().trim());
         assertEquals(outContent.toString().trim(), msg.toString());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListSd() throws  Exception {
+        String title1 = "tache 1";
+        String title2 = "tache 2";
+        String title3 = "tache 3";
+        String title4 = "tache 4";
+        Main.main(new String[]{"task", "add", title1});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title2});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title3});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title4});
+        outContent.reset();
+
+        Date date = new Date();
+        long time = 1000000;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Main.main(new String[]{"task", "sd", "0", df.format(new Date(date.getTime() - time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "1", df.format(new Date(date.getTime() + time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "2", df.format(new Date(date.getTime() + time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "3", df.format(new Date(date.getTime() - time))});
+        outContent.reset();
+        Main.main(new String[]{"list", "sd"});
+
+        List<Tache> taches = new ArrayList<Tache>();
+
+        taches.add(data.getListeTache().get(0));
+        taches.add(data.getListeTache().get(1));
+        taches.add(data.getListeTache().get(2));
+        taches.add(data.getListeTache().get(3));
+
+        String msg = Commande.affichage(data, taches);
+        assertEquals(outContent.toString().trim(), msg.trim());
         outContent.reset();
     }
 

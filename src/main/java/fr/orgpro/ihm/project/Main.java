@@ -15,7 +15,7 @@ public class Main {
         //args = new String[]{"list", "task"};
 
         data = Data.getInstance();
-        
+
         if (data.getFichierCourant().isEmpty()){
             System.out.println(Message.MAIN_AUNCUN_FICHIER);
             File[] files = new File(data.getDossierCourant()).listFiles();

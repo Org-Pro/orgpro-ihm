@@ -64,7 +64,8 @@ public enum Message {
     LIST_STATE_CANCELLED("CANCELLED list"),
     LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
     "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state" +
-    "LIST ATS -> displays all the task sort by state"),
+    "LIST ATS -> displays all the task sort by state" +
+    "LIST SD -> shows tasks that have been scheduled but are still in the todo list"),
 
 
 
