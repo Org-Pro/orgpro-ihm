@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -185,6 +187,17 @@ public class CommandeTest {
         outContent.reset();
 
         assertEquals(data.getListeTache().size(), 2);
+    }
+
+    @Test
+    public void testTaskDeleteOneTask() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+        Main.main(new String[]{"task", "delete", "0"});
+        outContent.reset();
+        File fw = null;
+        fw = new File(data.getPath());
+        assertEquals(fw.length(),0);
     }
 
     @Test
@@ -584,6 +597,7 @@ public class CommandeTest {
         Tache t = data.getListeTache().get(0);
         taches.add(t);
         StringBuilder msg = new StringBuilder();
+        msg.append("\n" + Message.LIST_STATE_TODO + "\n");
         int i = 0;
         for (Tache tache : data.getListeTache()) {
             if(taches.contains(tache)) {
@@ -598,6 +612,130 @@ public class CommandeTest {
         msg.append(data.getListeTache().size() + " résultat(s).\n");
         msg = new StringBuilder(msg.toString().trim());
         assertEquals(outContent.toString().trim(), msg.toString());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListATSIF() throws Exception {
+        Main.main(new String[]{"list","ats"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListATS() throws Exception {
+        String title1 = "tache 1";
+        String title2 = "tache 2";
+        String title3 = "tache 3";
+        String title4 = "tache 4";
+        Main.main(new String[]{"task", "add", title1});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title2});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title3});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title4});
+        outContent.reset();
+        Main.main(new String[]{"task", "state", "1", "ongoing"});
+        outContent.reset();
+        Main.main(new String[]{"task", "state", "2", "done"});
+        outContent.reset();
+        Main.main(new String[]{"task", "state", "3", "cancelled"});
+        outContent.reset();
+        Main.main(new String[]{"list", "ats"});
+        List<Tache> taches = new ArrayList<Tache>();
+
+        StringBuilder msg = new StringBuilder();
+
+        Tache t = new Tache("temp");
+        int k;
+        for(k = 1 ; k < 5 ; k++){
+            if(k == 1){
+                msg.append("\n" + Message.LIST_STATE_TODO + "\n");
+                t = data.getListeTache().get(0);
+                taches.add(t);
+            }else if(k == 2){
+                msg.append("\n" + Message.LIST_STATE_ONGOING + "\n");
+                taches.clear();
+                t = data.getListeTache().get(1);
+                taches.add(t);
+            }else if (k == 3){
+                msg.append("\n" + Message.LIST_STATE_DONE + "\n");
+                taches.clear();
+                t = data.getListeTache().get(2);
+                taches.add(t);
+            }else if(k == 4){
+                msg.append("\n" + Message.LIST_STATE_CANCELLED + "\n");
+                taches.clear();
+                t = data.getListeTache().get(3);
+                taches.add(t);
+            }
+            int i = 0;
+            int j = 0;
+            for (Tache tache : data.getListeTache()) {
+                if(taches.contains(tache)) {
+                    msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
+                    if (tache.getClock() != null) {
+                        msg.append(" ").append(tache.getClock());
+                    }
+                    msg.append("\n");
+                    j++;
+                }
+                i++;
+            }
+            msg.append(j + " résultat(s).\n");
+        }
+
+        msg = new StringBuilder(msg.toString().trim());
+        assertEquals(outContent.toString().trim(), msg.toString());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListSdSIF() throws Exception {
+        Main.main(new String[]{"list","sd"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testListSd() throws  Exception {
+        String title1 = "tache 1";
+        String title2 = "tache 2";
+        String title3 = "tache 3";
+        String title4 = "tache 4";
+        Main.main(new String[]{"task", "add", title1});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title2});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title3});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title4});
+        outContent.reset();
+
+        Date date = new Date();
+        long time = 1000000;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Main.main(new String[]{"task", "sd", "0", df.format(new Date(date.getTime() - time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "1", df.format(new Date(date.getTime() + time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "2", df.format(new Date(date.getTime() + time))});
+        outContent.reset();
+        Main.main(new String[]{"task", "sd", "3", df.format(new Date(date.getTime() - time))});
+        outContent.reset();
+        Main.main(new String[]{"list", "sd"});
+
+        List<Tache> taches = new ArrayList<Tache>();
+
+        taches.add(data.getListeTache().get(0));
+        taches.add(data.getListeTache().get(1));
+        taches.add(data.getListeTache().get(2));
+        taches.add(data.getListeTache().get(3));
+
+        String msg = Commande.affichage(data, taches);
+        assertEquals(outContent.toString().trim(), msg.trim());
         outContent.reset();
     }
 
@@ -729,4 +867,23 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_COLLABORATEUR_SUCCES.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testListDefault() throws Exception {
+        Main.main(new String[]{"list", "zzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"zzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.COMMANDE_INCONNUE.toString().trim());
+    }
+
+    @Test
+    public void testListHelp() throws Exception {
+        Main.main(new String[]{"list", "help"});
+        assertEquals(outContent.toString().trim(), Message.LIST_HELP.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"help"});
+        assertEquals(outContent.toString().trim(), Message.MAIN_HELP.toString().trim());
+    }
+
 }

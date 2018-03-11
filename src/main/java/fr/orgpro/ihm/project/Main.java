@@ -16,16 +16,6 @@ public class Main {
 
         data = Data.getInstance();
 
-
-        //////////////////////////////////////////////
-        /*data.getListeTache().add((new Tache("aze", 5)));
-        data.getListeTache().add((new Tache("aaa", 5)));
-        data.getListeTache().add((new Tache("bbb", 5)));
-        data.getListeTache().add((new Tache("ccc", 5)));
-        data.getListeTache().add((new Tache("ddd", 5)));*/
-        //////////////////////////////////////////////
-
-
         if (data.getFichierCourant().isEmpty()){
             System.out.println(Message.MAIN_AUNCUN_FICHIER);
             File[] files = new File(data.getDossierCourant()).listFiles();
