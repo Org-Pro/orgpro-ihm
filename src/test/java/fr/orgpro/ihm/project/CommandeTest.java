@@ -145,6 +145,8 @@ public class CommandeTest {
         Main.main(new String[]{"task", "add", "tache 1"});
         Main.main(new String[]{"task", "add", "tache 2"});
         Main.main(new String[]{"task", "add", "tache 3"});
+        Main.main(new String[]{"task", "clock", "use", "0"});
+        Main.main(new String[]{"task", "clock", "use", "0"});
         outContent.reset();
         Main.main(new String[]{"task", "list"});
         int i = 0;
@@ -152,7 +154,7 @@ public class CommandeTest {
         for (Tache tache : data.getListeTache()) {
             msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
             if(tache.getClock() != null){
-                msg.append(" ").append(tache.getClock());
+                msg.append(" ").append(tache.getClockString());
             }
             msg.append("\n");
             i++;
@@ -588,6 +590,8 @@ public class CommandeTest {
         outContent.reset();
         String title = "tache 1";
         Main.main(new String[]{"task", "add", title});
+        Main.main(new String[]{"task", "clock", "use", "0"});
+        Main.main(new String[]{"task", "clock", "use", "0"});
         outContent.reset();
         Main.main(new String[]{"list","ts","DONE"});
         StringBuilder msg2 = new StringBuilder();
@@ -606,7 +610,7 @@ public class CommandeTest {
             if(taches.contains(tache)) {
                 msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
                 if (tache.getClock() != null) {
-                    msg.append(" ").append(tache.getClock());
+                    msg.append(" ").append(tache.getClockString());
                 }
                 msg.append("\n");
             }
@@ -679,7 +683,7 @@ public class CommandeTest {
                 if(taches.contains(tache)) {
                     msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
                     if (tache.getClock() != null) {
-                        msg.append(" ").append(tache.getClock());
+                        msg.append(" ").append(tache.getClockString());
                     }
                     msg.append("\n");
                     j++;
