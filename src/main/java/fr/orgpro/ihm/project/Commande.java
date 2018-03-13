@@ -598,10 +598,6 @@ public class Commande {
     private static void affichageState(Data data,String state){
         List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(state));
 
-        if(taches.isEmpty()){
-            System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
-            return;
-        }
         if(State.TODO.toString().equals(state)){
             System.out.print("\n" + Message.LIST_STATE_TODO + "\n");
         }else if(State.ONGOING.toString().equals(state)){
@@ -611,6 +607,12 @@ public class Commande {
         }else if(State.CANCELLED.toString().equals(state)){
             System.out.print("\n" + Message.LIST_STATE_CANCELLED + "\n");
         }
+        
+        if(taches.isEmpty()){
+            System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+            return;
+        }
+        
         System.out.print(affichage(data,taches));
         return;
     }
