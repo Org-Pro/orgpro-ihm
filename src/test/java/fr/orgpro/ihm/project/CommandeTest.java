@@ -593,7 +593,7 @@ public class CommandeTest {
         StringBuilder msg2 = new StringBuilder();
         msg2.append(Message.LIST_STATE_DONE + "\n");
         msg2.append(Message.LIST_AUCUN_RESULTAT);
-        assertEquals(outContent.toString().trim(), msg2.toString().trim());assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        assertEquals(outContent.toString().trim(), msg2.toString().trim());
         outContent.reset();
         Main.main(new String[]{"list", "ts", "TODO"});
         List<Tache> taches = new ArrayList<Tache>();
