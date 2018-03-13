@@ -2,7 +2,8 @@ package fr.orgpro.ihm.project;
 
 public enum Message {
     COMMANDE_INCONNUE("FAILURE : Unknown command."),
-    ARGUMENT_MANQUANT("FAILURE : Missing argument(s)."),
+    ARGUMENT_MANQUANT("FAILURE : Wrong argument(s)."),
+    //ARGUMENT_SUP("FAILURE : too much argument(s)."),
     ARGUMENT_INVALIDE("FAILURE : One of the argument is invalid."),
     PROBLEME_LECTURE("FAILURE : Trouble reading the file."),
 
@@ -18,30 +19,33 @@ public enum Message {
     TACHE_AJOUT_SCHEDULED_SUCCES("SUCCESS : Scheduled add/modified."),
     TACHE_AJOUT_TAG_SUCCES("SUCCESS : Tag add."),
     TACHE_AJOUT_PROPRIETE_SUCCES("SUCCESS : Property add."),
+    TACHE_AJOUT_COLLABORATEUR_SUCCES("SUCCESS : Collaborator add."),
+    TACHE_DELETE_COLLABORATEUR_SUCCES("SUCCESS : Collaborator deleted."),
     TACHE_DELETE_PROPRIETE_SUCCES("SUCCESS : Property deleted."),
     TACHE_DELETE_TAG_SUCCES("SUCCESS : Tag deleted."),
     TACHE_DELETE_SUCCES("SUCCESS : Task deleted."),
+    TACHE_STATE_UPDATE_SUCCES("SUCCESS : Changed State."),
     //TACHE_DELETE_DEADLINE_SUCCES("SUCCES : Deadline supprimée."),
     //TACHE_DELETE_CLOSED_SUCCES("SUCCES : Closed supprimée."),
     //TACHE_DELETE_SCHEDULED_SUCCES("SUCCES : Scheduled supprimée."),
-    //TACHE_MINUTEUR_RESET_SUCCES("SUCCES : Minuteur de la tâche remit à zéro."),
-    //TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Minuteur lancé."),
-    //TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Minuteur stoppé."),
+    TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Timer started."),
+    TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Timer stopped."),
     TACHE_SET_DEPENDANCE_SUCCES("SUCCESS : Dependency has been added / modified."),
     TACHE_RENAME_SUCESS("SUCCESS : The task has been renamed."),
     TACHE_DELETE_DEPENDANCE_SUCCES("SUCCESS : Dependency deleted."),
-    //TACHE_LEVEL_SUCCES("SUCCES : Le niveau de la tâche a bien été changé."),
+    TACHE_AJOUT_COLLABORATEUR_ECHEC("FAILURE : Collaborator's name cannot contains \":\"."),
+    TACHE_DELETE_COLLABORATEUR_ECHEC("FAILURE : Collaborator's name cannot contains \":\""),
     TACHE_AJOUT_PROPRIETE_ECHEC("FAILURE : Cannot add property ID or DEPENDENCE."),
     TACHE_SET_DEPENDANCE_ECHEC("FAILURE : Dependency cannot be updated."),
     TACHE_DELETE_DEPENDANCE_ECHEC("FAILURE : Dependency cannot be deleted."),
     TACHE_DELETE_PROPRIETE_ECHEC("FAILURE : Cannot delete property ID or DEPENDENCE."),
-    //TACHE_LEVEL_DEP_ECHEC("ECHEC : Une dépendance empêche le changement de niveau."),
-    //TACHE_LEVEL_NEGATIF_ECHEC("ECHEC : Le niveau de la tâche doit être supérieur ou égal à 1."),
     TACHE_INVALIDE_ECHEC("FAILURE : Invalid task number."),
     TACHES_NON_IDENTIQUES_ECHEC("FAILURE : tasks must not be identical."),
     TACHE_AJOUT_DEADLINE_ECHEC("FAILURE : Wrong date format. (YYYY/MM/DD)."),
     TACHE_AJOUT_CLOSED_ECHEC("FAILURE : Wrong date format. (YYYY/MM/DD)."),
     TACHE_AJOUT_SCHEDULED_ECHEC("FAILURE : Wrong date format. (YYYY/MM/DD)."),
+    TACHE_STATE_UPDATE_ECHEC("FAILURE : Unchanged State."),
+    TACHE_STATE_INTROUVABLE_ECHEC("FAILURE : State does not exist."),
     TACHE_HELP("TASK ADD <Title of task> -> Add a task\n"
 
 
@@ -58,12 +62,18 @@ public enum Message {
     FICHIER_LISTE_VIDE("No file found."),
 
     LIST_AUCUN_RESULTAT("No result."),
+    LIST_STATE_TODO("TODO list"),
+    LIST_STATE_ONGOING("ONGOING list"),
+    LIST_STATE_DONE("DONE list"),
+    LIST_STATE_CANCELLED("CANCELLED list"),
     LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
-    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state"),
+    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state" +
+    "LIST ATS -> displays all the task sort by state" +
+    "LIST SD -> shows tasks that have been scheduled but are still in the todo list"),
 
-    STATE_UPDATE_SUCCES("SUCCESS : Changed State."),
-    STATE_UPDATE_ECHEC("FAILURE : Unchanged STate."),
-    STATE_INTROUVABLE("FAILURE : State does not exist.")
+
+
+
     ;
 
     private String message;

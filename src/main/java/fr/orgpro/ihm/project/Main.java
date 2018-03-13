@@ -10,18 +10,11 @@ public class Main {
         //args = new String[]{"file", "select", "test"};
         //args = new String[]{"task", "add", "test2"};
         //args = new String[]{"task", "list"};
+        //args = new String[]{"task", "clock", "use", "0"};
+        //args = new String[]{"task", "dep", "set", "0", "2"};
+        //args = new String[]{"list", "task"};
 
         data = Data.getInstance();
-
-
-        //////////////////////////////////////////////
-        /*data.getListeTache().add((new Tache("aze", 5)));
-        data.getListeTache().add((new Tache("aaa", 5)));
-        data.getListeTache().add((new Tache("bbb", 5)));
-        data.getListeTache().add((new Tache("ccc", 5)));
-        data.getListeTache().add((new Tache("ddd", 5)));*/
-        //////////////////////////////////////////////
-
 
         if (data.getFichierCourant().isEmpty()){
             System.out.println(Message.MAIN_AUNCUN_FICHIER);

@@ -29,6 +29,7 @@ public class Data {
         listeTache = new ArrayList<Tache>();
         prefs = Preferences.userNodeForPackage(fr.orgpro.ihm.project.Data.class);
         fichierCourant = prefs.get(PREF_FICHIER_COURANT, "");
+
         // Vérifie si le chemin vers le fichier existe
         if(!new File(dossierCourant + "/" + fichierCourant).exists()) {
             prefs.remove(PREF_FICHIER_COURANT);
