@@ -364,7 +364,7 @@ public class Commande {
                 for (Tache tache : data.getListeTache()) {
                     msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
                     if(tache.getClock() != null){
-                        msg += " " + tache.getClock();
+                        msg += " " + tache.getClockString();
                     }
                     System.out.print(msg + "\n");
                     i++;
@@ -625,7 +625,7 @@ public class Commande {
             if(taches.contains(tache)) {
                 msg += "n°" + i + " " + tache.getTitle() + " " + tache.getId();
                 if (tache.getClock() != null) {
-                    msg += " " + tache.getClock();
+                    msg += " " + tache.getClockString();
                 }
                 //System.out.print(msg + "\n");
                 msg += "\n";
