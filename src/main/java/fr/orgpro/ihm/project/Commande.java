@@ -553,6 +553,77 @@ public class Commande {
         }
     }
 
+    public static void commandeHeader(String[] args, Data data) {
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "get" : {
+                // HEAD GET <clef>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                String header = Tache.getHeader(args[2]);
+                if (header != null) {
+                    System.out.println(header);
+                } else {
+                    System.out.println(Message.HEADER_GET_ECHEC);
+                }
+                break;
+            }
+
+            case "add" : {
+                // HEAD ADD <clef> <valeur>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.ajoutHeader(args[2], args[3])) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_ADD_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_ADD_ECHEC);
+                }
+                break;
+            }
+
+            case "set" : {
+                // HEAD SET <clef> <valeur>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.modifierHeader(args[2], args[3])) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_SET_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_SET_ECHEC);
+                }
+                break;
+            }
+
+            case "delete" : {
+                // HEAD DELETE <clef>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.supprimerHeader(args[2])) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_DELETE_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_DELETE_ECHEC);
+                }
+                break;
+            }
+
+            case "help" :
+                System.out.println(Message.HEADER_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
 
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){

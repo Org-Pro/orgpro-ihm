@@ -893,4 +893,97 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.MAIN_HELP.toString().trim());
     }
 
+    @Test
+    public void testHeader() throws Exception {
+        Main.main(new String[]{"head", "help"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_HELP.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderGet() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_GET_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get", "test"});
+        assertEquals(outContent.toString().trim(), "valeur");
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderAdd() throws Exception {
+        Main.main(new String[]{"head", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "add", "test", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_ADD_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "add", " ", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_ADD_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderSet() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set", "test", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_SET_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set", "aze", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_SET_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderDelete() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_DELETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "aze"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_DELETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
 }

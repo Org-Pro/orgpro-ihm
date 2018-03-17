@@ -47,6 +47,10 @@ public class Main {
             case "task":
                 Commande.commandeTache(args, data);
                 break;
+            case "head": {}
+            case "header":
+                Commande.commandeHeader(args, data);
+                break;
             case "file":
                 Commande.commandeFichier(args, data);
                 break;

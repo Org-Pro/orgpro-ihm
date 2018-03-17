@@ -71,7 +71,14 @@ public enum Message {
     "LIST ATS -> displays all the task sort by state" +
     "LIST SD -> shows tasks that have been scheduled but are still in the todo list"),
 
-
+    HEADER_HELP(""),
+    HEADER_ADD_SUCCES("SUCCESS : Header add."),
+    HEADER_SET_SUCCES("SUCCESS : Header modified."),
+    HEADER_DELETE_SUCCES("SUCCESS : Header deleted."),
+    HEADER_GET_ECHEC("No result."),
+    HEADER_ADD_ECHEC("FAILLURE : Key or Value cannot be empty and Key cannot be COST."),
+    HEADER_DELETE_ECHEC("FAILLURE : Key or Value cannot be empty and Key cannot be COST."),
+    HEADER_SET_ECHEC("FAILLURE : Key or Value cannot be empty and Key cannot be COST."),
 
 
     ;
