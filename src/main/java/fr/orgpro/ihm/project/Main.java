@@ -57,6 +57,9 @@ public class Main {
             case "list":
                 Commande.commandeListe(args, data);
                 break;
+            case "cost":
+                Commande.commandeCost(args, data);
+                break;
             case "help":
                 System.out.println(Message.MAIN_HELP);
                 break;

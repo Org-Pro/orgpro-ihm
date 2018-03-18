@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import org.junit.*;
 
@@ -1008,4 +1009,39 @@ public class CommandeTest {
         outContent.reset();
     }
 
+    @Test
+    public void testCostIte() throws Exception {
+        Main.main(new String[]{"cost"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE.toString());
+        outContent.reset();
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+        Main.main(new String[]{"head", Tache.HEADER_COST, "3"});
+        outContent.reset();
+        Main.main(new String[]{"task", "cost", "0", "3"});
+        outContent.reset();
+        Main.main(new String[]{"task", "state", "0", State.ONGOING.toString()});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_0.toString().trim());
+        Main.main(new String[]{"task", "cost", "0", "2"});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_SUP.toString() + 1);
+        Main.main(new String[]{"task", "cost", "0", "4"});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_INF.toString() + 1);
+        Tache.supprimerHeader(Tache.HEADER_COST, true);
+    }
+
+    @Test
+    public void testHeaderCost() throws Exception {
+        Main.main(new String[]{"header", "cost"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
 }

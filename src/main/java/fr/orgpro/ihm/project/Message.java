@@ -74,6 +74,7 @@ public enum Message {
     "LIST SD -> shows tasks that have been scheduled but are still in the todo list"),
 
     HEADER_HELP(""),
+    HEADER_COSTS("SUCCES : Iteration cost added"),
     HEADER_ADD_SUCCES("SUCCESS : Header add."),
     HEADER_SET_SUCCES("SUCCESS : Header modified."),
     HEADER_DELETE_SUCCES("SUCCESS : Header deleted."),
@@ -82,6 +83,11 @@ public enum Message {
     HEADER_DELETE_ECHEC("FAILLURE : Key or Value cannot be empty and Key cannot be COST."),
     HEADER_SET_ECHEC("FAILLURE : Key or Value cannot be empty and Key cannot be COST."),
 
+    COST_ITE("Task list is empty"),
+    COST_ITE_0("The cost of the tasks is equal to the cost of an iteration"),
+    COST_ITE_SUP("the cost of the tasks is less than "),
+    COST_ITE_INF("the cost of the tasks is higher than "),
+    COST_HELP("COST ITE -> gives the difference between the cost of an iteration and the sum of the costs of ongoing tasks"),
 
     ;
 

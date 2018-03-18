@@ -576,11 +576,51 @@ public class Commande {
         }
     }
 
+    public static void commandeCost(String[] args, Data data){
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "ite" :
+                Integer dif = Scrum.compareCout(data.getListeTache());
+                if(dif == null){
+                    System.out.println(Message.COST_ITE);
+                }else if(dif == 0){
+                    System.out.println(Message.COST_ITE_0);
+                }else if(dif > 0){
+                    System.out.println(Message.COST_ITE_SUP + dif.toString());
+                }else{
+                    dif = dif * -1;
+                    System.out.println(Message.COST_ITE_INF + dif.toString());
+                }
+                break;
+            case "help" :
+                System.out.println(Message.COST_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
     public static void commandeHeader(String[] args, Data data) {
         if (verifBadNbArgument(2, args)){
             return;
         }
         switch (args[1].toLowerCase()){
+            case "cost" : {
+                // HEAD COST <valeur>
+                if(verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(!Tache.modifierHeader(Tache.HEADER_COST,args[2],true)){
+                    Tache.ajoutHeader(Tache.HEADER_COST, args[2], true);
+                }
+                System.out.println(Message.HEADER_COSTS);
+                data.ecritureListeTaches();
+                break;
+            }
             case "get" : {
                 // HEAD GET <clef>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
