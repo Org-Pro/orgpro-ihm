@@ -579,6 +579,9 @@ public class CommandeTest {
 
     @Test
     public void testListTSIF() throws Exception {
+        Main.main(new String[]{"list"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
         Main.main(new String[]{"list","ts"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
@@ -1036,6 +1039,16 @@ public class CommandeTest {
         Main.main(new String[]{"cost", "ite"});
         assertEquals(outContent.toString().trim(), Message.COST_ITE_INF.toString() + 1);
         Tache.supprimerHeader(Tache.HEADER_COST, true);
+    }
+
+    @Test
+    public void testCostHelp() throws Exception {
+        Main.main(new String[]{"cost", "help"});
+        assertEquals(outContent.toString().trim(), Message.COST_HELP.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"cost", "zzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
     }
 
     @Test
