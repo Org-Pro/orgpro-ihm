@@ -28,8 +28,8 @@ public enum Message {
     //TACHE_DELETE_DEADLINE_SUCCES("SUCCES : Deadline supprimée."),
     //TACHE_DELETE_CLOSED_SUCCES("SUCCES : Closed supprimée."),
     //TACHE_DELETE_SCHEDULED_SUCCES("SUCCES : Scheduled supprimée."),
-    TACHE_MINUTEUR_LANCER_SUCCES("SUCCES : Timer started."),
-    TACHE_MINUTEUR_STOPPER_SUCCES("SUCCES : Timer stopped."),
+    TACHE_MINUTEUR_LANCER_SUCCES("SUCCESS : Timer started."),
+    TACHE_MINUTEUR_STOPPER_SUCCES("SUCCESS : Timer stopped."),
     TACHE_SET_DEPENDANCE_SUCCES("SUCCESS : Dependency has been added / modified."),
     TACHE_RENAME_SUCESS("SUCCESS : The task has been renamed."),
     TACHE_DELETE_DEPENDANCE_SUCCES("SUCCESS : Dependency deleted."),
@@ -46,6 +46,8 @@ public enum Message {
     TACHE_AJOUT_SCHEDULED_ECHEC("FAILURE : Wrong date format. (YYYY/MM/DD)."),
     TACHE_STATE_UPDATE_ECHEC("FAILURE : Unchanged State."),
     TACHE_STATE_INTROUVABLE_ECHEC("FAILURE : State does not exist."),
+    TACHE_COUTS("SUCCESS : Cost added"),
+    TACHE_COUTF("FAILURE : Cost not added"),
     TACHE_HELP("TASK ADD <Title of task> -> Add a task\n"
 
 

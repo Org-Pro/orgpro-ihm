@@ -776,6 +776,28 @@ public class CommandeTest {
     }
 
     @Test
+    public void testTaskCost() throws Exception {
+        Main.main(new String[]{"task", "cost", "0", "salut"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "add", "test"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_COUTF.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_COUTS.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
     public void testClock() throws Exception {
         Main.main(new String[]{"task","clock"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());

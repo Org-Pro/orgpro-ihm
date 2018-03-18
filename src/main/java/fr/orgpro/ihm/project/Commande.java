@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
@@ -335,6 +336,28 @@ public class Commande {
                     tache.ecritureFichier(data.getPath(), true);
                     System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
+                break;
+            }
+
+            case "cost": {
+                // Task cost <numTask> <valCost>
+
+                if(verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                int cout = Integer.parseInt(args[3]);
+
+                if (verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+
+                if(data.getListeTache().get(numTache).ajoutCout(cout)){
+                    System.out.println(Message.TACHE_COUTS);
+                }else{
+                    System.out.println(Message.TACHE_COUTF);
+                }
+                data.ecritureListeTaches();
                 break;
             }
 
