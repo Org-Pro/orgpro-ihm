@@ -577,7 +577,7 @@ public class Commande {
                 if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
                     return;
                 }
-                if (Tache.ajoutHeader(args[2], args[3])) {
+                if (Tache.ajoutHeader(args[2], args[3], false)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.HEADER_ADD_SUCCES);
                 } else {
@@ -591,7 +591,7 @@ public class Commande {
                 if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
                     return;
                 }
-                if (Tache.modifierHeader(args[2], args[3])) {
+                if (Tache.modifierHeader(args[2], args[3], false)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.HEADER_SET_SUCCES);
                 } else {
@@ -605,7 +605,7 @@ public class Commande {
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
                 }
-                if (Tache.supprimerHeader(args[2])) {
+                if (Tache.supprimerHeader(args[2], false)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.HEADER_DELETE_SUCCES);
                 } else {
