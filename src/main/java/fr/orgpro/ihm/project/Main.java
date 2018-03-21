@@ -44,6 +44,10 @@ public class Main {
             return;
         }
         switch (args[0].toLowerCase()){
+            case "collaboratueur": {}
+            case "col" :
+                Commande.commandeCollaborateur(args, data);
+                break;
             case "task":
                 Commande.commandeTache(args, data);
                 break;

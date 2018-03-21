@@ -89,6 +89,15 @@ public enum Message {
     COST_ITE_INF("the cost of the tasks is higher than "),
     COST_HELP("COST ITE -> gives the difference between the cost of an iteration and the sum of the costs of ongoing tasks"),
 
+    // TODO
+    COLLABORATEUR_HELP("col help"),
+    COLLABORATEUR_AJOUT_SUCCES("SUCCESS : add col"),
+    COLLABORATEUR_SET_SUCCES("SUCCESS : set col"),
+    COLLABORATEUR_DELETE_SUCCES("SUCCESS : delete col"),
+    COLLABORATEUR_AJOUT_ECHEC("FAILLURE : add col"),
+    COLLABORATEUR_SET_ECHEC("FAILLURE : set col"),
+    COLLABORATEUR_DELETE_ECHEC("FAILLURE : delete col"),
+
     ;
 
     private String message;

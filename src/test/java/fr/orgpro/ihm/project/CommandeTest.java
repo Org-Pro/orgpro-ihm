@@ -852,6 +852,7 @@ public class CommandeTest {
     @Test
     public void testCollaboratorAdd() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"col", "add", "bob"});
         outContent.reset();
 
         Main.main(new String[]{"task", "col", "add"});
@@ -878,6 +879,8 @@ public class CommandeTest {
     @Test
     public void testCollaboratorDelete() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"col", "add", "bob"});
+        Main.main(new String[]{"task", "col", "add", "0", "bob"});
         outContent.reset();
 
         Main.main(new String[]{"task", "col", "delete"});
@@ -1055,6 +1058,72 @@ public class CommandeTest {
     public void testHeaderCost() throws Exception {
         Main.main(new String[]{"header", "cost"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeader() throws Exception {
+        Main.main(new String[]{"col", "help"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_HELP.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "aazeazezaeze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderAdd() throws Exception {
+        Main.main(new String[]{"col", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderSet() throws Exception {
+        Main.main(new String[]{"col", "set"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        outContent.reset();
+
+        Main.main(new String[]{"col", "set", "bob", "dylane"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_SET_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "set", "bob", "test"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_SET_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderDelete() throws Exception {
+        Main.main(new String[]{"col", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        outContent.reset();
+
+        Main.main(new String[]{"col", "delete", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "delete", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_ECHEC.toString().trim());
         outContent.reset();
     }
 }

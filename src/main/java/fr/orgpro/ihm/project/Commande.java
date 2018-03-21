@@ -687,6 +687,57 @@ public class Commande {
         }
     }
 
+    public static void commandeCollaborateur(String[] args, Data data){
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "add" :
+                // COL ADD <nom>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.ajoutCollaborateurHeader(args[2])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_AJOUT_ECHEC);
+                }
+                break;
+            case "set" :
+                // COL set <old nom> <new nom>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.modifierCollaborateurHeader(data.getListeTache(), args[2], args[3])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_SET_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_SET_ECHEC);
+                }
+                break;
+            case "delete" :
+                // COL delete <nom>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.supprimerCollaborateurHeader(data.getListeTache(), args[2])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_DELETE_ECHEC);
+                }
+                break;
+            case "help" :
+                System.out.println(Message.COLLABORATEUR_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
 
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
