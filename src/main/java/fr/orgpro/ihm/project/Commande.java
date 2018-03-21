@@ -704,6 +704,7 @@ public class Commande {
                     System.out.println(Message.COLLABORATEUR_AJOUT_ECHEC);
                 }
                 break;
+
             case "set" :
                 // COL set <old nom> <new nom>
                 if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
@@ -716,6 +717,7 @@ public class Commande {
                     System.out.println(Message.COLLABORATEUR_SET_ECHEC);
                 }
                 break;
+
             case "delete" :
                 // COL delete <nom>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
@@ -728,6 +730,29 @@ public class Commande {
                     System.out.println(Message.COLLABORATEUR_DELETE_ECHEC);
                 }
                 break;
+
+            case "list": {
+                // TACHE LIST
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
+                List<String> list = Tache.getListCollaborateurHeader();
+                if (list == null){
+                    System.out.print("No résult.\n");
+                    break;
+                }else {
+                    System.out.print(list.size() + " résult(s).\n");
+                }
+                int i = 0;
+                String msg;
+                for (String col : list) {
+                    msg = "n°" + i + " " + col;
+                    System.out.print(msg + "\n");
+                    i++;
+                }
+                break;
+            }
+
             case "help" :
                 System.out.println(Message.COLLABORATEUR_HELP);
                 break;
