@@ -1,6 +1,5 @@
 package fr.orgpro.ihm.project;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
