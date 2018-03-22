@@ -143,7 +143,7 @@ public class Commande {
                         break;
                     }
                     case "delete": {
-                        // TASK PROPERTY ADD <num> <name prop>
+                        // TASK PROPERTY DELETE <num> <name prop>
                         if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                             return;
                         }
@@ -210,7 +210,7 @@ public class Commande {
 
             case "deadline":{}
             case "dl": {
-                // TACHE DL <num> <date ou 0>
+                // TACHE DL <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -218,15 +218,6 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)) {
                     return;
                 }
-
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_DEADLINE_SUCCES);
-                    return;
-                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutDeadline(date)) {
@@ -240,7 +231,7 @@ public class Commande {
 
             case "closed":{}
             case "cl": {
-                // TACHE closed <num> <date ou 0>
+                // TACHE closed <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -248,15 +239,6 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)) {
                     return;
                 }
-
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_CLOSED_SUCCES);
-                    return;
-                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutClosed(date)) {
@@ -270,7 +252,7 @@ public class Commande {
 
             case "scheduled":{}
             case "sd": {
-                // TACHE scheduled <num> <date ou 0>
+                // TACHE scheduled <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -278,15 +260,6 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)) {
                     return;
                 }
-
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_SCHEDULED_SUCCES);
-                    return;
-                }*/
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).ajoutScheduled(date)) {
@@ -314,7 +287,7 @@ public class Commande {
             }
 
             case "add": {
-                // TACHE ADD <nom> (dep)
+                // TACHE ADD <nom> (num dep)
                 if(args.length == 4){
                     if (verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                         return;
