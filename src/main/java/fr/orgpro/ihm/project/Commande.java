@@ -381,7 +381,7 @@ public class Commande {
                 if(verifBadLectureFichier(data)){
                     return;
                 }
-                System.out.print(data.getListeTache().size() + " résultat(s).\n");
+                System.out.print(data.getListeTache().size() + " result(s).\n");
                 int i = 0;
                 String msg;
                 for (Tache tache : data.getListeTache()) {
@@ -844,7 +844,7 @@ public class Commande {
             i++;
         }
         //System.out.print(j + " résultat(s).\n");
-        msg += j + " résultat(s).\n";
+        msg += j + " result(s).\n";
 
         return msg;
     }

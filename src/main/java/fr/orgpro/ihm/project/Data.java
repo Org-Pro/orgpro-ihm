@@ -19,6 +19,11 @@ public class Data {
     private List<Tache> listeTache;
     private static Data data = null;
 
+    public final static String COULEUR_ECHEC = "\033[0;31m";
+    public final static String COULEUR_SUCCES = "\033[1;32m";
+    public final static String COULEUR_RESET = "\033[0m";
+
+
     public static Data getInstance(){
         if(data == null)
             data = new Data();

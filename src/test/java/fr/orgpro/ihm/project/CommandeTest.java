@@ -151,7 +151,7 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"task", "list"});
         int i = 0;
-        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " résultat(s).\n");
+        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " result(s).\n");
         for (Tache tache : data.getListeTache()) {
             msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
             if(tache.getClock() != null){
@@ -620,7 +620,7 @@ public class CommandeTest {
             }
             i++;
         }
-        msg.append(data.getListeTache().size() + " résultat(s).\n");
+        msg.append(data.getListeTache().size() + " result(s).\n");
         msg = new StringBuilder(msg.toString().trim());
         assertEquals(outContent.toString().trim(), msg.toString());
         outContent.reset();
@@ -694,7 +694,7 @@ public class CommandeTest {
                 }
                 i++;
             }
-            msg.append(j + " résultat(s).\n");
+            msg.append(j + " result(s).\n");
         }
 
         msg = new StringBuilder(msg.toString().trim());
