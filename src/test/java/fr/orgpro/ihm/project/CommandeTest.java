@@ -90,7 +90,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_RENAME_SUCESS.toString().trim());
         outContent.reset();
 
-        assertEquals(data.getListeTache().get(1).getTitle(), "test");
+        assertEquals(data.getListeTache().get(1).getTitre(), "test");
     }
 
     @Test
@@ -153,9 +153,9 @@ public class CommandeTest {
         int i = 0;
         StringBuilder msg = new StringBuilder(data.getListeTache().size() + " result(s).\n");
         for (Tache tache : data.getListeTache()) {
-            msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-            if(tache.getClock() != null){
-                msg.append(" ").append(tache.getClockString());
+            msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+            if(tache.getMinuteur() != null){
+                msg.append(" ").append(tache.getMinuteurTexte());
             }
             msg.append("\n");
             i++;
@@ -227,7 +227,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getDeadline(), date);
+        assertEquals(data.getListeTache().get(0).getDateLimite(), date);
 
         /*Main.main(new String[]{"task", "dl", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEADLINE_SUCCES.toString().trim());
@@ -261,7 +261,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getClosed(), date);
+        assertEquals(data.getListeTache().get(0).getDateFin(), date);
 
         /*Main.main(new String[]{"task", "cl", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_CLOSED_SUCCES.toString().trim());
@@ -295,7 +295,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getScheduled(), date);
+        assertEquals(data.getListeTache().get(0).getDateDebut(), date);
 
         /*Main.main(new String[]{"task", "sd", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_SCHEDULED_SUCCES.toString().trim());
@@ -332,7 +332,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTags().get(0));
+        assertEquals("test", data.getListeTache().get(1).getTagListe().get(0));
     }
 
     @Test
@@ -366,8 +366,8 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTags().get(0));
-        assertEquals(1, data.getListeTache().get(1).getTags().size());
+        assertEquals("test", data.getListeTache().get(1).getTagListe().get(0));
+        assertEquals(1, data.getListeTache().get(1).getTagListe().size());
     }
 
     @Test
@@ -612,9 +612,9 @@ public class CommandeTest {
         int i = 0;
         for (Tache tache : data.getListeTache()) {
             if(taches.contains(tache)) {
-                msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-                if (tache.getClock() != null) {
-                    msg.append(" ").append(tache.getClockString());
+                msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+                if (tache.getMinuteur() != null) {
+                    msg.append(" ").append(tache.getMinuteurTexte());
                 }
                 msg.append("\n");
             }
@@ -685,9 +685,9 @@ public class CommandeTest {
             int j = 0;
             for (Tache tache : data.getListeTache()) {
                 if(taches.contains(tache)) {
-                    msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-                    if (tache.getClock() != null) {
-                        msg.append(" ").append(tache.getClockString());
+                    msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+                    if (tache.getMinuteur() != null) {
+                        msg.append(" ").append(tache.getMinuteurTexte());
                     }
                     msg.append("\n");
                     j++;
@@ -1041,7 +1041,7 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"cost", "ite"});
         assertEquals(outContent.toString().trim(), Message.COST_ITE_INF.toString() + 1);
-        Tache.supprimerHeader(Tache.HEADER_COST, true);
+        Tache.removeEnTete(Tache.HEADER_COST, true);
     }
 
     @Test

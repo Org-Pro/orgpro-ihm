@@ -59,7 +59,7 @@ public class Data {
             listeTache = new ArrayList<Tache>();
             return true;
         }
-        listeTache = Tache.lectureFichier(path);
+        listeTache = Tache.readFichier(path);
         if(listeTache == null){
             return false;
         }else {
@@ -82,10 +82,10 @@ public class Data {
         }
         for (Tache t : listeTache){
             if (premier){
-                t.ecritureFichier(path, false);
+                t.writeFichier(path, false);
                 premier = false;
             }else {
-                t.ecritureFichier(path, true);
+                t.writeFichier(path, true);
             }
         }
     }
