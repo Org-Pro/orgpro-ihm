@@ -104,11 +104,23 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)) {
                     return;
                 }
+
+                if(args[3].trim().toLowerCase().equals("next")){
+                    if(data.getListeTache().get(numTache).setEtatSuivant()){
+                        data.ecritureListeTaches();
+                        System.out.println(Message.TACHE_STATE_SUIVANT_UPDATE_SUCCES);
+                    }else{
+                        System.out.println(Message.TACHE_STATE_SUIVANT_UPDATE_ECHEC);
+                    }
+                    break;
+                }
+
                 State state = State.stringIsState(args[3]);
                 if(state == null){
                     System.out.println(Message.TACHE_STATE_INTROUVABLE_ECHEC);
                     return;
                 }
+
                 if(data.getListeTache().get(numTache).setEtat(state)){
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_STATE_UPDATE_SUCCES);

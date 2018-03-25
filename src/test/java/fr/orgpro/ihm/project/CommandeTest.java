@@ -575,6 +575,14 @@ public class CommandeTest {
         Main.main(new String[]{"task", "state", "0", "ongoing"});
         assertEquals(outContent.toString().trim(), Message.TACHE_STATE_UPDATE_ECHEC.toString().trim());
         outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "next"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_SUIVANT_UPDATE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "next"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_SUIVANT_UPDATE_ECHEC.toString().trim());
+        outContent.reset();
     }
 
     @Test
