@@ -65,32 +65,20 @@ public class Commande {
             }
 
             case "clock" : {
-                if (verifBadNbArgument(3, args)) {
+                // TACHE CLOCK <num>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
-                switch (args[2].toLowerCase()){
-                    case "use" : {
-                        // TACHE CLOCK USE <num>
-                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
-                            return;
-                        }
-                        int numTache = Integer.parseInt(args[3]);
-                        if (verifTacheNotExiste(numTache, data)) {
-                            return;
-                        }
-                        if (data.getListeTache().get(numTache).useMinuteurParPropriete()) {
-                            data.ecritureListeTaches();
-                            System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
-                        } else {
-                            data.ecritureListeTaches();
-                            System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
-                        }
-                        break;
-                    }
-
-                    default:
-                        System.out.println(Message.ARGUMENT_INVALIDE);
-                        break;
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+                if (data.getListeTache().get(numTache).useMinuteurParPropriete()) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
+                } else {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
                 }
                 break;
             }
