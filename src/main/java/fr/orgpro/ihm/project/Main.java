@@ -64,6 +64,9 @@ public class Main {
             case "cost":
                 Commande.commandeCost(args, data);
                 break;
+            case "tag":
+                Commande.commandeTag(args, data);
+                break;
             case "help":
                 System.out.println(Message.MAIN_HELP);
                 break;

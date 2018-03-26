@@ -332,7 +332,11 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTagListe().get(0));
+        Main.main(new String[]{"task", "tag", "add", "1", "test"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_TAG_ECHEC.toString().trim());
+        outContent.reset();
+
+        assertEquals("TEST", data.getListeTache().get(1).getTagListe().get(0));
     }
 
     @Test
@@ -366,7 +370,11 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTagListe().get(0));
+        Main.main(new String[]{"task", "tag", "delete", "1", "autre"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_TAG_ECHEC.toString().trim());
+        outContent.reset();
+
+        assertEquals("TEST", data.getListeTache().get(1).getTagListe().get(0));
         assertEquals(1, data.getListeTache().get(1).getTagListe().size());
     }
 
@@ -1132,6 +1140,58 @@ public class CommandeTest {
 
         Main.main(new String[]{"col", "delete", "bob"});
         assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTagFunctional() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_FUNC_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_FUNC_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTagTechnical() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_TECH_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_TECH_ECHEC.toString().trim());
         outContent.reset();
     }
 }

@@ -181,9 +181,12 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        data.getListeTache().get(numTache).addTag(args[4]);
-                        data.ecritureListeTaches();
-                        System.out.println(Message.TACHE_AJOUT_TAG_SUCCES);
+                        if(data.getListeTache().get(numTache).addTag(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_AJOUT_TAG_SUCCES);
+                        }else {
+                            System.out.println(Message.TACHE_AJOUT_TAG_ECHEC);
+                        }
                         break;
                     }
                     case "delete": {
@@ -195,11 +198,15 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        data.getListeTache().get(numTache).removeTag(args[4]);
-                        data.ecritureListeTaches();
-                        System.out.println(Message.TACHE_DELETE_TAG_SUCCES);
+                        if(data.getListeTache().get(numTache).removeTag(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_DELETE_TAG_SUCCES);
+                        }else {
+                            System.out.println(Message.TACHE_DELETE_TAG_ECHEC);
+                        }
                         break;
                     }
+
                     default:
                         System.out.println(Message.ARGUMENT_INVALIDE);
                         break;
@@ -735,6 +742,58 @@ public class Commande {
         }
     }
 
+    public static void commandeTag(String[] args, Data data) {
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "technical": {}
+            case "tech": {
+                // TAG TECH <num tache>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if(verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+                if(data.getListeTache().get(numTache).addTag("technical")){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TAG_TECH_SUCCES);
+                }else{
+                    System.out.println(Message.TAG_TECH_ECHEC);
+                }
+                break;
+            }
+
+            case "functional": {}
+            case "func": {
+                // TAG FUNC <num tache>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if(verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+                if(data.getListeTache().get(numTache).addTag("functional")){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TAG_FUNC_SUCCES);
+                }else{
+                    System.out.println(Message.TAG_FUNC_ECHEC);
+                }
+                break;
+            }
+
+            case "help":
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+
+    }
 
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
