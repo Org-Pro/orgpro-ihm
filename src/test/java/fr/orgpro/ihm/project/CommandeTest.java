@@ -1201,6 +1201,10 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
         outContent.reset();
 
+        Main.main(new String[]{"list", "func"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+
         String title1 = "tache 1";
         String title2 = "tache 2";
         String title3 = "tache 3";
