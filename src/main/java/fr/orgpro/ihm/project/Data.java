@@ -19,6 +19,11 @@ public class Data {
     private List<Tache> listeTache;
     private static Data data = null;
 
+    public final static String COULEUR_ECHEC = "\033[0;31m";
+    public final static String COULEUR_SUCCES = "\033[1;32m";
+    public final static String COULEUR_RESET = "\033[0m";
+
+
     public static Data getInstance(){
         if(data == null)
             data = new Data();
@@ -54,7 +59,7 @@ public class Data {
             listeTache = new ArrayList<Tache>();
             return true;
         }
-        listeTache = Tache.lectureFichier(path);
+        listeTache = Tache.readFichier(path);
         if(listeTache == null){
             return false;
         }else {
@@ -77,10 +82,10 @@ public class Data {
         }
         for (Tache t : listeTache){
             if (premier){
-                t.ecritureFichier(path, false);
+                t.writeFichier(path, false);
                 premier = false;
             }else {
-                t.ecritureFichier(path, true);
+                t.writeFichier(path, true);
             }
         }
     }

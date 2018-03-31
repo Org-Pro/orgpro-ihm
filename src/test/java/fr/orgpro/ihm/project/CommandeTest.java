@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import org.junit.*;
 
@@ -89,7 +90,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_RENAME_SUCESS.toString().trim());
         outContent.reset();
 
-        assertEquals(data.getListeTache().get(1).getTitle(), "test");
+        assertEquals(data.getListeTache().get(1).getTitre(), "test");
     }
 
     @Test
@@ -150,11 +151,11 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"task", "list"});
         int i = 0;
-        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " résultat(s).\n");
+        StringBuilder msg = new StringBuilder(data.getListeTache().size() + " result(s).\n");
         for (Tache tache : data.getListeTache()) {
-            msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-            if(tache.getClock() != null){
-                msg.append(" ").append(tache.getClockString());
+            msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+            if(tache.getMinuteur() != null){
+                msg.append(" ").append(tache.getMinuteurTexte());
             }
             msg.append("\n");
             i++;
@@ -226,7 +227,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getDeadline(), date);
+        assertEquals(data.getListeTache().get(0).getDateLimite(), date);
 
         /*Main.main(new String[]{"task", "dl", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_DEADLINE_SUCCES.toString().trim());
@@ -260,7 +261,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getClosed(), date);
+        assertEquals(data.getListeTache().get(0).getDateFin(), date);
 
         /*Main.main(new String[]{"task", "cl", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_CLOSED_SUCCES.toString().trim());
@@ -294,7 +295,7 @@ public class CommandeTest {
         outContent.reset();
 
         Date date = new Date("2018/02/02");
-        assertEquals(data.getListeTache().get(0).getScheduled(), date);
+        assertEquals(data.getListeTache().get(0).getDateDebut(), date);
 
         /*Main.main(new String[]{"task", "sd", "0", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_SCHEDULED_SUCCES.toString().trim());
@@ -331,7 +332,11 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTags().get(0));
+        Main.main(new String[]{"task", "tag", "add", "1", "test"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_AJOUT_TAG_ECHEC.toString().trim());
+        outContent.reset();
+
+        assertEquals("TEST", data.getListeTache().get(1).getTagListe().get(0));
     }
 
     @Test
@@ -365,8 +370,12 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_TAG_SUCCES.toString().trim());
         outContent.reset();
 
-        assertEquals("test", data.getListeTache().get(1).getTags().get(0));
-        assertEquals(1, data.getListeTache().get(1).getTags().size());
+        Main.main(new String[]{"task", "tag", "delete", "1", "autre"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_DELETE_TAG_ECHEC.toString().trim());
+        outContent.reset();
+
+        assertEquals("TEST", data.getListeTache().get(1).getTagListe().get(0));
+        assertEquals(1, data.getListeTache().get(1).getTagListe().size());
     }
 
     @Test
@@ -574,10 +583,21 @@ public class CommandeTest {
         Main.main(new String[]{"task", "state", "0", "ongoing"});
         assertEquals(outContent.toString().trim(), Message.TACHE_STATE_UPDATE_ECHEC.toString().trim());
         outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "next"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_SUIVANT_UPDATE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "state", "0", "next"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_STATE_SUIVANT_UPDATE_ECHEC.toString().trim());
+        outContent.reset();
     }
 
     @Test
     public void testListTSIF() throws Exception {
+        Main.main(new String[]{"list"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
         Main.main(new String[]{"list","ts"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
@@ -608,15 +628,15 @@ public class CommandeTest {
         int i = 0;
         for (Tache tache : data.getListeTache()) {
             if(taches.contains(tache)) {
-                msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-                if (tache.getClock() != null) {
-                    msg.append(" ").append(tache.getClockString());
+                msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+                if (tache.getMinuteur() != null) {
+                    msg.append(" ").append(tache.getMinuteurTexte());
                 }
                 msg.append("\n");
             }
             i++;
         }
-        msg.append(data.getListeTache().size() + " résultat(s).\n");
+        msg.append(data.getListeTache().size() + " result(s).\n");
         msg = new StringBuilder(msg.toString().trim());
         assertEquals(outContent.toString().trim(), msg.toString());
         outContent.reset();
@@ -681,16 +701,16 @@ public class CommandeTest {
             int j = 0;
             for (Tache tache : data.getListeTache()) {
                 if(taches.contains(tache)) {
-                    msg.append("n°").append(i).append(" ").append(tache.getTitle()).append(" ").append(tache.getId());
-                    if (tache.getClock() != null) {
-                        msg.append(" ").append(tache.getClockString());
+                    msg.append("n°").append(i).append(" ").append(tache.getTitre()).append(" ").append(tache.getId());
+                    if (tache.getMinuteur() != null) {
+                        msg.append(" ").append(tache.getMinuteurTexte());
                     }
                     msg.append("\n");
                     j++;
                 }
                 i++;
             }
-            msg.append(j + " résultat(s).\n");
+            msg.append(j + " result(s).\n");
         }
 
         msg = new StringBuilder(msg.toString().trim());
@@ -776,6 +796,28 @@ public class CommandeTest {
     }
 
     @Test
+    public void testTaskCost() throws Exception {
+        Main.main(new String[]{"task", "cost", "0", "salut"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "add", "test"});
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_COUTF.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"task", "cost", "0", "1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_COUTS.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
     public void testClock() throws Exception {
         Main.main(new String[]{"task","clock"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
@@ -791,23 +833,23 @@ public class CommandeTest {
         Main.main(new String[]{"task", "add", "tache 1"});
         outContent.reset();
 
-        Main.main(new String[]{"task", "clock", "use"});
+        Main.main(new String[]{"task", "clock"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"task", "clock", "use", "aze"});
+        Main.main(new String[]{"task", "clock", "aze"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"task", "clock", "use", "-1"});
+        Main.main(new String[]{"task", "clock", "-1"});
         assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"task", "clock", "use", "0"});
+        Main.main(new String[]{"task", "clock", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_LANCER_SUCCES.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"task", "clock", "use", "0"});
+        Main.main(new String[]{"task", "clock", "0"});
         assertEquals(outContent.toString().trim(), Message.TACHE_MINUTEUR_STOPPER_SUCCES.toString().trim());
         outContent.reset();
     }
@@ -826,6 +868,7 @@ public class CommandeTest {
     @Test
     public void testCollaboratorAdd() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"col", "add", "bob"});
         outContent.reset();
 
         Main.main(new String[]{"task", "col", "add"});
@@ -852,6 +895,8 @@ public class CommandeTest {
     @Test
     public void testCollaboratorDelete() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
+        Main.main(new String[]{"col", "add", "bob"});
+        Main.main(new String[]{"task", "col", "add", "0", "bob"});
         outContent.reset();
 
         Main.main(new String[]{"task", "col", "delete"});
@@ -893,4 +938,260 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.MAIN_HELP.toString().trim());
     }
 
+    @Test
+    public void testHeader() throws Exception {
+        Main.main(new String[]{"head", "help"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_HELP.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderGet() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_GET_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "get", "test"});
+        assertEquals(outContent.toString().trim(), "valeur");
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderAdd() throws Exception {
+        Main.main(new String[]{"head", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "add", "test", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_ADD_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "add", " ", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_ADD_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderSet() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set", "test", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_SET_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "set", "aze", "bob"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_SET_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderDelete() throws Exception {
+        Main.main(new String[]{"head", "add", "test", "valeur"});
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "test"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_DELETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"head", "delete", "aze"});
+        assertEquals(outContent.toString().trim(), Message.HEADER_DELETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCostIte() throws Exception {
+        Main.main(new String[]{"cost"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE.toString());
+        outContent.reset();
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+        Main.main(new String[]{"head", Tache.HEADER_COST, "3"});
+        outContent.reset();
+        Main.main(new String[]{"task", "cost", "0", "3"});
+        outContent.reset();
+        Main.main(new String[]{"task", "state", "0", State.ONGOING.toString()});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_0.toString().trim());
+        Main.main(new String[]{"task", "cost", "0", "2"});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_SUP.toString() + 1);
+        Main.main(new String[]{"task", "cost", "0", "4"});
+        outContent.reset();
+        Main.main(new String[]{"cost", "ite"});
+        assertEquals(outContent.toString().trim(), Message.COST_ITE_INF.toString() + 1);
+        Tache.removeEnTete(Tache.HEADER_COST, true);
+    }
+
+    @Test
+    public void testCostHelp() throws Exception {
+        Main.main(new String[]{"cost", "help"});
+        assertEquals(outContent.toString().trim(), Message.COST_HELP.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"cost", "zzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testHeaderCost() throws Exception {
+        Main.main(new String[]{"header", "cost"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeader() throws Exception {
+        Main.main(new String[]{"col", "help"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_HELP.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "aazeazezaeze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderAdd() throws Exception {
+        Main.main(new String[]{"col", "add"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderSet() throws Exception {
+        Main.main(new String[]{"col", "set"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        outContent.reset();
+
+        Main.main(new String[]{"col", "set", "bob", "dylane"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_SET_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "set", "bob", "test"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_SET_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testCollaboratorHeaderDelete() throws Exception {
+        Main.main(new String[]{"col", "delete"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "add", "bob"});
+        outContent.reset();
+
+        Main.main(new String[]{"col", "delete", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"col", "delete", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTagFunctional() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_FUNC_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "func", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_FUNC_ECHEC.toString().trim());
+        outContent.reset();
+    }
+
+    @Test
+    public void testTagTechnical() throws Exception {
+        Main.main(new String[]{"task", "add", "tache 1"});
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "aze"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "-1"});
+        assertEquals(outContent.toString().trim(), Message.TACHE_INVALIDE_ECHEC.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_TECH_SUCCES.toString().trim());
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "0"});
+        assertEquals(outContent.toString().trim(), Message.TAG_TECH_ECHEC.toString().trim());
+        outContent.reset();
+    }
 }

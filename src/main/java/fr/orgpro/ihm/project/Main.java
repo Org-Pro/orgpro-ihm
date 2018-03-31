@@ -9,10 +9,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //args = new String[]{"file", "select", "test"};
         //args = new String[]{"task", "add", "test2"};
-        //args = new String[]{"task", "list"};
-        //args = new String[]{"task", "clock", "use", "0"};
+        //args = new String[]{"col", "list"};
+        //args = new String[]{"task", "clock", "use", "1"};
         //args = new String[]{"task", "dep", "set", "0", "2"};
-        //args = new String[]{"list", "task"};
+        //args = new String[]{"col", "delete", "bob"};
 
         data = Data.getInstance();
 
@@ -44,14 +44,28 @@ public class Main {
             return;
         }
         switch (args[0].toLowerCase()){
+            case "collaborator": {}
+            case "col" :
+                Commande.commandeCollaborateur(args, data);
+                break;
             case "task":
                 Commande.commandeTache(args, data);
+                break;
+            case "head": {}
+            case "header":
+                Commande.commandeHeader(args, data);
                 break;
             case "file":
                 Commande.commandeFichier(args, data);
                 break;
             case "list":
                 Commande.commandeListe(args, data);
+                break;
+            case "cost":
+                Commande.commandeCost(args, data);
+                break;
+            case "tag":
+                Commande.commandeTag(args, data);
                 break;
             case "help":
                 System.out.println(Message.MAIN_HELP);

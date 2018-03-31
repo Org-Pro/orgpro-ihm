@@ -30,7 +30,7 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if(data.getListeTache().get(numTache).ajoutCollaborateur(args[4])){
+                        if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_SUCCES);
                         }else{
@@ -48,7 +48,7 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if(data.getListeTache().get(numTache).supprimerCollaborateur(args[4])){
+                        if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_COLLABORATEUR_SUCCES);
                         }else{
@@ -65,32 +65,20 @@ public class Commande {
             }
 
             case "clock" : {
-                if (verifBadNbArgument(3, args)) {
+                // TACHE CLOCK <num>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
-                switch (args[2].toLowerCase()){
-                    case "use" : {
-                        // TACHE CLOCK USE <num>
-                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
-                            return;
-                        }
-                        int numTache = Integer.parseInt(args[3]);
-                        if (verifTacheNotExiste(numTache, data)) {
-                            return;
-                        }
-                        if (data.getListeTache().get(numTache).minuteurParPropriete()) {
-                            data.ecritureListeTaches();
-                            System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
-                        } else {
-                            data.ecritureListeTaches();
-                            System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
-                        }
-                        break;
-                    }
-
-                    default:
-                        System.out.println(Message.ARGUMENT_INVALIDE);
-                        break;
+                int numTache = Integer.parseInt(args[2]);
+                if (verifTacheNotExiste(numTache, data)) {
+                    return;
+                }
+                if (data.getListeTache().get(numTache).useMinuteurParPropriete()) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_MINUTEUR_LANCER_SUCCES);
+                } else {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TACHE_MINUTEUR_STOPPER_SUCCES);
                 }
                 break;
             }
@@ -104,12 +92,24 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)) {
                     return;
                 }
+
+                if(args[3].trim().toLowerCase().equals("next")){
+                    if(data.getListeTache().get(numTache).setEtatSuivant()){
+                        data.ecritureListeTaches();
+                        System.out.println(Message.TACHE_STATE_SUIVANT_UPDATE_SUCCES);
+                    }else{
+                        System.out.println(Message.TACHE_STATE_SUIVANT_UPDATE_ECHEC);
+                    }
+                    break;
+                }
+
                 State state = State.stringIsState(args[3]);
                 if(state == null){
                     System.out.println(Message.TACHE_STATE_INTROUVABLE_ECHEC);
                     return;
                 }
-                if(data.getListeTache().get(numTache).changeState(state)){
+
+                if(data.getListeTache().get(numTache).setEtat(state)){
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_STATE_UPDATE_SUCCES);
                 }else{
@@ -134,7 +134,7 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if(data.getListeTache().get(numTache).ajoutProperty(args[4], args[5], false)){
+                        if(data.getListeTache().get(numTache).addPropriete(args[4], args[5], false)){
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_AJOUT_PROPRIETE_SUCCES);
                         }else{
@@ -143,7 +143,7 @@ public class Commande {
                         break;
                     }
                     case "delete": {
-                        // TASK PROPERTY ADD <num> <name prop>
+                        // TASK PROPERTY DELETE <num> <name prop>
                         if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                             return;
                         }
@@ -151,7 +151,7 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if(data.getListeTache().get(numTache).supprimerProperty(args[4],  false)){
+                        if(data.getListeTache().get(numTache).removePropriete(args[4],  false)){
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_PROPRIETE_SUCCES);
                         }else{
@@ -181,9 +181,12 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        data.getListeTache().get(numTache).ajoutTag(args[4]);
-                        data.ecritureListeTaches();
-                        System.out.println(Message.TACHE_AJOUT_TAG_SUCCES);
+                        if(data.getListeTache().get(numTache).addTag(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_AJOUT_TAG_SUCCES);
+                        }else {
+                            System.out.println(Message.TACHE_AJOUT_TAG_ECHEC);
+                        }
                         break;
                     }
                     case "delete": {
@@ -195,11 +198,15 @@ public class Commande {
                         if (verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        data.getListeTache().get(numTache).supprimerTag(args[4]);
-                        data.ecritureListeTaches();
-                        System.out.println(Message.TACHE_DELETE_TAG_SUCCES);
+                        if(data.getListeTache().get(numTache).removeTag(args[4])){
+                            data.ecritureListeTaches();
+                            System.out.println(Message.TACHE_DELETE_TAG_SUCCES);
+                        }else {
+                            System.out.println(Message.TACHE_DELETE_TAG_ECHEC);
+                        }
                         break;
                     }
+
                     default:
                         System.out.println(Message.ARGUMENT_INVALIDE);
                         break;
@@ -210,7 +217,7 @@ public class Commande {
 
             case "deadline":{}
             case "dl": {
-                // TACHE DL <num> <date ou 0>
+                // TACHE DL <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -219,17 +226,8 @@ public class Commande {
                     return;
                 }
 
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_DEADLINE_SUCCES);
-                    return;
-                }*/
-
                 String date = args[3].replace("/", "-");
-                if (data.getListeTache().get(numTache).ajoutDeadline(date)) {
+                if (data.getListeTache().get(numTache).addDateLimite(date)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_DEADLINE_SUCCES);
                 } else {
@@ -240,7 +238,7 @@ public class Commande {
 
             case "closed":{}
             case "cl": {
-                // TACHE closed <num> <date ou 0>
+                // TACHE closed <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -249,17 +247,8 @@ public class Commande {
                     return;
                 }
 
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_CLOSED_SUCCES);
-                    return;
-                }*/
-
                 String date = args[3].replace("/", "-");
-                if (data.getListeTache().get(numTache).ajoutClosed(date)) {
+                if (data.getListeTache().get(numTache).addDateFin(date)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_CLOSED_SUCCES);
                 } else {
@@ -270,7 +259,7 @@ public class Commande {
 
             case "scheduled":{}
             case "sd": {
-                // TACHE scheduled <num> <date ou 0>
+                // TACHE scheduled <num> <date>
                 if (verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
                     return;
                 }
@@ -279,17 +268,8 @@ public class Commande {
                     return;
                 }
 
-                /*if(args[3].trim().equals("0")){
-                    // TODO
-                    //data.getListeTache().get(numTache)
-
-                    data.ecritureListeTaches();
-                    System.out.println(Message.TACHE_DELETE_SCHEDULED_SUCCES);
-                    return;
-                }*/
-
                 String date = args[3].replace("/", "-");
-                if (data.getListeTache().get(numTache).ajoutScheduled(date)) {
+                if (data.getListeTache().get(numTache).addDateDebut(date)) {
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_SCHEDULED_SUCCES);
                 } else {
@@ -307,14 +287,14 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
-                data.getListeTache().get(numTache).changeTitle(args[3]);
+                data.getListeTache().get(numTache).setTitre(args[3]);
                 data.ecritureListeTaches();
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
             }
 
             case "add": {
-                // TACHE ADD <nom> (dep)
+                // TACHE ADD <nom> (num dep)
                 if(args.length == 4){
                     if (verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                         return;
@@ -332,9 +312,31 @@ public class Commande {
                         return;
                     }
                     Tache tache = new Tache(args[2]);
-                    tache.ecritureFichier(data.getPath(), true);
+                    tache.writeFichier(data.getPath(), true);
                     System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
+                break;
+            }
+
+            case "cost": {
+                // Task cost <numTask> <valCost>
+
+                if(verifBadNbArgument(4, args) || verifArgNotNombre(args[2]) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                int cout = Integer.parseInt(args[3]);
+
+                if (verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+
+                if(data.getListeTache().get(numTache).addCout(cout)){
+                    System.out.println(Message.TACHE_COUTS);
+                }else{
+                    System.out.println(Message.TACHE_COUTF);
+                }
+                data.ecritureListeTaches();
                 break;
             }
 
@@ -347,7 +349,7 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
-                Tache.supprimerTache(data.getListeTache(), numTache);
+                Tache.removeTache(data.getListeTache(), numTache);
                 data.ecritureListeTaches();
                 System.out.println(Message.TACHE_DELETE_SUCCES);
                 break;
@@ -358,13 +360,13 @@ public class Commande {
                 if(verifBadLectureFichier(data)){
                     return;
                 }
-                System.out.print(data.getListeTache().size() + " résultat(s).\n");
+                System.out.print(data.getListeTache().size() + " result(s).\n");
                 int i = 0;
                 String msg;
                 for (Tache tache : data.getListeTache()) {
-                    msg = "n°" + i + " " + tache.getTitle() + " " + tache.getId();
-                    if(tache.getClock() != null){
-                        msg += " " + tache.getClockString();
+                    msg = "n°" + i + " " + tache.getTitre() + " " + tache.getId();
+                    if(tache.getMinuteur() != null){
+                        msg += " " + tache.getMinuteurTexte();
                     }
                     System.out.print(msg + "\n");
                     i++;
@@ -408,7 +410,7 @@ public class Commande {
                         if(verifTacheNotExiste(numTache, data)){
                             return;
                         }
-                        if(Tache.deleteDependanceListe(data.getListeTache(), numTache)){
+                        if(Tache.removeDependanceListe(data.getListeTache(), numTache)){
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_DEPENDANCE_SUCCES);
                         }else{
@@ -537,7 +539,7 @@ public class Commande {
                     System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
                     break;
                 }
-                List<Tache> taches = Scrum.listerTacheScheduled(data.getListeTache());
+                List<Tache> taches = Scrum.listTacheDateDebut(data.getListeTache());
                 System.out.print(affichage(data, taches));
 
                 break;
@@ -553,6 +555,245 @@ public class Commande {
         }
     }
 
+    public static void commandeCost(String[] args, Data data){
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "ite" :
+                Integer dif = Scrum.compareCout(data.getListeTache());
+                if(dif == null){
+                    System.out.println(Message.COST_ITE);
+                }else if(dif == 0){
+                    System.out.println(Message.COST_ITE_0);
+                }else if(dif > 0){
+                    System.out.println(Message.COST_ITE_SUP + dif.toString());
+                }else{
+                    dif = dif * -1;
+                    System.out.println(Message.COST_ITE_INF + dif.toString());
+                }
+                break;
+            case "help" :
+                System.out.println(Message.COST_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
+    public static void commandeHeader(String[] args, Data data) {
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "cost" : {
+                // HEAD COST <valeur>
+                if(verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(!Tache.setEnTete(Tache.HEADER_COST,args[2],true)){
+                    Tache.addEnTete(Tache.HEADER_COST, args[2], true);
+                }
+                System.out.println(Message.HEADER_COSTS);
+                data.ecritureListeTaches();
+                break;
+            }
+            case "get" : {
+                // HEAD GET <clef>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                String header = Tache.getEnTete(args[2]);
+                if (header != null) {
+                    System.out.println(header);
+                } else {
+                    System.out.println(Message.HEADER_GET_ECHEC);
+                }
+                break;
+            }
+
+            case "add" : {
+                // HEAD ADD <clef> <valeur>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.addEnTete(args[2], args[3], false)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_ADD_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_ADD_ECHEC);
+                }
+                break;
+            }
+
+            case "set" : {
+                // HEAD SET <clef> <valeur>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.setEnTete(args[2], args[3], false)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_SET_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_SET_ECHEC);
+                }
+                break;
+            }
+
+            case "delete" : {
+                // HEAD DELETE <clef>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if (Tache.removeEnTete(args[2], false)) {
+                    data.ecritureListeTaches();
+                    System.out.println(Message.HEADER_DELETE_SUCCES);
+                } else {
+                    System.out.println(Message.HEADER_DELETE_ECHEC);
+                }
+                break;
+            }
+
+            case "help" :
+                System.out.println(Message.HEADER_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
+    public static void commandeCollaborateur(String[] args, Data data){
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "add" :
+                // COL ADD <nom>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.addCollaborateurEnTete(args[2])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_AJOUT_ECHEC);
+                }
+                break;
+
+            case "set" :
+                // COL set <old nom> <new nom>
+                if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_SET_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_SET_ECHEC);
+                }
+                break;
+
+            case "delete" :
+                // COL delete <nom>
+                if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(Tache.removeCollaborateurEnTete(data.getListeTache(), args[2])){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
+                }else{
+                    System.out.println(Message.COLLABORATEUR_DELETE_ECHEC);
+                }
+                break;
+
+            case "list": {
+                // TACHE LIST
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
+                List<String> list = Tache.getCollaborateurEnTeteListe();
+                if (list == null){
+                    System.out.print("No résult.\n");
+                    break;
+                }else {
+                    System.out.print(list.size() + " résult(s).\n");
+                }
+                int i = 0;
+                String msg;
+                for (String col : list) {
+                    msg = "n°" + i + " " + col;
+                    System.out.print(msg + "\n");
+                    i++;
+                }
+                break;
+            }
+
+            case "help" :
+                System.out.println(Message.COLLABORATEUR_HELP);
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+    }
+
+    public static void commandeTag(String[] args, Data data) {
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "technical": {}
+            case "tech": {
+                // TAG TECH <num tache>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if(verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+                if(data.getListeTache().get(numTache).addTag("technical")){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TAG_TECH_SUCCES);
+                }else{
+                    System.out.println(Message.TAG_TECH_ECHEC);
+                }
+                break;
+            }
+
+            case "functional": {}
+            case "func": {
+                // TAG FUNC <num tache>
+                if (verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache = Integer.parseInt(args[2]);
+                if(verifTacheNotExiste(numTache, data)){
+                    return;
+                }
+                if(data.getListeTache().get(numTache).addTag("functional")){
+                    data.ecritureListeTaches();
+                    System.out.println(Message.TAG_FUNC_SUCCES);
+                }else{
+                    System.out.println(Message.TAG_FUNC_ECHEC);
+                }
+                break;
+            }
+
+            case "help":
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+
+    }
 
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
@@ -596,7 +837,7 @@ public class Commande {
     }
 
     private static void affichageState(Data data,String state){
-        List<Tache> taches = Scrum.listerTacheState(data.getListeTache(), State.stringIsState(state));
+        List<Tache> taches = Scrum.listTacheEtat(data.getListeTache(), State.stringIsState(state));
 
         if(State.TODO.toString().equals(state)){
             System.out.print("\n" + Message.LIST_STATE_TODO + "\n");
@@ -623,9 +864,9 @@ public class Commande {
         String msg = "";
         for (Tache tache : data.getListeTache()) {
             if(taches.contains(tache)) {
-                msg += "n°" + i + " " + tache.getTitle() + " " + tache.getId();
-                if (tache.getClock() != null) {
-                    msg += " " + tache.getClockString();
+                msg += "n°" + i + " " + tache.getTitre() + " " + tache.getId();
+                if (tache.getMinuteur() != null) {
+                    msg += " " + tache.getMinuteurTexte();
                 }
                 //System.out.print(msg + "\n");
                 msg += "\n";
@@ -634,7 +875,7 @@ public class Commande {
             i++;
         }
         //System.out.print(j + " résultat(s).\n");
-        msg += j + " résultat(s).\n";
+        msg += j + " result(s).\n";
 
         return msg;
     }
