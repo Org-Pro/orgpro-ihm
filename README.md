@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Org-Pro/orgpro-ihm.svg?branch=version-1.0)](https://travis-ci.org/Org-Pro/orgpro-ihm)
-[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.png?branch=version-1.0)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=version-1.0)
+[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.svg?branch=version-1.0)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=version-1.0)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/CodeChillAlluna/code-chill/blob/master/LICENSE)
 
 # Guide d'installation
