@@ -545,6 +545,30 @@ public class Commande {
                 break;
             }
 
+            case "tech" : {
+                //LIST TECH
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
+                List<Tache> taches = Scrum.listTacheTag(data.getListeTache(),"technical");
+                System.out.print(affichage(data,taches));
+                break;
+            }
+
+            case "func" : {
+                //LIST FUNC
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
+                List<Tache> taches = Scrum.listTacheTag(data.getListeTache(),"functional");
+                System.out.print(affichage(data,taches));
+                break;
+            }
+
             case "help" :
                 System.out.println(Message.LIST_HELP);
                 break;

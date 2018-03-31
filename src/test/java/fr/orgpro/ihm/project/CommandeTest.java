@@ -1194,4 +1194,54 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.TAG_TECH_ECHEC.toString().trim());
         outContent.reset();
     }
+
+    @Test
+    public void testListTechAndFunc() throws Exception {
+        Main.main(new String[]{"list", "tech"});
+        assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
+        outContent.reset();
+
+        String title1 = "tache 1";
+        String title2 = "tache 2";
+        String title3 = "tache 3";
+        String title4 = "tache 4";
+        Main.main(new String[]{"task", "add", title1});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title2});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title3});
+        outContent.reset();
+        Main.main(new String[]{"task", "add", title4});
+        outContent.reset();
+
+        Main.main(new String[]{"tag", "tech", "0"});
+        outContent.reset();
+        Main.main(new String[]{"tag", "func", "1"});
+        outContent.reset();
+        Main.main(new String[]{"tag", "tech", "2"});
+        outContent.reset();
+        Main.main(new String[]{"tag", "func", "3"});
+        outContent.reset();
+        Main.main(new String[]{"list","tech"});
+
+        List<Tache> taches = new ArrayList<Tache>();
+
+        taches.add(data.getListeTache().get(0));
+        taches.add(data.getListeTache().get(2));
+
+        String msg = Commande.affichage(data, taches);
+        assertEquals(outContent.toString().trim(),msg.trim());
+        outContent.reset();
+
+        Main.main(new String[]{"list","func"});
+
+        taches.clear();
+        taches.add(data.getListeTache().get(1));
+        taches.add(data.getListeTache().get(3));
+
+        msg = Commande.affichage(data, taches);
+
+        assertEquals(outContent.toString().trim(),msg.trim());
+        outContent.reset();
+    }
 }
