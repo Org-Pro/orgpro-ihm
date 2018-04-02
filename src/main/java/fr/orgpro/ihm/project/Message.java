@@ -10,7 +10,13 @@ public enum Message {
     ARGUMENT_INVALIDE(COULEUR_ECHEC + "FAILURE : One of the argument is invalid." + COULEUR_RESET),
     PROBLEME_LECTURE(COULEUR_ECHEC + "FAILURE : Trouble reading the file." + COULEUR_RESET),
 
-    MAIN_HELP(""),
+    MAIN_HELP("COL ... -> command related to collaborator\n " +
+            "TASK ... -> command related to task\n" +
+            "HEAD ... -> command related to header\n" +
+            "FILE ... -> command related to the read and write file\n" +
+            "LIST ... -> command related to sort of task\n" +
+            "COST ... -> command related to the cost od an iteration\n" +
+            "TAG ... -> command that allow to mark task to functionnal or technical"),
     MAIN_AUNCUN_FICHIER("You must create or upload a file.\n" +
             "Command : FILE SELECT <Name of the file to create / load>"),
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
@@ -54,7 +60,13 @@ public enum Message {
     TACHE_STATE_INTROUVABLE_ECHEC(COULEUR_ECHEC + "FAILURE : State does not exist." + COULEUR_RESET),
     TACHE_COUTS(COULEUR_SUCCES + "SUCCESS : Cost added" + COULEUR_RESET),
     TACHE_COUTF(COULEUR_ECHEC + "FAILURE : Cost not added" + COULEUR_RESET),
-    TACHE_HELP("TASK ADD <Title of task> -> Add a task\n"
+    TACHE_HELP("TASK ADD <Title of task> -> Add a task\n"+
+                "TASK COL ADD <numTask> <nameCol> -> add a collaborator to a task if the collaborator exist in the header\n" +
+                "TASK COL DELETE <numTask> <nameCol> -> delete a collaborator to a task\n" +
+                "TASK CLOCK <numTask> -> start/end the timer\n" +
+                "TASK STATE <numTask> <state (TODO,ONGOING,DONE,CANCELLED)> -> add a state to a task\n" +
+                "TASK STATE <numTask> <next> -> set a task to the next state" +
+                ""
 
 
 
@@ -68,6 +80,8 @@ public enum Message {
     FICHIER_LOAD(COULEUR_SUCCES + "SUCCESS : Loaded file." + COULEUR_RESET),
     FICHIER_LISTE("List of file available :"),
     FICHIER_LISTE_VIDE("No file found."),
+    FICHIER_HELP("FILE LIST -> list existing file\n" +
+                "FILE SELECT <name of file> -> create/select a file to write in\n"),
 
     LIST_AUCUN_RESULTAT("No result."),
     LIST_STATE_TODO("TODO list"),
@@ -75,9 +89,9 @@ public enum Message {
     LIST_STATE_DONE("DONE list"),
     LIST_STATE_CANCELLED("CANCELLED list"),
     LIST_HELP("LIST TASK -> displays the tasks of a file\n" +
-    "LIST TS <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state" +
-    "LIST ATS -> displays all the task sort by state" +
-    "LIST SD -> shows tasks that have been scheduled but are still in the todo list"),
+    "LIST T <State> (TODO,ONGOING,DONE,CANCELLED) -> displays the tasks that correspond to the given state" +
+    "LIST K/ LIST KANBAN -> displays all the task sort by state" +
+    "LIST NOTSTARTED -> shows tasks that have been scheduled but are still in the todo list"),
 
     HEADER_HELP(""),
     HEADER_COSTS(COULEUR_SUCCES + "SUCCES : Iteration cost added" + COULEUR_RESET),
@@ -96,7 +110,10 @@ public enum Message {
     COST_HELP("COST ITE -> gives the difference between the cost of an iteration and the sum of the costs of ongoing tasks"),
 
     // TODO
-    COLLABORATEUR_HELP("col help"),
+    COLLABORATEUR_HELP("COL ADD <name> -> add a collaborator in the header\n" +
+                        "COL SET <old name> <new name> -> update the name of a collaborator\n" +
+                        "COL DELETE <name> -> delete a collaborator\n" +
+                        "COL LIST -> list all collaborator"),
     COLLABORATEUR_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : add col" + COULEUR_RESET),
     COLLABORATEUR_SET_SUCCES(COULEUR_SUCCES + "SUCCESS : set col" + COULEUR_RESET),
     COLLABORATEUR_DELETE_SUCCES(COULEUR_SUCCES + "SUCCESS : delete col" + COULEUR_RESET),
@@ -108,6 +125,8 @@ public enum Message {
     TAG_TECH_SUCCES(COULEUR_SUCCES + "FAILLURE : add tech" + COULEUR_RESET),
     TAG_FUNC_ECHEC(COULEUR_ECHEC + "FAILLURE : add func" + COULEUR_RESET),
     TAG_TECH_ECHEC(COULEUR_ECHEC + "SUCCESS : add tech" + COULEUR_RESET),
+    TAG_HELP("TAG TECH <numTask> -> Tag a task to technical\n" +
+            "TAG FUNC <numTask> -> Tag a task to functional"),
 
     ;
 

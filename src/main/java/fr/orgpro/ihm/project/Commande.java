@@ -479,6 +479,7 @@ public class Commande {
             }
 
             case "help":
+                System.out.println(Message.FICHIER_HELP);
                 break;
 
             default:
@@ -810,6 +811,7 @@ public class Commande {
             }
 
             case "help":
+                System.out.println(Message.TAG_HELP);
                 break;
 
             default:
