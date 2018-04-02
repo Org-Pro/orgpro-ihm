@@ -58,17 +58,30 @@ public enum Message {
     TACHE_STATE_INTROUVABLE_ECHEC(COULEUR_ECHEC + "FAILURE : State does not exist." + COULEUR_RESET),
     TACHE_COUTS(COULEUR_SUCCES + "SUCCESS : Cost added" + COULEUR_RESET),
     TACHE_COUTF(COULEUR_ECHEC + "FAILURE : Cost not added" + COULEUR_RESET),
-    TACHE_HELP("TASK ADD <Title of task> -> Add a task\n"+
-                "TASK COL ADD <numTask> <nameCol> -> add a collaborator to a task if the collaborator exist in the header\n" +
+    TACHE_HELP("TASK COL ADD <numTask> <nameCol> -> add a collaborator to a task if the collaborator exist in the header\n" +
                 "TASK COL DELETE <numTask> <nameCol> -> delete a collaborator to a task\n" +
                 "TASK CLOCK <numTask> -> start/end the timer\n" +
                 "TASK STATE <numTask> <state (TODO,ONGOING,DONE,CANCELLED)> -> add a state to a task\n" +
-                "TASK STATE <numTask> <next> -> set a task to the next state" +
+                "TASK STATE <numTask> <next> -> set a task to the next state\n" +
+                "TASK PROP ADD <numTask> <nameProp> <value> -> add a property in a task\n" +
+                "TASK PROP DELETE <numTask> <nameProp> -> delete a property in a task\n" +
+                "TASK TAG ADD <numTask> <nameTag> -> add a tag in a task\n" +
+                "TASK TAG DELETE <numTask> <nameTag> -> delete a tag in a task\n" +
+                "TASK DL <numTask> <date (yyyy-MM-dd or yyyy/MM/dd)> -> add a deadline to the task\n" +
+                "TASK CL <numTask> <date (yyyy-MM-dd or yyyy/MM/dd)> -> add a the date when the task was finished\n" +
+                "TASK SD <numTask> <date (yyyy-MM-dd or yyyy/MM/dd)> -> add a scheduled date to the task\n" +
+                "TASK RENAME <numTask> <newName> -> rename a task\n" +
+                "TASK ADD <name> -> create a task\n" +
+                "TASK ADD <name> <numTask> -> create a task with dependency to another task\n" +
+                "TASK COST <numTask> <value> -> add a cost to a task\n" +
+                "TASK DELETE <numTask> -> delete a task\n" +
+                "TASK LIST -> llist all the task with their number\n" +
+                "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
                 ""
 
 
 
-    //TODO
+
 
 
     ),
