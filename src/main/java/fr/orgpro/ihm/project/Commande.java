@@ -479,6 +479,7 @@ public class Commande {
             }
 
             case "help":
+                System.out.println(Message.FICHIER_HELP);
                 break;
 
             default:
@@ -504,7 +505,7 @@ public class Commande {
                 break;
             }
 
-            case "ts" : {
+            case "t" : {
                 // LIST TS <State>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
@@ -516,8 +517,10 @@ public class Commande {
                 affichageState(data, args[2]);
                 break;
             }
+            case "kanban" : {
 
-            case "ats" : {
+            }
+            case "k" : {
                 // LIST ATS
                 verifBadLectureFichier(data);
                 if(data.getListeTache().isEmpty()){
@@ -532,7 +535,7 @@ public class Commande {
                 break;
             }
 
-            case "sd" : {
+            case "notstarted" : {
                 // LIST SD
                 verifBadLectureFichier(data);
                 if(data.getListeTache().isEmpty()){
@@ -542,6 +545,30 @@ public class Commande {
                 List<Tache> taches = Scrum.listTacheDateDebut(data.getListeTache());
                 System.out.print(affichage(data, taches));
 
+                break;
+            }
+
+            case "tech" : {
+                //LIST TECH
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
+                List<Tache> taches = Scrum.listTacheTag(data.getListeTache(),"technical");
+                System.out.print(affichage(data,taches));
+                break;
+            }
+
+            case "func" : {
+                //LIST FUNC
+                verifBadLectureFichier(data);
+                if(data.getListeTache().isEmpty()){
+                    System.out.print(Message.LIST_AUCUN_RESULTAT + "\n");
+                    break;
+                }
+                List<Tache> taches = Scrum.listTacheTag(data.getListeTache(),"functional");
+                System.out.print(affichage(data,taches));
                 break;
             }
 
@@ -786,6 +813,7 @@ public class Commande {
             }
 
             case "help":
+                System.out.println(Message.TAG_HELP);
                 break;
 
             default:
