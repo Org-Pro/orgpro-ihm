@@ -1248,4 +1248,23 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(),msg.trim());
         outContent.reset();
     }
+    @Test
+    public void testTagHelp() throws Exception {
+        Main.main(new String[]{"tag", "zzzzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"tag", "help"});
+        assertEquals(outContent.toString().trim(), Message.TAG_HELP.toString().trim());
+        outContent.reset();
+    }
+
+        @Test
+    public void testFileHelp() throws Exception {
+        Main.main(new String[]{"file", "zzzzzzzzz"});
+        assertEquals(outContent.toString().trim(), Message.ARGUMENT_INVALIDE.toString().trim());
+        outContent.reset();
+        Main.main(new String[]{"file", "help"});
+        assertEquals(outContent.toString().trim(), Message.FICHIER_HELP.toString().trim());
+        outContent.reset();
+    }
 }
