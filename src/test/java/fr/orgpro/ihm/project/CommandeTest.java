@@ -594,18 +594,18 @@ public class CommandeTest {
     }
 
     @Test
-    public void testListTSIF() throws Exception {
+    public void testListTIF() throws Exception {
         Main.main(new String[]{"list"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
-        Main.main(new String[]{"list","ts"});
+        Main.main(new String[]{"list","t"});
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
     }
 
     @Test
-    public void testListTS() throws Exception {
-        Main.main(new String[]{"list","ts","TODO"});
+    public void testListT() throws Exception {
+        Main.main(new String[]{"list","t","TODO"});
         assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
         outContent.reset();
         String title = "tache 1";
@@ -613,13 +613,13 @@ public class CommandeTest {
         Main.main(new String[]{"task", "clock", "use", "0"});
         Main.main(new String[]{"task", "clock", "use", "0"});
         outContent.reset();
-        Main.main(new String[]{"list","ts","DONE"});
+        Main.main(new String[]{"list","t","DONE"});
         StringBuilder msg2 = new StringBuilder();
         msg2.append(Message.LIST_STATE_DONE + "\n");
         msg2.append(Message.LIST_AUCUN_RESULTAT);
         assertEquals(outContent.toString().trim(), msg2.toString().trim());
         outContent.reset();
-        Main.main(new String[]{"list", "ts", "TODO"});
+        Main.main(new String[]{"list", "t", "TODO"});
         List<Tache> taches = new ArrayList<Tache>();
         Tache t = data.getListeTache().get(0);
         taches.add(t);
@@ -643,14 +643,14 @@ public class CommandeTest {
     }
 
     @Test
-    public void testListATSIF() throws Exception {
-        Main.main(new String[]{"list","ats"});
+    public void testListKanbanIF() throws Exception {
+        Main.main(new String[]{"list","kanban"});
         assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
         outContent.reset();
     }
 
     @Test
-    public void testListATS() throws Exception {
+    public void testListKanban() throws Exception {
         String title1 = "tache 1";
         String title2 = "tache 2";
         String title3 = "tache 3";
@@ -669,7 +669,7 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"task", "state", "3", "cancelled"});
         outContent.reset();
-        Main.main(new String[]{"list", "ats"});
+        Main.main(new String[]{"list", "kanban"});
         List<Tache> taches = new ArrayList<Tache>();
 
         StringBuilder msg = new StringBuilder();
@@ -719,14 +719,14 @@ public class CommandeTest {
     }
 
     @Test
-    public void testListSdSIF() throws Exception {
-        Main.main(new String[]{"list","sd"});
+    public void testListNotStartedIF() throws Exception {
+        Main.main(new String[]{"list","notstarted"});
         assertEquals(outContent.toString().trim(), Message.LIST_AUCUN_RESULTAT.toString().trim());
         outContent.reset();
     }
 
     @Test
-    public void testListSd() throws  Exception {
+    public void testListNotStarted() throws  Exception {
         String title1 = "tache 1";
         String title2 = "tache 2";
         String title3 = "tache 3";
@@ -752,7 +752,7 @@ public class CommandeTest {
         outContent.reset();
         Main.main(new String[]{"task", "sd", "3", df.format(new Date(date.getTime() - time))});
         outContent.reset();
-        Main.main(new String[]{"list", "sd"});
+        Main.main(new String[]{"list", "notstarted"});
 
         List<Tache> taches = new ArrayList<Tache>();
 

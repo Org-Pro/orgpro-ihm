@@ -505,7 +505,7 @@ public class Commande {
                 break;
             }
 
-            case "ts" : {
+            case "t" : {
                 // LIST TS <State>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
@@ -517,8 +517,10 @@ public class Commande {
                 affichageState(data, args[2]);
                 break;
             }
+            case "kanban" : {
 
-            case "ats" : {
+            }
+            case "k" : {
                 // LIST ATS
                 verifBadLectureFichier(data);
                 if(data.getListeTache().isEmpty()){
@@ -533,7 +535,7 @@ public class Commande {
                 break;
             }
 
-            case "sd" : {
+            case "notstarted" : {
                 // LIST SD
                 verifBadLectureFichier(data);
                 if(data.getListeTache().isEmpty()){
