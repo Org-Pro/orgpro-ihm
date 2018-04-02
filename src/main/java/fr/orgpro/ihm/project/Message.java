@@ -20,7 +20,6 @@ public enum Message {
     TACHE_AJOUT_DEADLINE_SUCCES(COULEUR_SUCCES + "SUCCESS : Deadline add/modified." + COULEUR_RESET),
     TACHE_AJOUT_CLOSED_SUCCES(COULEUR_SUCCES + "SUCCESS : Closed add/modified." + COULEUR_RESET),
     TACHE_AJOUT_SCHEDULED_SUCCES(COULEUR_SUCCES + "SUCCESS : Scheduled add/modified." + COULEUR_RESET),
-    // TODO
     TACHE_AJOUT_TAG_SUCCES(COULEUR_SUCCES + "SUCCESS : Tag add." + COULEUR_RESET),
     TACHE_AJOUT_PROPRIETE_SUCCES(COULEUR_SUCCES + "SUCCESS : Property add." + COULEUR_RESET),
     TACHE_AJOUT_COLLABORATEUR_SUCCES(COULEUR_SUCCES + "SUCCESS : Collaborator add." + COULEUR_RESET),
@@ -35,7 +34,6 @@ public enum Message {
     TACHE_SET_DEPENDANCE_SUCCES(COULEUR_SUCCES + "SUCCESS : Dependency has been added / modified." + COULEUR_RESET),
     TACHE_RENAME_SUCESS(COULEUR_SUCCES + "SUCCESS : The task has been renamed." + COULEUR_RESET),
     TACHE_DELETE_DEPENDANCE_SUCCES(COULEUR_SUCCES + "SUCCESS : Dependency deleted." + COULEUR_RESET),
-    // TODO
     TACHE_AJOUT_COLLABORATEUR_ECHEC(COULEUR_ECHEC + "FAILURE : Collaborator's name cannot contains \":\"." + COULEUR_RESET),
     TACHE_DELETE_COLLABORATEUR_ECHEC(COULEUR_ECHEC + "FAILURE : Collaborator's name cannot contains \":\"" + COULEUR_RESET),
     TACHE_AJOUT_PROPRIETE_ECHEC(COULEUR_ECHEC + "FAILURE : Cannot add property ID or DEPENDENCE." + COULEUR_RESET),
@@ -95,19 +93,18 @@ public enum Message {
     COST_ITE_INF("the cost of the tasks is higher than "),
     COST_HELP("COST ITE -> gives the difference between the cost of an iteration and the sum of the costs of ongoing tasks"),
 
-    // TODO
     COLLABORATEUR_HELP("col help"),
-    COLLABORATEUR_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : add col" + COULEUR_RESET),
-    COLLABORATEUR_SET_SUCCES(COULEUR_SUCCES + "SUCCESS : set col" + COULEUR_RESET),
-    COLLABORATEUR_DELETE_SUCCES(COULEUR_SUCCES + "SUCCESS : delete col" + COULEUR_RESET),
-    COLLABORATEUR_AJOUT_ECHEC(COULEUR_ECHEC + "FAILLURE : add col" + COULEUR_RESET),
-    COLLABORATEUR_SET_ECHEC(COULEUR_ECHEC + "FAILLURE : set col" + COULEUR_RESET),
-    COLLABORATEUR_DELETE_ECHEC(COULEUR_ECHEC + "FAILLURE : delete col" + COULEUR_RESET),
+    COLLABORATEUR_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : Collaborator add." + COULEUR_RESET),
+    COLLABORATEUR_SET_SUCCES(COULEUR_SUCCES + "SUCCESS : Collaborator modified." + COULEUR_RESET),
+    COLLABORATEUR_DELETE_SUCCES(COULEUR_SUCCES + "SUCCESS : Collaborator deleted." + COULEUR_RESET),
+    COLLABORATEUR_AJOUT_ECHEC(COULEUR_ECHEC + "FAILLURE : Collaborator cannot be add. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
+    COLLABORATEUR_SET_ECHEC(COULEUR_ECHEC + "FAILLURE : Collaborator cannot be modified. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
+    COLLABORATEUR_DELETE_ECHEC(COULEUR_ECHEC + "FAILLURE : Collaborator cannot be deleted. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
 
-    TAG_FUNC_SUCCES(COULEUR_SUCCES + "SUCCESS : add func" + COULEUR_RESET),
-    TAG_TECH_SUCCES(COULEUR_SUCCES + "FAILLURE : add tech" + COULEUR_RESET),
-    TAG_FUNC_ECHEC(COULEUR_ECHEC + "FAILLURE : add func" + COULEUR_RESET),
-    TAG_TECH_ECHEC(COULEUR_ECHEC + "SUCCESS : add tech" + COULEUR_RESET),
+    TAG_FUNC_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as fonctional." + COULEUR_RESET),
+    TAG_TECH_SUCCES(COULEUR_SUCCES + "FAILLURE : Task cannot be fonctional. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
+    TAG_FUNC_ECHEC(COULEUR_ECHEC + "FAILLURE : Task cannot be technical. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
+    TAG_TECH_ECHEC(COULEUR_ECHEC + "SUCCESS : Task added as technical." + COULEUR_RESET),
 
     ;
 
