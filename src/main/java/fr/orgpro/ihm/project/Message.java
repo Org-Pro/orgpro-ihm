@@ -104,7 +104,11 @@ public enum Message {
     "LIST K/ LIST KANBAN -> displays all the task sort by state" +
     "LIST NOTSTARTED -> shows tasks that have been scheduled but are still in the todo list"),
 
-    HEADER_HELP(""),
+    HEADER_HELP("HEADER COST <value> -> Add a general cost.\n" +
+            "HEADER GET <key> -> Return the value of key.\n" +
+            "HEADER ADD <key> <value> -> Add a new key/value in the header.\n" +
+            "HEADER SET <key> <value> -> Changes the value related to the key in the header.\n" +
+            "HEADER DELETE <key> -> Remove the key/value from the header."),
     HEADER_COSTS(COULEUR_SUCCES + "SUCCES : Iteration cost added" + COULEUR_RESET),
     HEADER_ADD_SUCCES(COULEUR_SUCCES + "SUCCESS : Header add." + COULEUR_RESET),
     HEADER_SET_SUCCES(COULEUR_SUCCES + "SUCCESS : Header modified." + COULEUR_RESET),
