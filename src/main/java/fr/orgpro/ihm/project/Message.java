@@ -77,14 +77,7 @@ public enum Message {
                 "TASK DELETE <numTask> -> delete a task\n" +
                 "TASK LIST -> llist all the task with their number\n" +
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
-                ""
-
-
-
-
-
-
-    ),
+                "TASK DEP DELETE <numTask> -> delete a dependency\n"),
 
     //FICHIER_SAVE_SUCCES("SUCCESS : Saved file."),
     FICHIER_CREATION(COULEUR_SUCCES + "SUCCESS : File does not exist but it was created." + COULEUR_RESET),
