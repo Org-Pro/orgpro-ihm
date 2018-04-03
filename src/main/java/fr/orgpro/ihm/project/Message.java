@@ -130,9 +130,9 @@ public enum Message {
     COLLABORATEUR_DELETE_ECHEC(COULEUR_ECHEC + "FAILLURE : Collaborator cannot be deleted. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
     
     TAG_FUNC_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as fonctional." + COULEUR_RESET),
-    TAG_TECH_SUCCES(COULEUR_SUCCES + "FAILLURE : Task cannot be fonctional. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
-    TAG_FUNC_ECHEC(COULEUR_ECHEC + "FAILLURE : Task cannot be technical. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
-    TAG_TECH_ECHEC(COULEUR_ECHEC + "SUCCESS : Task added as technical." + COULEUR_RESET),
+    TAG_TECH_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as technical." + COULEUR_RESET),
+    TAG_FUNC_ECHEC(COULEUR_ECHEC + "FAILLURE : Task cannot be fonctional. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
+    TAG_TECH_ECHEC(COULEUR_ECHEC + "FAILLURE : Task cannot be technical. Collaborator's name cannot contains \":\"" + COULEUR_RESET),
     TAG_HELP("TAG TECH <numTask> -> Tag a task to technical\n" +
             "TAG FUNC <numTask> -> Tag a task to functional"),
 
