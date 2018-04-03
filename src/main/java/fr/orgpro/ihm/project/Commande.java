@@ -588,6 +588,7 @@ public class Commande {
         }
         switch (args[1].toLowerCase()){
             case "ite" :
+                verifBadLectureFichier(data);
                 Integer dif = Scrum.compareCout(data.getListeTache());
                 if(dif == null){
                     System.out.println(Message.COST_ITE);
