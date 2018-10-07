@@ -3,6 +3,8 @@ package fr.orgpro.ihm.project;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
+import fr.orgpro.api.remote.*;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +58,24 @@ public class Commande {
                         }
                         break;
                     }
-
+                    // TASK COL SEND <numTask> <pathToColCredentials>
+                    case "send": {
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if(verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if (!verifCredentialExist(args[4])) {
+                            return;
+                        }
+                        String name = data.getListeTache().get(numTache).getTitre();
+                        GoogleList gl = GoogleList.getInstance();
+                        System.out.println(args[4]);
+                        gl.postTache(args[4], name);
+                        return;
+                    }
                     default:
                         System.out.println(Message.ARGUMENT_INVALIDE);
                         break;
@@ -434,6 +453,7 @@ public class Commande {
                 break;
         }
     }
+
 
     public static void commandeFichier(String[] args, Data data) {
         if (verifBadNbArgument(2, args)){
@@ -824,6 +844,21 @@ public class Commande {
 
     }
 
+    /**
+     * Prend un chemin vers un fichier et renvoi true si
+     * le fichier existe et que ce n'est pas un dossier
+     * @param path
+     * @return boolean
+     */
+    private static boolean verifCredentialExist(String path) {
+        File f = new File("src/main/resources" + path);
+        if(f.exists() && !f.isDirectory()) {
+            return true;
+        } else {
+            System.out.println(Message.PROBLEME_LECTURE);
+            return false;
+        }
+    }
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
             return false;
