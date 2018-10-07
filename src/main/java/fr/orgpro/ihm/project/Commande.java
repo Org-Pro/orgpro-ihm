@@ -5,12 +5,14 @@ import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.api.remote.*;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class Commande {
+    private static final String fs = File.separator;
+    private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
+    private static final String PATH_TOKEN = "tokens" + fs;
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -725,6 +727,18 @@ public class Commande {
                     return;
                 }
                 if(Tache.addCollaborateurEnTete(args[2])){
+                    String fs = File.separator;
+                    File file = new File(PATH + args[2]);
+                    if (!file.exists() && !file.isDirectory()) {
+                        if(!file.mkdirs()) {
+                            System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_FAILURE);
+                            break;
+                        }
+                        System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_SUCCES);
+                    } else {
+                        System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_ALREADY_EXIST);
+                    }
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -738,6 +752,13 @@ public class Commande {
                     return;
                 }
                 if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
+                    String fs = File.separator;
+                    File dir = new File(PATH + args[2]);
+                    File newDir = new File(PATH + args[3]);
+                    if (!changeDirectory(dir, newDir)) break;
+                    dir = new File(PATH_TOKEN + args[2]);
+                    newDir = new File(PATH_TOKEN + args[3]);
+                    if (!changeDirectory(dir, newDir)) break;
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_SET_SUCCES);
                 }else{
@@ -751,6 +772,14 @@ public class Commande {
                     return;
                 }
                 if(Tache.removeCollaborateurEnTete(data.getListeTache(), args[2])){
+                    File dir = new File(PATH + args[2]);
+                    if(!deleteDirectory(dir)){
+                        System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+                    }
+                    dir = new File(PATH_TOKEN, args[2]);
+                    if(!deleteDirectory(dir)){
+                        System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+                    }
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
                 }else{
@@ -843,6 +872,33 @@ public class Commande {
         }
 
     }
+    private static boolean deleteDirectory (File dir) {
+        File[] allFiles = dir.listFiles();
+        if(null != allFiles) {
+            for (File f: allFiles) {
+                if(!f.delete()) {
+                    System.out.println(Message.COLLABORATEUR_SUPPRESSION_FICHIER_FAILURE + f.getPath());
+                    return false;
+                }
+            }
+        }
+        if(!dir.delete()) {
+            System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+            return false;
+        }
+        return true;
+    }
+    private static boolean changeDirectory(File dir, File newDir) {
+        if (dir.exists() && dir.isDirectory() && !newDir.exists()) {
+            dir.renameTo(newDir);
+        } else if (newDir.exists()) {
+            System.out.println(Message.COLLABORATEUR_DOSSIER_EXISTE_DEJA_ECHEC);
+            return false;
+        }else {
+            dir.mkdir();
+        }
+        return true;
+    }
 
     /**
      * Prend un chemin vers un fichier et renvoi true si
@@ -851,7 +907,8 @@ public class Commande {
      * @return boolean
      */
     private static boolean verifCredentialExist(String path) {
-        File f = new File("src/main/resources" + path);
+        System.out.println("src/main/resources/" + path + "/credentials.json");
+        File f = new File("src/main/resources/" + path + "/credentials.json");
         if(f.exists() && !f.isDirectory()) {
             return true;
         } else {
