@@ -43,7 +43,8 @@ public class Data {
         path = dossierCourant + "/" + fichierCourant;
     }
 
-    public String setFichierCourant(String fichier){
+    public String setFichierCourant(String fichierP){
+        String fichier = fichierP;
         if(!fichier.endsWith(".org")){
             fichier += ".org";
         }

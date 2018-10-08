@@ -40,7 +40,7 @@ public class Main {
 
     private static void traitementArgs(String[] args){
         // Si aucun fichier n'est chargé, seule la commande "file" est autorisée
-        if(data.getFichierCourant().isEmpty() && !args[0].toLowerCase().equals("file")){
+        if(data.getFichierCourant().isEmpty() && !args[0].equalsIgnoreCase("file")){
             return;
         }
         switch (args[0].toLowerCase()){
