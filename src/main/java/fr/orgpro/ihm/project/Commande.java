@@ -74,7 +74,6 @@ public class Commande {
                         }
                         String name = data.getListeTache().get(numTache).getTitre();
                         GoogleList gl = GoogleList.getInstance();
-                        System.out.println(args[4]);
                         gl.postTache(args[4], name);
                         return;
                     }
