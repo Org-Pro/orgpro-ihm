@@ -1091,7 +1091,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
     }
-
+/*
     @Test
     public void testCollaboratorHeaderAdd() throws Exception {
         Main.main(new String[]{"col", "add"});
@@ -1142,7 +1142,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_ECHEC.toString().trim());
         outContent.reset();
     }
-
+*/
     @Test
     public void testTagFunctional() throws Exception {
         Main.main(new String[]{"task", "add", "tache 1"});
