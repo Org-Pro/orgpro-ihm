@@ -4,15 +4,19 @@ import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.api.remote.*;
+import fr.orgpro.ihm.service.ColaborateurService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Commande {
     private static final String fs = File.separator;
     private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
     private static final String PATH_TOKEN = "tokens" + fs;
+    private static final ColaborateurService cls = ColaborateurService.getInstance();
+
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -78,9 +82,25 @@ public class Commande {
                         gl.postTache(args[4], name);
                         return;
                     }
+                    case "sync": {
+                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        if (!verifCredentialExist(args[3])) {
+                            return;
+                        }
+                        String name = args[3];
+                        if(!cls.verifColaborateurExist(name, data)) {
+                            return;
+                        }
+                        List<Tache> toSend = new ArrayList<>();
+                        for (Tache task: data.getListeTache()) {
+                            if(task.get)
+                        }
+                    }
                     default:
-                        System.out.println(Message.ARGUMENT_INVALIDE);
-                        break;
+                    System.out.println(Message.ARGUMENT_INVALIDE);
+                    break;
                 }
                 break;
             }

@@ -134,6 +134,8 @@ public enum Message {
     COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_FAILURE(COULEUR_ECHEC + "FAILURE : Collaborator directory for google connection was not created"),
     COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE(COULEUR_ECHEC + "FAILURE : The directory could not be deleted : "),
     COLLABORATEUR_SUPPRESSION_FICHIER_FAILURE(COULEUR_ECHEC + "FAILURE : The file could not be deleted : "),
+    COLLABORATEUR_LISTE_VIDE(COULEUR_ECHEC + "INFO : No colaborator found in the file"),
+    COLLABORATEUR_NON_TROUVE(COULEUR_ECHEC + "ERROR : No colaborateur with this name found"),
 
     TAG_FUNC_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as fonctional." + COULEUR_RESET),
     TAG_TECH_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as technical." + COULEUR_RESET),
