@@ -1,15 +1,5 @@
 package fr.orgpro.ihm.project;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.prefs.Preferences;
-
-import static org.junit.Assert.assertEquals;
-
 
 public class MainTest {
     /*private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

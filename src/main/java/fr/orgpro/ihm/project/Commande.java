@@ -114,7 +114,7 @@ public class Commande {
                     return;
                 }
 
-                if(args[3].trim().toLowerCase().equals("next")){
+                if(args[3].trim().equalsIgnoreCase("next")){
                     if(data.getListeTache().get(numTache).setEtatSuivant()){
                         data.ecritureListeTaches();
                         System.out.println(Message.TACHE_STATE_SUIVANT_UPDATE_SUCCES);
@@ -976,7 +976,7 @@ public class Commande {
         }
         
         System.out.print(affichage(data,taches));
-        return;
+        //return;
     }
 
     public static String affichage(Data data,List<Tache> taches){

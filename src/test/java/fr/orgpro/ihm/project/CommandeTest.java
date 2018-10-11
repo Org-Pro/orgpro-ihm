@@ -5,15 +5,11 @@ import fr.orgpro.api.project.Tache;
 import org.junit.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,7 +22,7 @@ public class CommandeTest {
     private static File file;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setUp() throws Exception {
         Main.main(new String[]{"file", "select", "test"});
         data = Data.getInstance();
         file = new File(data.getPath());
