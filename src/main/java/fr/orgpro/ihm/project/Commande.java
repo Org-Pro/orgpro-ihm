@@ -744,6 +744,9 @@ public class Commande {
                     return;
                 }
                 if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
+                    SQLiteDataBase.updateCollaborateur(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_SET_SUCCES);
                 }else{
