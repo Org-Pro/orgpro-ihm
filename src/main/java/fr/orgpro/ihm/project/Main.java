@@ -9,7 +9,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //args = new String[]{"file", "select", "test"};
         //args = new String[]{"task", "add", "test2"};
-        //args = new String[]{"col", "list"};
+        //args = new String[]{"task", "delete", "0"};
+        //args = new String[]{"col", "add", "alex"};
+        //args = new String[]{"task", "col", "delete", "1", "bob"};
         //args = new String[]{"task", "clock", "use", "1"};
         //args = new String[]{"task", "dep", "set", "0", "2"};
         //args = new String[]{"col", "delete", "bob"};

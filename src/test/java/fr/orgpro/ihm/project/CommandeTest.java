@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import org.junit.*;
@@ -31,6 +32,12 @@ public class CommandeTest {
     @AfterClass
     public static void deleteSetup() throws Exception {
         new File(data.getDossierCourant()).delete();
+        // Delete db
+        File[] filesDb = new File(SQLiteConnection.getDbFolder()).listFiles();
+        for (File fileDb : filesDb) {
+            new File(SQLiteConnection.getDbFolder() + "/" + fileDb.getName()).delete();
+        }
+        new File(SQLiteConnection.getDbFolder()).delete();
     }
 
     @Before

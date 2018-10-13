@@ -1,5 +1,7 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.local.SQLiteConnection;
+import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
@@ -31,6 +33,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
+                            SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_SUCCES);
                         }else{
@@ -49,6 +54,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
+                            SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_COLLABORATEUR_SUCCES);
                         }else{
@@ -303,16 +311,27 @@ public class Commande {
                     if (verifTacheNotExiste(numTache, data)){
                         return;
                     }
-                    data.getListeTache().add(new Tache(args[2]));
+                    Tache tache = new Tache(args[2]);
+                    data.getListeTache().add(tache);
                     Tache.setDependanceListe(data.getListeTache(), data.getListeTache().size() - 1, numTache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
                 }else{
-                    if (verifBadNbArgument(3, args)) {
+                    if (verifBadNbArgument(3, args) || verifBadLectureFichier(data)) {
                         return;
                     }
                     Tache tache = new Tache(args[2]);
-                    tache.writeFichier(data.getPath(), true);
+                    data.getListeTache().add(tache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+
+                    //tache.writeFichier(data.getPath(), true);
+                    data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
                 break;
@@ -349,8 +368,12 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
+                Tache tache = data.getListeTache().get(numTache);
                 Tache.removeTache(data.getListeTache(), numTache);
                 data.ecritureListeTaches();
+
+                SQLiteDataBase.deleteTache(tache);
+                SQLiteConnection.closeConnection();
                 System.out.println(Message.TACHE_DELETE_SUCCES);
                 break;
             }
@@ -705,6 +728,9 @@ public class Commande {
                     return;
                 }
                 if(Tache.addCollaborateurEnTete(args[2])){
+                    SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -731,6 +757,9 @@ public class Commande {
                     return;
                 }
                 if(Tache.removeCollaborateurEnTete(data.getListeTache(), args[2])){
+                    SQLiteDataBase.deleteCollaborateur(args[2].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
                 }else{
