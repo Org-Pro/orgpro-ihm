@@ -5,18 +5,21 @@ import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.api.remote.*;
 import fr.orgpro.ihm.service.ColaborateurService;
+import fr.orgpro.ihm.service.CredentialService;
+
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Commande {
     private static final String fs = File.separator;
     private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
     private static final String PATH_TOKEN = "tokens" + fs;
+    private static final GoogleList gl = GoogleList.getInstance();
     private static final ColaborateurService cls = ColaborateurService.getInstance();
-
+    private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
+    private static final CredentialService cdls = CredentialService.getInstance();
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -64,7 +67,7 @@ public class Commande {
                         }
                         break;
                     }
-                    // TASK COL SEND <numTask> <pathToColCredentials>
+                    // TASK COL SEND <numTask> <nameCollabo>
                     case "send": {
                         if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
                             return;
@@ -73,29 +76,33 @@ public class Commande {
                         if(verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if (!verifCredentialExist(args[4])) {
+                        if (!cdls.verifCredentialExist(args[4])) {
                             return;
                         }
                         String name = data.getListeTache().get(numTache).getTitre();
-                        GoogleList gl = GoogleList.getInstance();
                         gl.postTache(args[4], name);
                         return;
                     }
+                    // TASK COL SYNC <collaboName> optionel:<ONGOING>
                     case "sync": {
-                        if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
-                            return;
-                        }
-                        if (!verifCredentialExist(args[3])) {
+                        if(verifBadLectureFichier(data) && !cdls.verifCredentialExist(args[3])) {
                             return;
                         }
                         String name = args[3];
-                        if(!cls.verifColaborateurExist(name, data)) {
+                        if(!cls.verifColaborateurExist(name)) {
                             return;
                         }
-                        List<Tache> toSend = new ArrayList<>();
-                        for (Tache task: data.getListeTache()) {
-                            if(task.get)
+                        System.out.println(args.length);
+                        if (args.length == 5) {
+                            colIhm.syncOngoingUser(name, data);
+                        } else if (args.length == 4) {
+                            colIhm.syncUser(name, data);
+                        } else {
+                            System.out.println(Message.ARGUMENT_INVALIDE);
+                            break;
                         }
+                        return;
+
                     }
                     default:
                     System.out.println(Message.ARGUMENT_INVALIDE);
@@ -919,22 +926,6 @@ public class Commande {
         return true;
     }
 
-    /**
-     * Prend un chemin vers un fichier et renvoi true si
-     * le fichier existe et que ce n'est pas un dossier
-     * @param path
-     * @return boolean
-     */
-    private static boolean verifCredentialExist(String path) {
-        System.out.println("src/main/resources/" + path + "/credentials.json");
-        File f = new File("src/main/resources/" + path + "/credentials.json");
-        if(f.exists() && !f.isDirectory()) {
-            return true;
-        } else {
-            System.out.println(Message.PROBLEME_LECTURE);
-            return false;
-        }
-    }
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
             return false;
