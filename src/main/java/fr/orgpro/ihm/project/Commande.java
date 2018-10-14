@@ -1,5 +1,7 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.local.SQLiteConnection;
+import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
@@ -42,6 +44,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
+                            SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_SUCCES);
                         }else{
@@ -60,6 +65,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
+                            SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_COLLABORATEUR_SUCCES);
                         }else{
@@ -350,8 +358,13 @@ public class Commande {
                     if (verifTacheNotExiste(numTache, data)){
                         return;
                     }
-                    data.getListeTache().add(new Tache(args[2]));
+                    Tache tache = new Tache(args[2]);
+                    data.getListeTache().add(tache);
                     Tache.setDependanceListe(data.getListeTache(), data.getListeTache().size() - 1, numTache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
                 }else{
@@ -482,7 +495,6 @@ public class Commande {
         }
     }
 
-
     public static void commandeFichier(String[] args, Data data) {
         if (verifBadNbArgument(2, args)){
             return;
@@ -522,18 +534,6 @@ public class Commande {
                     System.out.println(Message.FICHIER_CREATION);
                 }else{
                     System.out.println(Message.FICHIER_LOAD);
-                    if(verifBadLectureFichier(data)){
-                        return;
-                    }
-                    List<String> list = Tache.getCollaborateurEnTeteListe();
-                    if (list != null) {
-                        for (String col: list) {
-                            if(!cls.creerDossierCollaboSiPasExistant(col)) {
-                                break;
-                            }
-                        }
-                    }
-
                 }
                 break;
             }
@@ -780,6 +780,8 @@ public class Commande {
                     if(!cls.creerDossierCollaboSiPasExistant(args[2])) {
                         break;
                     }
+                    SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
+                    SQLiteConnection.closeConnection();
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -795,10 +797,13 @@ public class Commande {
                 if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
                     File dir = new File(PATH + args[2]);
                     File newDir = new File(PATH + args[3]);
-                    if (!changeDirectory(dir, newDir)) break;
+                    if (!cls.changeDirectory(dir, newDir)) break;
                     dir = new File(PATH_TOKEN + args[2]);
                     newDir = new File(PATH_TOKEN + args[3]);
-                    if (!changeDirectory(dir, newDir)) break;
+                    if (!cls.changeDirectory(dir, newDir)) break;
+                    SQLiteDataBase.updateCollaborateur(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_SET_SUCCES);
                 }else{
@@ -813,13 +818,16 @@ public class Commande {
                 }
                 if(Tache.removeCollaborateurEnTete(data.getListeTache(), args[2])){
                     File dir = new File(PATH + args[2]);
-                    if(!deleteDirectory(dir)){
+                    if(!cls.deleteDirectory(dir)){
                         System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
                     }
                     dir = new File(PATH_TOKEN, args[2]);
-                    if(!deleteDirectory(dir)){
+                    if(!cls.deleteDirectory(dir)){
                         System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
                     }
+                    SQLiteDataBase.deleteCollaborateur(args[2].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
                 }else{
@@ -911,33 +919,6 @@ public class Commande {
                 break;
         }
 
-    }
-    private static boolean deleteDirectory (File dir) {
-        File[] allFiles = dir.listFiles();
-        if(null != allFiles) {
-            for (File f: allFiles) {
-                if(!f.delete()) {
-                    System.out.println(Message.COLLABORATEUR_SUPPRESSION_FICHIER_FAILURE + f.getPath());
-                    return false;
-                }
-            }
-        }
-        if(!dir.delete()) {
-            System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
-            return false;
-        }
-        return true;
-    }
-    private static boolean changeDirectory(File dir, File newDir) {
-        if (dir.exists() && dir.isDirectory() && !newDir.exists()) {
-            dir.renameTo(newDir);
-        } else if (newDir.exists()) {
-            System.out.println(Message.COLLABORATEUR_DOSSIER_EXISTE_DEJA_ECHEC);
-            return false;
-        }else {
-            dir.mkdir();
-        }
-        return true;
     }
 
     private static boolean verifBadLectureFichier(Data data){

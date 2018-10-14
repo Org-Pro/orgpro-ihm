@@ -38,6 +38,33 @@ public class CollaborateurService {
         }
         return true;
     }
+    public boolean deleteDirectory (File dir) {
+        File[] allFiles = dir.listFiles();
+        if(null != allFiles) {
+            for (File f: allFiles) {
+                if(!f.delete()) {
+                    System.out.println(Message.COLLABORATEUR_SUPPRESSION_FICHIER_FAILURE + f.getPath());
+                    return false;
+                }
+            }
+        }
+        if(!dir.delete()) {
+            System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+            return false;
+        }
+        return true;
+    }
+    public boolean changeDirectory(File dir, File newDir) {
+        if (dir.exists() && dir.isDirectory() && !newDir.exists()) {
+            dir.renameTo(newDir);
+        } else if (newDir.exists()) {
+            System.out.println(Message.COLLABORATEUR_DOSSIER_EXISTE_DEJA_ECHEC);
+            return false;
+        }else {
+            dir.mkdir();
+        }
+        return true;
+    }
 
     public static CollaborateurService getInstance() {
         return INSTANCE;
