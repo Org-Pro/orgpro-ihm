@@ -4,7 +4,7 @@ import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.api.remote.*;
-import fr.orgpro.ihm.service.ColaborateurService;
+import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
 
 
@@ -17,7 +17,7 @@ public class Commande {
     private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
     private static final String PATH_TOKEN = "tokens" + fs;
     private static final GoogleList gl = GoogleList.getInstance();
-    private static final ColaborateurService cls = ColaborateurService.getInstance();
+    private static final CollaborateurService cls = CollaborateurService.getInstance();
     private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
     private static final CredentialService cdls = CredentialService.getInstance();
     public static void commandeTache(String[] args, Data data){
@@ -522,6 +522,18 @@ public class Commande {
                     System.out.println(Message.FICHIER_CREATION);
                 }else{
                     System.out.println(Message.FICHIER_LOAD);
+                    if(verifBadLectureFichier(data)){
+                        return;
+                    }
+                    List<String> list = Tache.getCollaborateurEnTeteListe();
+                    if (list != null) {
+                        for (String col: list) {
+                            if(!cls.creerDossierCollaboSiPasExistant(col)) {
+                                break;
+                            }
+                        }
+                    }
+
                 }
                 break;
             }
@@ -747,24 +759,27 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
+            case "directory" : {
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
+                List<String> list = Tache.getCollaborateurEnTeteListe();
+                for (String col: list) {
+                    if(!cls.creerDossierCollaboSiPasExistant(col)) {
+                        break;
+                    }
+                }
+                return;
+            }
             case "add" :
                 // COL ADD <nom>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
                 }
-                if(Tache.addCollaborateurEnTete(args[2])){
-                    String fs = File.separator;
-                    File file = new File(PATH + args[2]);
-                    if (!file.exists() && !file.isDirectory()) {
-                        if(!file.mkdirs()) {
-                            System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_FAILURE);
-                            break;
-                        }
-                        System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_SUCCES);
-                    } else {
-                        System.out.println(Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_ALREADY_EXIST);
+                if(Tache.addCollaborateurEnTete(args[2])) {
+                    if(!cls.creerDossierCollaboSiPasExistant(args[2])) {
+                        break;
                     }
-
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -778,7 +793,6 @@ public class Commande {
                     return;
                 }
                 if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
-                    String fs = File.separator;
                     File dir = new File(PATH + args[2]);
                     File newDir = new File(PATH + args[3]);
                     if (!changeDirectory(dir, newDir)) break;

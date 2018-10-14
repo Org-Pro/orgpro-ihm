@@ -17,7 +17,7 @@ public class CredentialService {
      * @return boolean
      */
     public boolean verifCredentialExist(String path) {
-        File f = new File("src/main/resources/" + path + "/credentials.json");
+        File f = new File("src/main/resources/" + path + "/batrayer/credentials.json");
         if(f.exists() && !f.isDirectory()) {
             return true;
         } else {
