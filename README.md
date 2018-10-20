@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/Org-Pro/orgpro-ihm.svg?branch=api-bdd)](https://travis-ci.org/Org-Pro/orgpro-ihm)
+[![Build Status](https://travis-ci.org/Org-Pro/orgpro-ihm.svg?branch=master)](https://travis-ci.org/Org-Pro/orgpro-ihm)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bcdbf832d18455d8e3f8dcaceb63af2)](https://www.codacy.com/app/Trellorg/orgpro-ihm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Org-Pro/orgpro-ihm&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.svg?branch=api-bdd)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=api-bdd)
+[![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.svg?branch=master)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=master)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/CodeChillAlluna/code-chill/blob/master/LICENSE)
 
 # Guide d'installation
