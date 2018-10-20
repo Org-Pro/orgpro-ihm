@@ -1,0 +1,16 @@
+# idea
+.idea/
+
+.gradle/
+
+build/
+
+files/
+
+libs/
+
+orgpro-ihm.iml
+
+out/
+
+tokens/
