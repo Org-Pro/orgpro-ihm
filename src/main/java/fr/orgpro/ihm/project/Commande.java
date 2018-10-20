@@ -88,7 +88,7 @@ public class Commande {
                             return;
                         }
                         String name = data.getListeTache().get(numTache).getTitre();
-                        gl.postTache(args[4], name);
+                        gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
                         return;
                     }
                     // TASK COL SYNC <collaboName> optionel:<ONGOING>
@@ -102,7 +102,12 @@ public class Commande {
                         }
                         System.out.println(args.length);
                         if (args.length == 5) {
-                            colIhm.syncOngoingUser(name, data);
+                            State state = State.stringIsState(args[3]);
+                            if (state != null) {
+                                colIhm.syncStatusTaskUser(name, data, state);
+                            } else {
+                                System.out.println(Message.ARGUMENT_INVALIDE);
+                            }
                         } else if (args.length == 4) {
                             colIhm.syncUser(name, data);
                         } else {
