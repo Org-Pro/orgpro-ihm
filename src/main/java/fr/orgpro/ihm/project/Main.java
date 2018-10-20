@@ -7,13 +7,24 @@ public class Main {
     private static Data data;
 
     public static void main(String[] args) throws IOException {
+        // args = new String[]{"file", "select", "google"};
+        //args = new String[]{"col", "directory"};
+        //args = new String[]{"task", "add", "test4"};
+
+        //args = new String[]{"task", "list"};
         //args = new String[]{"file", "select", "test"};
         //args = new String[]{"task", "add", "test2"};
-        //args = new String[]{"col", "list"};
+        //args = new String[]{"task", "delete", "0"};
+        //args = new String[]{"col", "add", "alex"};
+        //args = new String[]{"task", "col", "delete", "1", "bob"};
         //args = new String[]{"task", "clock", "use", "1"};
         //args = new String[]{"task", "dep", "set", "0", "2"};
-        //args = new String[]{"col", "delete", "bob"};
+         //args = new String[]{"col", "set", "baptiste", "batrayer"};
 
+        //args = new String[]{"col", "add", "baptiste"};
+        //args = new String[]{"task", "col", "add", "3", "batrayer"};
+       //args = new String[]{"task", "col", "sync", "batrayer"};
+        //args = new String[]{"task", "state", "3", "ongoing"};
         data = Data.getInstance();
 
         if (data.getFichierCourant().isEmpty()){

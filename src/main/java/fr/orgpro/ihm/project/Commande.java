@@ -1,14 +1,27 @@
 package fr.orgpro.ihm.project;
 
+import fr.orgpro.api.local.SQLiteConnection;
+import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.scrum.Scrum;
+import fr.orgpro.api.remote.*;
+import fr.orgpro.ihm.service.CollaborateurService;
+import fr.orgpro.ihm.service.CredentialService;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class Commande {
+    private static final String fs = File.separator;
+    private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
+    private static final String PATH_TOKEN = "tokens" + fs;
+    private static final GoogleList gl = GoogleList.getInstance();
+    private static final CollaborateurService cls = CollaborateurService.getInstance();
+    private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
+    private static final CredentialService cdls = CredentialService.getInstance();
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -31,6 +44,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
+                            SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_AJOUT_COLLABORATEUR_SUCCES);
                         }else{
@@ -49,6 +65,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
+                            SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
+                            SQLiteConnection.closeConnection();
+
                             data.ecritureListeTaches();
                             System.out.println(Message.TACHE_DELETE_COLLABORATEUR_SUCCES);
                         }else{
@@ -56,10 +75,46 @@ public class Commande {
                         }
                         break;
                     }
+                    // TASK COL SEND <numTask> <nameCollabo>
+                    case "send": {
+                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        int numTache = Integer.parseInt(args[3]);
+                        if(verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        if (!cdls.verifCredentialExist(args[4])) {
+                            return;
+                        }
+                        String name = data.getListeTache().get(numTache).getTitre();
+                        gl.postTache(args[4], name);
+                        return;
+                    }
+                    // TASK COL SYNC <collaboName> optionel:<ONGOING>
+                    case "sync": {
+                        if(verifBadLectureFichier(data) && !cdls.verifCredentialExist(args[3])) {
+                            return;
+                        }
+                        String name = args[3];
+                        if(!cls.verifColaborateurExist(name)) {
+                            return;
+                        }
+                        System.out.println(args.length);
+                        if (args.length == 5) {
+                            colIhm.syncOngoingUser(name, data);
+                        } else if (args.length == 4) {
+                            colIhm.syncUser(name, data);
+                        } else {
+                            System.out.println(Message.ARGUMENT_INVALIDE);
+                            break;
+                        }
+                        return;
 
+                    }
                     default:
-                        System.out.println(Message.ARGUMENT_INVALIDE);
-                        break;
+                    System.out.println(Message.ARGUMENT_INVALIDE);
+                    break;
                 }
                 break;
             }
@@ -303,8 +358,13 @@ public class Commande {
                     if (verifTacheNotExiste(numTache, data)){
                         return;
                     }
-                    data.getListeTache().add(new Tache(args[2]));
+                    Tache tache = new Tache(args[2]);
+                    data.getListeTache().add(tache);
                     Tache.setDependanceListe(data.getListeTache(), data.getListeTache().size() - 1, numTache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
                 }else{
@@ -699,12 +759,29 @@ public class Commande {
             return;
         }
         switch (args[1].toLowerCase()){
+            case "directory" : {
+                if(verifBadLectureFichier(data)){
+                    return;
+                }
+                List<String> list = Tache.getCollaborateurEnTeteListe();
+                for (String col: list) {
+                    if(!cls.creerDossierCollaboSiPasExistant(col)) {
+                        break;
+                    }
+                }
+                return;
+            }
             case "add" :
                 // COL ADD <nom>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
                     return;
                 }
-                if(Tache.addCollaborateurEnTete(args[2])){
+                if(Tache.addCollaborateurEnTete(args[2])) {
+                    if(!cls.creerDossierCollaboSiPasExistant(args[2])) {
+                        break;
+                    }
+                    SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
+                    SQLiteConnection.closeConnection();
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -718,6 +795,15 @@ public class Commande {
                     return;
                 }
                 if(Tache.setCollaborateurEnTete(data.getListeTache(), args[2], args[3])){
+                    File dir = new File(PATH + args[2]);
+                    File newDir = new File(PATH + args[3]);
+                    if (!cls.changeDirectory(dir, newDir)) break;
+                    dir = new File(PATH_TOKEN + args[2]);
+                    newDir = new File(PATH_TOKEN + args[3]);
+                    if (!cls.changeDirectory(dir, newDir)) break;
+                    SQLiteDataBase.updateCollaborateur(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_SET_SUCCES);
                 }else{
@@ -731,6 +817,17 @@ public class Commande {
                     return;
                 }
                 if(Tache.removeCollaborateurEnTete(data.getListeTache(), args[2])){
+                    File dir = new File(PATH + args[2]);
+                    if(!cls.deleteDirectory(dir)){
+                        System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+                    }
+                    dir = new File(PATH_TOKEN, args[2]);
+                    if(!cls.deleteDirectory(dir)){
+                        System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
+                    }
+                    SQLiteDataBase.deleteCollaborateur(args[2].toLowerCase().trim());
+                    SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_DELETE_SUCCES);
                 }else{
