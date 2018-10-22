@@ -16,19 +16,18 @@ public class CollaborateurIhm {
         toSend = getListTacheFromCollabo(name, data);
         if(toSend != null) {
             for(Tache t : toSend) {
-                System.out.println(t.toString());
-                gl.postTache(name, t.getTitre());
+                gl.postTache(name, t.getTitre(), t.getDateLimite());
             }
         }
         return;
     }
 
-    public void syncOngoingUser(String name, Data data){
+    public void syncStatusTaskUser(String name, Data data, State etat){
         List<Tache> toSend;
         toSend = getListTacheFromCollabo(name, data);
         for(Tache t : toSend) {
-            if(t.getEtat().equals(State.ONGOING)) {
-                gl.postTache(name, t.getTitre());
+            if(t.getEtat().equals(etat)) {
+                gl.postTache(name, t.getTitre(), t.getDateLimite());
             }
         }
     }
@@ -43,6 +42,7 @@ public class CollaborateurIhm {
                 }
             }
         }
+        System.out.println(toSend.get(0).toString());
         return toSend;
     }
     public static CollaborateurIhm getInstance() {

@@ -25,7 +25,7 @@ public class CollaborateurService {
         return false;
     }
 
-    public boolean creerDossierCollaboSiPasExistant(String name ) {
+    public boolean creerDossierCollaboSiPasExistant(String name) {
         File file = new File(PATH + name);
         if (!file.exists() && !file.isDirectory()) {
             if(!file.mkdirs()) {

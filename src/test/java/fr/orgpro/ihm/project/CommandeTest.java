@@ -1102,10 +1102,14 @@ public class CommandeTest {
         outContent.reset();
 
         Main.main(new String[]{"col", "add", "bob"});
-        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_SUCCES.toString().trim());
+        assertEquals(outContent.toString().trim(),
+                Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_SUCCES.toString().trim() + '\n' +
+                        Message.COLLABORATEUR_AJOUT_SUCCES.toString().trim());
         outContent.reset();
 
         Main.main(new String[]{"col", "add", "bob"});
+        assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_DOSSIER_GOOGLE_ALREADY_EXIST.toString().trim());
+        outContent.reset();
         assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_AJOUT_ECHEC.toString().trim());
         outContent.reset();
     }
@@ -1141,7 +1145,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_SUCCES.toString().trim());
         outContent.reset();
 
-        Main.main(new String[]{"col", "delete", "bob"});
+        Main.main(new String[]{"col", "delete", "dylane"});
         assertEquals(outContent.toString().trim(), Message.COLLABORATEUR_DELETE_ECHEC.toString().trim());
         outContent.reset();
     }
