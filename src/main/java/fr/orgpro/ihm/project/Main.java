@@ -22,9 +22,9 @@ public class Main {
          //args = new String[]{"col", "set", "baptiste", "batrayer"};
 
         //args = new String[]{"col", "add", "baptiste"};
-        //args = new String[]{"task", "col", "add", "3", "batrayer"};
-       //args = new String[]{"task", "col", "sync", "batrayer"};
-        //args = new String[]{"task", "state", "3", "ongoing"};
+        //args = new String[]{"task", "col", "add", "0", "alex"};
+        //args = new String[]{"task", "col", "sync", "alex"};
+        //args = new String[]{"task", "state", "0", "ongoing"};
         data = Data.getInstance();
 
         if (data.getFichierCourant().isEmpty()){

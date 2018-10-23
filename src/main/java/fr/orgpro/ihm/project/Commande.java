@@ -342,7 +342,12 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
+                Tache tache = data.getListeTache().get(numTache);
                 data.getListeTache().get(numTache).setTitre(args[3]);
+
+                SQLiteDataBase.synchroUpdateAllEstSynchroByTache(tache, false);
+                SQLiteConnection.closeConnection();
+
                 data.ecritureListeTaches();
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
@@ -368,11 +373,16 @@ public class Commande {
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
                 }else{
-                    if (verifBadNbArgument(3, args)) {
+                    if (verifBadNbArgument(3, args) || verifBadLectureFichier(data)) {
                         return;
                     }
                     Tache tache = new Tache(args[2]);
-                    tache.writeFichier(data.getPath(), true);
+                    data.getListeTache().add(tache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+                    //tache.writeFichier(data.getPath(), true);
+                    data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
                 break;
@@ -409,8 +419,12 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
+                Tache tache = data.getListeTache().get(numTache);
                 Tache.removeTache(data.getListeTache(), numTache);
                 data.ecritureListeTaches();
+
+                SQLiteDataBase.deleteTache(tache);
+                SQLiteConnection.closeConnection();
                 System.out.println(Message.TACHE_DELETE_SUCCES);
                 break;
             }
