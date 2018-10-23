@@ -921,6 +921,108 @@ public class Commande {
 
     }
 
+    public static void commandeSprint(String[] args, Data data) {
+        if (verifBadNbArgument(2, args)){
+            return;
+        }
+        switch (args[1].toLowerCase()){
+            case "get":
+                if (verifBadNbArgument(3, args) || verifBadLectureFichier(data)) {
+                    return;
+                }
+
+                switch (args[2].toLowerCase()){
+                    case "num":
+                        System.out.println(Message.SPRINT_GET_NUM + Tache.getSprint().toString());
+                        break;
+                    case "date":
+                        String date = Tache.getDateSprint();
+                        if(date == null)
+                        {
+                            System.out.println(Message.SPRINT_GET_DATE_ECHEC);
+                        }else{
+                            System.out.println(Message.SPRINT_GET_DATE_SUCCES + date);
+                        }
+                        break;
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
+
+            case "next":
+                if (verifBadLectureFichier(data)) {
+                    return;
+                }
+                Tache.incrementeSprint();
+                System.out.println(Message.SPRINT_NEXT + Tache.getSprint().toString());
+                break;
+
+            case "date":
+                if (verifBadNbArgument(3, args) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                if(Tache.setDateSprint(args[2])){
+                    System.out.println(Message.SPRINT_DATE_SUCCES);
+                }else{
+                    System.out.println(Message.SPRINT_DATE_ECHEC);
+                }
+                break;
+
+            case "task":
+                if (verifBadNbArgument(4, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                    return;
+                }
+                int numTache;
+                switch (args[2].toLowerCase()){
+                    case "num":
+                        //SPRINT TASK NUM <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        data.getListeTache().get(numTache).addSprint();
+                        System.out.println(Message.SPRINT_TASK_NUM_SUCCES);
+                        break;
+
+                    case "delnum":
+                        //SPRINT TASK DELNUM <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        data.getListeTache().get(numTache).deleteSprint(Tache.getSprint());
+                        System.out.println(Message.SPRINT_TASK_DELNUM_SUCCES);
+                        break;
+
+                    case "date":
+                        //SPRINT TASK DATE <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        if(data.getListeTache().get(numTache).addDateSprint()){
+                            System.out.println(Message.SPRINT_TASK_DATE_SUCCES);
+                        }else{
+                            System.out.println(Message.SPRINT_TASK_DATE_ECHEC);
+                        }
+                        break;
+
+                    case "all":
+                        //SPRINT TASK ALL <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        if(data.getListeTache().get(numTache).addDateSprint()){
+                            data.getListeTache().get(numTache).addSprint();
+                            System.out.println(Message.SPRINT_TASK_ALL_SUCCES);
+                        }else{
+                            System.out.println(Message.SPRINT_TASK_ALL_ECHEC);
+                        }
+                        break;
+
+                    default:
+                        System.out.println(Message.ARGUMENT_INVALIDE);
+                        break;
+                }
+                break;
+
+            default:
+                System.out.println(Message.ARGUMENT_INVALIDE);
+                break;
+        }
+        data.ecritureListeTaches();
+    }
+
     private static boolean verifBadLectureFichier(Data data){
         if (data.loadFichier()){
             return false;
