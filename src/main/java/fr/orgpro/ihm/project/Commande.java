@@ -88,7 +88,7 @@ public class Commande {
                             return;
                         }
                         String name = data.getListeTache().get(numTache).getTitre();
-                        gl.postTache(args[4], name);
+                        gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
                         return;
                     }
                     // TASK COL SYNC <collaboName> optionel:<ONGOING>
@@ -102,7 +102,12 @@ public class Commande {
                         }
                         System.out.println(args.length);
                         if (args.length == 5) {
-                            colIhm.syncOngoingUser(name, data);
+                            State state = State.stringIsState(args[3]);
+                            if (state != null) {
+                                colIhm.syncStatusTaskUser(name, data, state);
+                            } else {
+                                System.out.println(Message.ARGUMENT_INVALIDE);
+                            }
                         } else if (args.length == 4) {
                             colIhm.syncUser(name, data);
                         } else {
@@ -342,7 +347,12 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
+                Tache tache = data.getListeTache().get(numTache);
                 data.getListeTache().get(numTache).setTitre(args[3]);
+
+                SQLiteDataBase.synchroUpdateAllEstSynchroByTache(tache, false);
+                SQLiteConnection.closeConnection();
+
                 data.ecritureListeTaches();
                 System.out.println(Message.TACHE_RENAME_SUCESS);
                 break;
@@ -368,11 +378,16 @@ public class Commande {
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_AVEC_DEP_SUCCES);
                 }else{
-                    if (verifBadNbArgument(3, args)) {
+                    if (verifBadNbArgument(3, args) || verifBadLectureFichier(data)) {
                         return;
                     }
                     Tache tache = new Tache(args[2]);
-                    tache.writeFichier(data.getPath(), true);
+                    data.getListeTache().add(tache);
+
+                    SQLiteDataBase.addTache(tache);
+                    SQLiteConnection.closeConnection();
+                    //tache.writeFichier(data.getPath(), true);
+                    data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_SUCCES);
                 }
                 break;
@@ -409,8 +424,12 @@ public class Commande {
                 if (verifTacheNotExiste(numTache, data)){
                     return;
                 }
+                Tache tache = data.getListeTache().get(numTache);
                 Tache.removeTache(data.getListeTache(), numTache);
                 data.ecritureListeTaches();
+
+                SQLiteDataBase.deleteTache(tache);
+                SQLiteConnection.closeConnection();
                 System.out.println(Message.TACHE_DELETE_SUCCES);
                 break;
             }
