@@ -75,6 +75,9 @@ public class Main {
             case "tag":
                 Commande.commandeTag(args, data);
                 break;
+            case "sprint":
+                Commande.commandeSprint(args, data);
+                break;
             case "help":
                 System.out.println(Message.MAIN_HELP);
                 break;
