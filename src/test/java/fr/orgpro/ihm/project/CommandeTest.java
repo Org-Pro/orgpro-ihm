@@ -1033,7 +1033,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.HEADER_DELETE_ECHEC.toString().trim());
         outContent.reset();
     }
-
+/*  N'est plus utilisé
     @Test
     public void testCostIte() throws Exception {
         Main.main(new String[]{"cost"});
@@ -1079,7 +1079,7 @@ public class CommandeTest {
         assertEquals(outContent.toString().trim(), Message.ARGUMENT_MANQUANT.toString().trim());
         outContent.reset();
     }
-
+*/
     @Test
     public void testCollaboratorHeader() throws Exception {
         Main.main(new String[]{"col", "help"});
