@@ -94,8 +94,37 @@ public class Commande {
                         if (!cdls.verifCredentialExist(args[4])) {
                             return;
                         }
-                        String name = data.getListeTache().get(numTache).getTitre();
-                        gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
+
+                        // ---------------------------------------------------
+                        Tache tache = data.getListeTache().get(numTache);
+
+                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[4].trim());
+                        if(col == null) return;
+                        if(col.getGoogle_id_liste() == null){
+                            try {
+                                col.setGoogle_id_liste(gl.postList(col.getPseudo()).getId());
+                                SQLiteDataBase.updateCollaborateur(col);
+                            } catch (IOException e) {
+                                return;
+                            }
+                        }
+
+                        SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
+                        if (synchro == null)return;
+                        if(synchro.getGoogle_id_tache() == null){
+                            try {
+                                synchro.setGoogle_id_tache(gl.postTask(tache, col.getGoogle_id_liste(), col.getPseudo()).getId());
+                                synchro.setEst_synchro(true);
+                                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                            } catch (IOException e) {
+                                return;
+                            }
+                        }
+                        SQLiteConnection.closeConnection();
+
+                        // ---------------------------------------------------
+                        //String name = data.getListeTache().get(numTache).getTitre();
+                        //gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
                         return;
                     }
                     // TASK COL SYNC <collaboName> optionel:<ONGOING>

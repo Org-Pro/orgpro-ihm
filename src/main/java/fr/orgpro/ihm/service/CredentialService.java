@@ -5,7 +5,7 @@ import fr.orgpro.ihm.project.Message;
 import java.io.File;
 
 public class CredentialService {
-    private static CredentialService INSTANCE = CredentialService.getInstance();
+    private static CredentialService INSTANCE = new CredentialService();
 
     public static CredentialService getInstance() {
         return INSTANCE;
@@ -17,7 +17,7 @@ public class CredentialService {
      * @return boolean
      */
     public boolean verifCredentialExist(String path) {
-        File f = new File("src/main/resources/" + path + "/batrayer/credentials.json");
+        File f = new File("src/main/resources/" + path + "/credentials.json");
         if(f.exists() && !f.isDirectory()) {
             return true;
         } else {
