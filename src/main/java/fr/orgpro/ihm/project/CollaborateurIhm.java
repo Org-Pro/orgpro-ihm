@@ -2,7 +2,7 @@ package fr.orgpro.ihm.project;
 
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
-import fr.orgpro.api.remote.GoogleList;
+import fr.orgpro.api.remote.google.GoogleList;
 
 import java.util.ArrayList;
 import java.util.List;

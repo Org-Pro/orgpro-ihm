@@ -2,8 +2,11 @@ package fr.orgpro.ihm.project;
 
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
+import fr.orgpro.api.local.models.SQLCollaborateur;
+import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
+import fr.orgpro.api.remote.google.GoogleList;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.api.remote.*;
 import fr.orgpro.ihm.service.CollaborateurService;
@@ -44,7 +47,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
-                            SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
+                            SQLSynchro sync = new SQLSynchro(data.getListeTache().get(numTache).getId(), args[4].toLowerCase().trim());
+                            SQLiteDataBase.addSynchroTacheCollaborateur(sync);
+                            //SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
                             SQLiteConnection.closeConnection();
 
                             data.ecritureListeTaches();
@@ -65,7 +70,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
-                            SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
+                            SQLSynchro sync = new SQLSynchro(data.getListeTache().get(numTache).getId(), args[4].toLowerCase().trim());
+                            SQLiteDataBase.deleteSynchroTacheCollaborateur(sync);
+                            //SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
                             SQLiteConnection.closeConnection();
 
                             data.ecritureListeTaches();
@@ -350,7 +357,7 @@ public class Commande {
                 Tache tache = data.getListeTache().get(numTache);
                 data.getListeTache().get(numTache).setTitre(args[3]);
 
-                SQLiteDataBase.synchroUpdateAllEstSynchroByTache(tache, false);
+                SQLiteDataBase.updateAllSynchroEstSynchroByTache(tache, false);
                 SQLiteConnection.closeConnection();
 
                 data.ecritureListeTaches();
@@ -799,8 +806,12 @@ public class Commande {
                     if(!cls.creerDossierCollaboSiPasExistant(args[2])) {
                         break;
                     }
-                    SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
+
+                    SQLCollaborateur col = new SQLCollaborateur(args[2].toLowerCase().trim());
+                    SQLiteDataBase.addCollaborateur(col);
+                    //SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
                     SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
                     System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
                 }else{
@@ -820,7 +831,8 @@ public class Commande {
                     dir = new File(PATH_TOKEN + args[2]);
                     newDir = new File(PATH_TOKEN + args[3]);
                     if (!cls.changeDirectory(dir, newDir)) break;
-                    SQLiteDataBase.updateCollaborateur(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
+
+                    SQLiteDataBase.updateCollaborateurPseudo(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
                     SQLiteConnection.closeConnection();
 
                     data.ecritureListeTaches();
@@ -844,6 +856,7 @@ public class Commande {
                     if(!cls.deleteDirectory(dir)){
                         System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
                     }
+
                     SQLiteDataBase.deleteCollaborateur(args[2].toLowerCase().trim());
                     SQLiteConnection.closeConnection();
 
