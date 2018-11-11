@@ -25,6 +25,7 @@ public class Commande {
     private static final CollaborateurService cls = CollaborateurService.getInstance();
     private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
     private static final CredentialService cdls = CredentialService.getInstance();
+    private static final TrelloIhm tihm = TrelloIhm.getInstance();
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -842,12 +843,22 @@ public class Commande {
                     SQLiteConnection.closeConnection();
 
                     data.ecritureListeTaches();
-                    System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
+                    System.out.print(Message.COLLABORATEUR_AJOUT_SUCCES + "\n");
                 }else{
                     System.out.println(Message.COLLABORATEUR_AJOUT_ECHEC);
                 }
                 break;
-
+            // COL TRELLO <nom> ???
+            case "trello": {
+                if(verifBadLectureFichier(data)) {
+                    return;
+                }
+                if (!cls.verifColaborateurExist(args[2])){
+                    return;
+                }
+                tihm.chooseWork(args, data);
+                return;
+            }
             case "set" :
                 // COL set <old nom> <new nom>
                 if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
