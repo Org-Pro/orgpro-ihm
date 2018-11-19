@@ -1,9 +1,11 @@
 package fr.orgpro.ihm.service;
 
 import fr.orgpro.api.project.Tache;
+import fr.orgpro.ihm.project.Data;
 import fr.orgpro.ihm.project.Message;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CollaborateurService {
@@ -64,6 +66,20 @@ public class CollaborateurService {
             dir.mkdir();
         }
         return true;
+    }
+
+    public List<Tache> getListTacheFromCollabo(String name, Data data) {
+        System.out.println(name);
+        List<Tache> toSend = new ArrayList<>();
+        for (Tache task: data.getListeTache()) {
+            for(String c : task.getCollaborateurFromTache(task)) {
+                if (c.equalsIgnoreCase(name)) {
+                    toSend.add(task);
+                    break;
+                }
+            }
+        }
+        return toSend;
     }
 
     public static CollaborateurService getInstance() {

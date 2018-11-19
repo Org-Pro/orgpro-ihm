@@ -8,7 +8,6 @@ import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.google.GoogleList;
 import fr.orgpro.api.scrum.Scrum;
-import fr.orgpro.api.remote.*;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
 
@@ -23,7 +22,7 @@ public class Commande {
     private static final String PATH_TOKEN = "tokens" + fs;
     private static final GoogleList gl = GoogleList.getInstance();
     private static final CollaborateurService cls = CollaborateurService.getInstance();
-    private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
+    private static final GoogleIhm colIhm = GoogleIhm.getInstance();
     private static final CredentialService cdls = CredentialService.getInstance();
     private static final TrelloIhm tihm = TrelloIhm.getInstance();
     public static void commandeTache(String[] args, Data data){
