@@ -115,7 +115,7 @@ public class Commande {
                         if(synchro.getGoogle_id_tache() == null){
                             try {
                                 synchro.setGoogle_id_tache(gl.postTask(tache, col.getGoogle_id_liste(), col.getPseudo()).getId());
-                                synchro.setEst_synchro(true);
+                                synchro.setGoogle_est_synchro(true);
                                 SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
                             } catch (IOException e) {
                                 return;
