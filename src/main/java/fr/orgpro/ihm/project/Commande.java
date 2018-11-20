@@ -1,5 +1,6 @@
 package fr.orgpro.ihm.project;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -14,6 +15,7 @@ import fr.orgpro.ihm.service.CredentialService;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class Commande {
@@ -104,19 +106,36 @@ public class Commande {
                             try {
                                 col.setGoogle_id_liste(gl.postList(col.getPseudo()).getId());
                                 SQLiteDataBase.updateCollaborateur(col);
+                            }catch (UnknownHostException e){
+                                // Pas de connexion
+                                SQLiteConnection.closeConnection();
+                                return;
                             } catch (IOException e) {
+                                SQLiteConnection.closeConnection();
                                 return;
                             }
                         }
 
                         SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
                         if (synchro == null)return;
-                        if(synchro.getGoogle_id_tache() == null){
+                        if(synchro.getGoogle_id_tache() == null) {
                             try {
                                 synchro.setGoogle_id_tache(gl.postTask(tache, col.getGoogle_id_liste(), col.getPseudo()).getId());
                                 synchro.setGoogle_est_synchro(true);
                                 SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
-                            } catch (IOException e) {
+                            } catch (GoogleJsonResponseException e) {
+                                col.setGoogle_id_liste(null);
+                                SQLiteDataBase.updateCollaborateur(col);
+
+                                // La liste n'existe pas code 404
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }catch (UnknownHostException e){
+                                // Pas de connexion
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }catch (IOException e) {
+                                SQLiteConnection.closeConnection();
                                 return;
                             }
                         }
