@@ -69,9 +69,9 @@ public class Main {
             case "list":
                 Commande.commandeListe(args, data);
                 break;
-            case "cost":
+            /*case "cost":
                 Commande.commandeCost(args, data);
-                break;
+                break;*/
             case "tag":
                 Commande.commandeTag(args, data);
                 break;

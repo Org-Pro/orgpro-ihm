@@ -661,6 +661,7 @@ public class Commande {
         }
     }
 
+    /* N'est plus utilisé
     public static void commandeCost(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -688,13 +689,14 @@ public class Commande {
                 System.out.println(Message.ARGUMENT_INVALIDE);
                 break;
         }
-    }
+    }*/
 
     public static void commandeHeader(String[] args, Data data) {
         if (verifBadNbArgument(2, args)){
             return;
         }
         switch (args[1].toLowerCase()){
+            /* N'est plus utilisé
             case "cost" : {
                 // HEAD COST <valeur>
                 if(verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)){
@@ -706,7 +708,7 @@ public class Commande {
                 System.out.println(Message.HEADER_COSTS);
                 data.ecritureListeTaches();
                 break;
-            }
+            }*/
             case "get" : {
                 // HEAD GET <clef>
                 if(verifBadNbArgument(3, args) || verifBadLectureFichier(data)){
@@ -1034,6 +1036,18 @@ public class Commande {
                         break;
                 }
                 break;
+
+            case "cost" : {
+                // SPRINT COST <valeur>
+                if(verifBadNbArgument(3, args) || verifArgNotNombre(args[2]) || verifBadLectureFichier(data)){
+                    return;
+                }
+                if(!Tache.setEnTete(Tache.HEADER_COST,args[2],true)){
+                    Tache.addEnTete(Tache.HEADER_COST, args[2], true);
+                }
+                System.out.println(Message.HEADER_COSTS);
+                break;
+            }
 
             default:
                 System.out.println(Message.ARGUMENT_INVALIDE);
