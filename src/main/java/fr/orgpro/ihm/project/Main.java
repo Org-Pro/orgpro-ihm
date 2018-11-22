@@ -7,7 +7,7 @@ public class Main {
     private static Data data;
 
     public static void main(String[] args) throws IOException {
-        // args = new String[]{"file", "select", "google"};
+        //args = new String[]{"file", "select", "google"};
         //args = new String[]{"col", "directory"};
         //args = new String[]{"task", "add", "test4"};
 
@@ -16,12 +16,14 @@ public class Main {
         //args = new String[]{"task", "add", "test2"};
         //args = new String[]{"task", "delete", "0"};
         //args = new String[]{"col", "add", "alex"};
-        //args = new String[]{"task", "col", "delete", "1", "bob"};
+        //args = new String[]{"task", "col", "delete", "0", "alex"};
+        //args = new String[]{"task", "col", "add", "0", "alex"};
         //args = new String[]{"task", "clock", "use", "1"};
         //args = new String[]{"task", "dep", "set", "0", "2"};
-         //args = new String[]{"col", "set", "baptiste", "batrayer"};
+        //args = new String[]{"col", "set", "baptiste", "batrayer"};
+        //args = new String[]{"task", "col", "send", "1", "alex"};
 
-        //args = new String[]{"col", "add", "baptiste"};
+        //args = new String[]{"task", "col", "send", "0", "alex"};
         data = Data.getInstance();
 
         if (data.getFichierCourant().isEmpty()){

@@ -1,17 +1,21 @@
 package fr.orgpro.ihm.project;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
+import fr.orgpro.api.local.models.SQLCollaborateur;
+import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
+import fr.orgpro.api.remote.google.GoogleList;
 import fr.orgpro.api.scrum.Scrum;
-import fr.orgpro.api.remote.*;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class Commande {
@@ -20,8 +24,9 @@ public class Commande {
     private static final String PATH_TOKEN = "tokens" + fs;
     private static final GoogleList gl = GoogleList.getInstance();
     private static final CollaborateurService cls = CollaborateurService.getInstance();
-    private static final CollaborateurIhm colIhm = CollaborateurIhm.getInstance();
+    private static final GoogleIhm colIhm = GoogleIhm.getInstance();
     private static final CredentialService cdls = CredentialService.getInstance();
+    private static final TrelloIhm tihm = TrelloIhm.getInstance();
     public static void commandeTache(String[] args, Data data){
         if (verifBadNbArgument(2, args)){
             return;
@@ -44,7 +49,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).addCollaborateur(args[4])){
-                            SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
+                            SQLSynchro sync = new SQLSynchro(data.getListeTache().get(numTache).getId(), args[4].toLowerCase().trim());
+                            SQLiteDataBase.addSynchroTacheCollaborateur(sync);
+                            //SQLiteDataBase.synchroAddTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim(), null, false);
                             SQLiteConnection.closeConnection();
 
                             data.ecritureListeTaches();
@@ -65,7 +72,9 @@ public class Commande {
                             return;
                         }
                         if(data.getListeTache().get(numTache).removeCollaborateur(args[4])){
-                            SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
+                            SQLSynchro sync = new SQLSynchro(data.getListeTache().get(numTache).getId(), args[4].toLowerCase().trim());
+                            SQLiteDataBase.deleteSynchroTacheCollaborateur(sync);
+                            //SQLiteDataBase.synchroDeleteTacheCollaborateur(data.getListeTache().get(numTache), args[4].toLowerCase().trim());
                             SQLiteConnection.closeConnection();
 
                             data.ecritureListeTaches();
@@ -87,8 +96,54 @@ public class Commande {
                         if (!cdls.verifCredentialExist(args[4])) {
                             return;
                         }
-                        String name = data.getListeTache().get(numTache).getTitre();
-                        gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
+
+                        // ---------------------------------------------------
+                        Tache tache = data.getListeTache().get(numTache);
+
+                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[4].trim());
+                        if(col == null) return;
+                        if(col.getGoogle_id_liste() == null){
+                            try {
+                                col.setGoogle_id_liste(gl.postList(col.getPseudo()).getId());
+                                SQLiteDataBase.updateCollaborateur(col);
+                            }catch (UnknownHostException e){
+                                // Pas de connexion
+                                SQLiteConnection.closeConnection();
+                                return;
+                            } catch (IOException e) {
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }
+                        }
+
+                        SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
+                        if (synchro == null)return;
+                        if(synchro.getGoogle_id_tache() == null) {
+                            try {
+                                synchro.setGoogle_id_tache(gl.postTask(tache, col.getGoogle_id_liste(), col.getPseudo()).getId());
+                                synchro.setGoogle_est_synchro(true);
+                                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                            } catch (GoogleJsonResponseException e) {
+                                col.setGoogle_id_liste(null);
+                                SQLiteDataBase.updateCollaborateur(col);
+
+                                // La liste n'existe pas code 404
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }catch (UnknownHostException e){
+                                // Pas de connexion
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }catch (IOException e) {
+                                SQLiteConnection.closeConnection();
+                                return;
+                            }
+                        }
+                        SQLiteConnection.closeConnection();
+
+                        // ---------------------------------------------------
+                        //String name = data.getListeTache().get(numTache).getTitre();
+                        //gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
                         return;
                     }
                     // TASK COL SYNC <collaboName> optionel:<ONGOING>
@@ -350,7 +405,7 @@ public class Commande {
                 Tache tache = data.getListeTache().get(numTache);
                 data.getListeTache().get(numTache).setTitre(args[3]);
 
-                SQLiteDataBase.synchroUpdateAllEstSynchroByTache(tache, false);
+                SQLiteDataBase.updateAllSynchroEstSynchroByTache(tache, false);
                 SQLiteConnection.closeConnection();
 
                 data.ecritureListeTaches();
@@ -801,15 +856,29 @@ public class Commande {
                     if(!cls.creerDossierCollaboSiPasExistant(args[2])) {
                         break;
                     }
-                    SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
+
+                    SQLCollaborateur col = new SQLCollaborateur(args[2].toLowerCase().trim());
+                    SQLiteDataBase.addCollaborateur(col);
+                    //SQLiteDataBase.addCollaborateur(args[2].toLowerCase().trim(), null, null, null);
                     SQLiteConnection.closeConnection();
+
                     data.ecritureListeTaches();
-                    System.out.println(Message.COLLABORATEUR_AJOUT_SUCCES);
+                    System.out.print(Message.COLLABORATEUR_AJOUT_SUCCES + "\n");
                 }else{
                     System.out.println(Message.COLLABORATEUR_AJOUT_ECHEC);
                 }
                 break;
-
+            // COL TRELLO <nom> ???
+            case "trello": {
+                if(verifBadLectureFichier(data)) {
+                    return;
+                }
+                if (!cls.verifColaborateurExist(args[2])){
+                    return;
+                }
+                tihm.chooseWork(args, data);
+                return;
+            }
             case "set" :
                 // COL set <old nom> <new nom>
                 if(verifBadNbArgument(4, args) || verifBadLectureFichier(data)){
@@ -822,7 +891,8 @@ public class Commande {
                     dir = new File(PATH_TOKEN + args[2]);
                     newDir = new File(PATH_TOKEN + args[3]);
                     if (!cls.changeDirectory(dir, newDir)) break;
-                    SQLiteDataBase.updateCollaborateur(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
+
+                    SQLiteDataBase.updateCollaborateurPseudo(args[2].toLowerCase().trim(), args[3].toLowerCase().trim());
                     SQLiteConnection.closeConnection();
 
                     data.ecritureListeTaches();
@@ -846,6 +916,7 @@ public class Commande {
                     if(!cls.deleteDirectory(dir)){
                         System.out.println(Message.COLLABORATEUR_SUPPRESSION_DOSSIER_FAILURE + dir.getPath());
                     }
+
                     SQLiteDataBase.deleteCollaborateur(args[2].toLowerCase().trim());
                     SQLiteConnection.closeConnection();
 
