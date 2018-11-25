@@ -2,7 +2,6 @@ package fr.orgpro.ihm.project;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.tasks.model.Task;
-import com.google.api.services.tasks.model.TaskList;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -10,7 +9,6 @@ import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.google.GoogleList;
-import fr.orgpro.api.remote.trello.models.TrelloCard;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
@@ -22,6 +20,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 public class Commande {
+    private static final String trello = "trello";
+    private static final String google = "google";
+
     private static final String fs = File.separator;
     private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
     private static final String PATH_TOKEN = "tokens" + fs;
@@ -103,7 +104,7 @@ public class Commande {
                             System.out.println(Message.BDD_COLLABORATEUR_NULL);
                             return;
                         }
-                        if (args[3].equalsIgnoreCase("google")) {
+                        if (args[3].equalsIgnoreCase(google)) {
                             if (!cdls.verifCredentialExist(args[5])) {
                                 return;
                             }
@@ -168,8 +169,10 @@ public class Commande {
                                 System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
                                 return;
                             }
-                        } else if (args[3].equalsIgnoreCase("trello")) {
+                        } else if (args[3].equalsIgnoreCase(trello)) {
                             tihm.send(col.getPseudo(), tache);
+                        } else {
+                            System.out.println(Message.NOT_SENDABLE + args[3]);
                         }
                         SQLiteConnection.closeConnection();
 

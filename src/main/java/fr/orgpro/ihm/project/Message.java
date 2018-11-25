@@ -164,6 +164,8 @@ public enum Message {
     COLLABORATEUR_UPDATED(COULEUR_SUCCES + "SUCCESS : Collaborator updated"),
     COLLABORATEUR_NO_TRELLLO_CREDENTIALS(COULEUR_ECHEC + "FAILURE : Collaborator has no trello credentials"),
 
+    NOT_SENDABLE(COULEUR_ECHEC + "FAILURE : datasource not found for : "),
+
     SPRINT_GET_NUM("Vous êtes au sprint numéro "),
     SPRINT_GET_DATE_SUCCES(COULEUR_SUCCES + "La deadline du sprint en cours est " + COULEUR_RESET),
     SPRINT_GET_DATE_ECHEC(COULEUR_ECHEC + "La deadline du sprint n'a pas été fixée" + COULEUR_RESET),
