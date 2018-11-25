@@ -79,6 +79,19 @@ public enum Message {
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
                 "TASK DEP DELETE <numTask> -> delete a dependency\n"),
 
+    BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
+    BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
+
+    TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste a bien été créée sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été créée sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été mise à jour sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_SUPPRIMEE(COULEUR_ECHEC + "FAILURE : La liste provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle liste sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_TACHE_SUPPRIMEE(COULEUR_ECHEC + "FAILURE : La tâche provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle tâche sur google task." + COULEUR_RESET),
+
+    TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
+    TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
+
+
     //FICHIER_SAVE_SUCCES("SUCCESS : Saved file."),
     FICHIER_CREATION(COULEUR_SUCCES + "SUCCESS : File does not exist but it was created." + COULEUR_RESET),
     FICHIER_LOAD(COULEUR_SUCCES + "SUCCESS : Loaded file." + COULEUR_RESET),

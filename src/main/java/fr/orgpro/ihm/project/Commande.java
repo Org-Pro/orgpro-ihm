@@ -1,6 +1,8 @@
 package fr.orgpro.ihm.project;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.services.tasks.model.Task;
+import com.google.api.services.tasks.model.TaskList;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -84,6 +86,7 @@ public class Commande {
                         }
                         break;
                     }
+
                     // TASK COL SEND <numTask> <nameCollabo>
                     case "send": {
                         if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
@@ -97,55 +100,81 @@ public class Commande {
                             return;
                         }
 
-                        // ---------------------------------------------------
                         Tache tache = data.getListeTache().get(numTache);
 
                         SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[4].trim());
-                        if(col == null) return;
+                        if(col == null) {
+                            System.out.println(Message.BDD_COLLABORATEUR_NULL);
+                            return;
+                        }
+
                         if(col.getGoogle_id_liste() == null){
                             try {
-                                col.setGoogle_id_liste(gl.postList(col.getPseudo()).getId());
+                                col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
                                 SQLiteDataBase.updateCollaborateur(col);
+                                System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
                             }catch (UnknownHostException e){
-                                // Pas de connexion
                                 SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
                                 return;
                             } catch (IOException e) {
                                 SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
                                 return;
                             }
                         }
 
                         SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
-                        if (synchro == null)return;
-                        if(synchro.getGoogle_id_tache() == null) {
-                            try {
-                                synchro.setGoogle_id_tache(gl.postTask(tache, col.getGoogle_id_liste(), col.getPseudo()).getId());
+                        if (synchro == null){
+                            System.out.println(Message.BDD_SYNCHRO_NULL);
+                            return;
+                        }
+
+                        try {
+                            if(synchro.getGoogle_id_tache() != null) {
+                                Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo());
+                                if(t.getDeleted() != null && t.getDeleted() ){
+                                    synchro.setGoogle_est_synchro(false);
+                                    synchro.setGoogle_id_tache(null);
+                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                    SQLiteConnection.closeConnection();
+                                    System.out.println(Message.TACHE_API_GOOGLE_TACHE_SUPPRIMEE);
+                                    return;
+                                }else{
+                                    synchro.setGoogle_est_synchro(true);
+                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                    System.out.println(Message.TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES);
+                                }
+                            }else{
+                                Task t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
+                                synchro.setGoogle_id_tache(t.getId());
                                 synchro.setGoogle_est_synchro(true);
                                 SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
-                            } catch (GoogleJsonResponseException e) {
-                                col.setGoogle_id_liste(null);
-                                SQLiteDataBase.updateCollaborateur(col);
-
-                                // La liste n'existe pas code 404
-                                SQLiteConnection.closeConnection();
-                                return;
-                            }catch (UnknownHostException e){
-                                // Pas de connexion
-                                SQLiteConnection.closeConnection();
-                                return;
-                            }catch (IOException e) {
-                                SQLiteConnection.closeConnection();
-                                return;
+                                System.out.println(Message.TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES);
                             }
+                        } catch (GoogleJsonResponseException e) {
+                            col.setGoogle_id_liste(null);
+                            SQLiteDataBase.updateCollaborateur(col);
+                            SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
+                            SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
+                            SQLiteConnection.closeConnection();
+                            System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE);
+                            return;
+                        }catch (UnknownHostException e){
+                            SQLiteConnection.closeConnection();
+                            System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                            return;
+                        }catch (IOException e) {
+                            SQLiteConnection.closeConnection();
+                            System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                            return;
                         }
+
                         SQLiteConnection.closeConnection();
 
-                        // ---------------------------------------------------
-                        //String name = data.getListeTache().get(numTache).getTitre();
-                        //gl.postTache(args[4], name, data.getListeTache().get(numTache).getDateLimite());
-                        return;
+                        break;
                     }
+
                     // TASK COL SYNC <collaboName> optionel:<ONGOING>
                     case "sync": {
                         if(verifBadLectureFichier(data) && !cdls.verifCredentialExist(args[3])) {
