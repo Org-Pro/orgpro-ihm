@@ -10,6 +10,7 @@ import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.google.GoogleList;
+import fr.orgpro.api.remote.trello.models.TrelloCard;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
@@ -87,89 +88,89 @@ public class Commande {
                         break;
                     }
 
-                    // TASK COL SEND <numTask> <nameCollabo>
+                    // TASK COL SEND <trello/google> <numTask> <nameCollabo>
                     case "send": {
-                        if (verifBadNbArgument(5, args) || verifArgNotNombre(args[3]) || verifBadLectureFichier(data)) {
+                        if (verifBadNbArgument(6, args) || verifArgNotNombre(args[4]) || verifBadLectureFichier(data)) {
                             return;
                         }
-                        int numTache = Integer.parseInt(args[3]);
+                        int numTache = Integer.parseInt(args[4]);
                         if(verifTacheNotExiste(numTache, data)) {
                             return;
                         }
-                        if (!cdls.verifCredentialExist(args[4])) {
-                            return;
-                        }
-
                         Tache tache = data.getListeTache().get(numTache);
-
-                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[4].trim());
+                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[5].trim());
                         if(col == null) {
                             System.out.println(Message.BDD_COLLABORATEUR_NULL);
                             return;
                         }
+                        if (args[3].equalsIgnoreCase("google")) {
+                            if (!cdls.verifCredentialExist(args[5])) {
+                                return;
+                            }
+                            if(col.getGoogle_id_liste() == null){
+                                try {
+                                    col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                    SQLiteDataBase.updateCollaborateur(col);
+                                    System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
+                                }catch (UnknownHostException e){
+                                    SQLiteConnection.closeConnection();
+                                    System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                    return;
+                                } catch (IOException e) {
+                                    SQLiteConnection.closeConnection();
+                                    System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                    return;
+                                }
+                            }
 
-                        if(col.getGoogle_id_liste() == null){
+                            SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
+                            if (synchro == null){
+                                System.out.println(Message.BDD_SYNCHRO_NULL);
+                                return;
+                            }
+
                             try {
-                                col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                if(synchro.getGoogle_id_tache() != null) {
+                                    Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo());
+                                    if(t.getDeleted() != null && t.getDeleted() ){
+                                        synchro.setGoogle_est_synchro(false);
+                                        synchro.setGoogle_id_tache(null);
+                                        SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                        SQLiteConnection.closeConnection();
+                                        System.out.println(Message.TACHE_API_GOOGLE_TACHE_SUPPRIMEE);
+                                        return;
+                                    }else{
+                                        synchro.setGoogle_est_synchro(true);
+                                        SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                        System.out.println(Message.TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES);
+                                    }
+                                }else{
+                                    Task t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
+                                    synchro.setGoogle_id_tache(t.getId());
+                                    synchro.setGoogle_est_synchro(true);
+                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                    System.out.println(Message.TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES);
+                                }
+                            } catch (GoogleJsonResponseException e) {
+                                col.setGoogle_id_liste(null);
                                 SQLiteDataBase.updateCollaborateur(col);
-                                System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
+                                SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
+                                SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
+                                SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE);
+                                return;
                             }catch (UnknownHostException e){
                                 SQLiteConnection.closeConnection();
                                 System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
                                 return;
-                            } catch (IOException e) {
+                            }catch (IOException e) {
                                 SQLiteConnection.closeConnection();
-                                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
                                 return;
                             }
+                        } else if (args[3].equalsIgnoreCase("trello")) {
+                            tihm.send(col.getPseudo(), tache);
                         }
-
-                        SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
-                        if (synchro == null){
-                            System.out.println(Message.BDD_SYNCHRO_NULL);
-                            return;
-                        }
-
-                        try {
-                            if(synchro.getGoogle_id_tache() != null) {
-                                Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo());
-                                if(t.getDeleted() != null && t.getDeleted() ){
-                                    synchro.setGoogle_est_synchro(false);
-                                    synchro.setGoogle_id_tache(null);
-                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
-                                    SQLiteConnection.closeConnection();
-                                    System.out.println(Message.TACHE_API_GOOGLE_TACHE_SUPPRIMEE);
-                                    return;
-                                }else{
-                                    synchro.setGoogle_est_synchro(true);
-                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
-                                    System.out.println(Message.TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES);
-                                }
-                            }else{
-                                Task t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
-                                synchro.setGoogle_id_tache(t.getId());
-                                synchro.setGoogle_est_synchro(true);
-                                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
-                                System.out.println(Message.TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES);
-                            }
-                        } catch (GoogleJsonResponseException e) {
-                            col.setGoogle_id_liste(null);
-                            SQLiteDataBase.updateCollaborateur(col);
-                            SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
-                            SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
-                            SQLiteConnection.closeConnection();
-                            System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE);
-                            return;
-                        }catch (UnknownHostException e){
-                            SQLiteConnection.closeConnection();
-                            System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
-                            return;
-                        }catch (IOException e) {
-                            SQLiteConnection.closeConnection();
-                            System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
-                            return;
-                        }
-
                         SQLiteConnection.closeConnection();
 
                         break;
@@ -181,19 +182,22 @@ public class Commande {
                             return;
                         }
                         String name = args[3];
+                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(name);
                         if(!cls.verifColaborateurExist(name)) {
                             return;
                         }
-                        System.out.println(args.length);
+                        if (col == null) {
+                            return;
+                        }
                         if (args.length == 5) {
                             State state = State.stringIsState(args[3]);
                             if (state != null) {
-                                colIhm.syncStatusTaskUser(name, data, state);
+                                colIhm.syncStatusTaskUser(col, data, state);
                             } else {
                                 System.out.println(Message.ARGUMENT_INVALIDE);
                             }
                         } else if (args.length == 4) {
-                            colIhm.syncUser(name, data);
+                            colIhm.syncUser(col, data);
                         } else {
                             System.out.println(Message.ARGUMENT_INVALIDE);
                             break;
