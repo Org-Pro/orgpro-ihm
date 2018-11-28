@@ -1,7 +1,6 @@
 package fr.orgpro.ihm.service;
 
 import fr.orgpro.ihm.project.Message;
-
 import java.io.File;
 
 public class CredentialService {

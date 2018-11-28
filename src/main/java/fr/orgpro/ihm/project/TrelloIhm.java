@@ -117,17 +117,7 @@ public class TrelloIhm {
         if(toSend != null) {
             TrelloCard tc;
             for(Tache t : toSend) {
-                tc = new TrelloCard();
-                tc.setIdBoard(col.getTrello_id_board());
-                tc.setIdList(col.getTrello_id_liste());
-                if (t.getDateLimite() != null) {
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(t.getDateLimite());
-                    c.add(Calendar.DATE, 1);
-                    DateTime d = new DateTime(c.getTime());
-                    tc.setDate(d.toString());
-                }
-                tc.setName(t.getTitre());
+                tc = setupCard(t, col);
                 try {
                     System.out.println("try");
                     tc = TrelloApi.createService(TrelloCardService.class)
@@ -147,6 +137,43 @@ public class TrelloIhm {
         }
     }
 
+    public void send(String name, Tache tache) {
+        SQLCollaborateur col = checkColExist(name);
+        if(col == null) {
+            return;
+        }
+        if(!checkColCredential(col)) {
+            System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS);
+            return;
+        }
+        try {
+            TrelloCard tc = setupCard(tache, col);
+            tc = TrelloApi.createService(TrelloCardService.class)
+                    .addCard(col.getTrello_key(), col.getTrello_token(),
+                            tc.getIdList(),
+                            tc.getName(),
+                            tc.getDate()).execute().body();
+            System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_SUCCESS);
+        }catch (Exception e){
+            System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_FAILURE);
+            e.printStackTrace();
+        }
+    }
+
+    private TrelloCard setupCard(Tache t, SQLCollaborateur col) {
+        TrelloCard tc = new TrelloCard();
+        tc.setIdBoard(col.getTrello_id_board());
+        tc.setIdList(col.getTrello_id_liste());
+        if (t.getDateLimite() != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(t.getDateLimite());
+            c.add(Calendar.DATE, 1);
+            DateTime d = new DateTime(c.getTime());
+            tc.setDate(d.toString());
+        }
+        tc.setName(t.getTitre());
+        return tc;
+    }
     private SQLCollaborateur checkColExist(String name) {
         SQLCollaborateur col = SQLiteDataBase.getCollaborateur(name);
         if (col == null) {
@@ -157,7 +184,6 @@ public class TrelloIhm {
         return col;
     }
     private boolean checkColCredential(SQLCollaborateur col) {
-        System.out.println(col.getTrello_token());
         return col.getTrello_key() != null && col.getTrello_token() != null;
     }
     private void setupCredentialTrelloUser(String[] args, SQLCollaborateur col) {

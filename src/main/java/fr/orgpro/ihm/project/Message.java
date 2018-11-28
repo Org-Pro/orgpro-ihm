@@ -79,6 +79,19 @@ public enum Message {
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
                 "TASK DEP DELETE <numTask> -> delete a dependency\n"),
 
+    BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
+    BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
+
+    TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste a bien été créée sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été créée sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été mise à jour sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_SUPPRIMEE(COULEUR_ECHEC + "FAILURE : La liste provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle liste sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_TACHE_SUPPRIMEE(COULEUR_ECHEC + "FAILURE : La tâche provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle tâche sur google task." + COULEUR_RESET),
+
+    TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
+    TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
+
+
     //FICHIER_SAVE_SUCCES("SUCCESS : Saved file."),
     FICHIER_CREATION(COULEUR_SUCCES + "SUCCESS : File does not exist but it was created." + COULEUR_RESET),
     FICHIER_LOAD(COULEUR_SUCCES + "SUCCESS : Loaded file." + COULEUR_RESET),
@@ -146,8 +159,12 @@ public enum Message {
     COLLABORATEUR_GENERATION_TRELLO_LIST_FAILURE(COULEUR_ECHEC + "FAILURE : List could not be created" + COULEUR_RESET),
     COLLABORATEUR_SYNC_TRELLO_SUCCESS(COULEUR_SUCCES + "SUCCESS : Task(s) added to trello"),
     COLLABORATEUR_SYNC_TRELLO_FAILURE(COULEUR_ECHEC + "FAILURE : Task(s) could not be added to trello"),
+    COLLABORATEUR_TASK_TRELLO_SEND_SUCCESS(COULEUR_SUCCES + "SUCCESS : Task send to trello"),
+    COLLABORATEUR_TASK_TRELLO_SEND_FAILURE(COULEUR_ECHEC + "FAILURE : Task could not be send to trello"),
     COLLABORATEUR_UPDATED(COULEUR_SUCCES + "SUCCESS : Collaborator updated"),
     COLLABORATEUR_NO_TRELLLO_CREDENTIALS(COULEUR_ECHEC + "FAILURE : Collaborator has no trello credentials"),
+
+    NOT_SENDABLE(COULEUR_ECHEC + "FAILURE : datasource not found for : "),
 
     SPRINT_GET_NUM("Vous êtes au sprint numéro "),
     SPRINT_GET_DATE_SUCCES(COULEUR_SUCCES + "La deadline du sprint en cours est " + COULEUR_RESET),
