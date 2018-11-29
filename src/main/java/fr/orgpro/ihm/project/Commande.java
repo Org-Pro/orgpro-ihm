@@ -2,6 +2,7 @@ package fr.orgpro.ihm.project;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.tasks.model.Task;
+import fr.orgpro.api.collaborateur.Collaborateur;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -17,6 +18,7 @@ import fr.orgpro.ihm.service.CredentialService;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Commande {
@@ -601,11 +603,42 @@ public class Commande {
             // case task sync <num_task>
             case "sync":
                 System.out.println("Task sync");
+                int numtask = -1;
+                Tache tache = null;
                 if(verifBadLectureFichier(data)) return;
                 if(verifBadNbArgument(3, args)) return;
-                if(verifArgNotNombre(args[2])) return;
-                if(verifTacheNotExiste(Integer.parseInt(args[2]), data)) return;
-                 
+                if(verifArgNotNombre(args[2])){
+                    return;
+                } else {
+                    numtask = Integer.parseInt(args[2]);
+                }
+                if(verifTacheNotExiste(numtask, data)) {
+                    return;
+                }else{
+                    tache = data.getListeTache().get(numtask);
+                }
+                List<SQLCollaborateur> cols = new ArrayList<>();
+                for (String colString: data.getListeTache().get(numtask).getCollaborateur()) {
+                    cols.add(SQLiteDataBase.getCollaborateur(colString));
+                }
+                try {
+                    for (SQLCollaborateur sql: cols) {
+                        if (sql.getGoogle_id_liste() != null) {
+                            SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(sql, tache);
+                            if (tache.getEtat() == State.DONE) {
+                                Task task = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
+                                if ("completed".equals(task.getStatus())) {
+                                    System.out.println("Status identique pour les taches");
+                                }
+                            } else {
+                                Task task = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
+                                System.out.println(task.getStatus());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println(Message.ARGUMENT_INVALIDE);
