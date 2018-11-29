@@ -598,7 +598,15 @@ public class Commande {
             case "help":
                 System.out.println(Message.TACHE_HELP);
                 break;
-
+            // case task sync <num_task>
+            case "sync":
+                System.out.println("Task sync");
+                if(verifBadLectureFichier(data)) return;
+                if(verifBadNbArgument(3, args)) return;
+                if(verifArgNotNombre(args[2])) return;
+                if(verifTacheNotExiste(Integer.parseInt(args[2]), data)) return;
+                 
+                break;
             default:
                 System.out.println(Message.ARGUMENT_INVALIDE);
                 break;

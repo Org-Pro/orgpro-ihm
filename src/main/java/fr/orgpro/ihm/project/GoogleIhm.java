@@ -23,7 +23,6 @@ public class GoogleIhm {
                 gl.postTache(col.getPseudo(), t.getTitre(), t.getDateLimite());
             }
         }
-        return;
     }
 
     public void syncStatusTaskUser(SQLCollaborateur col, Data data, State etat){
