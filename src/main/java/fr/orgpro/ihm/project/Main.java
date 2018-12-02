@@ -13,7 +13,7 @@ public class Main {
 
         //args = new String[]{"task", "list"};
         //args = new String[]{"file", "select", "test"};
-        //args = new String[]{"task", "add", "test2"};
+        //args = new String[]{"task", "add", "te654"};
         //args = new String[]{"task", "delete", "0"};
         //args = new String[]{"col", "add", "alex"};
         //args = new String[]{"task", "col", "delete", "0", "alex"};
@@ -24,7 +24,8 @@ public class Main {
         //args = new String[]{"task", "col", "send", "0", "alex"};
         //args = new String[]{"task", "rename", "0", "test google"};
 
-        //args = new String[]{"task", "col", "send", "1", "alex"};
+        //args = new String[]{"task", "col", "send", "google", "0", "alex"};
+        //args = new String[]{"task", "col", "imp", "google", "alex"};
         //args = new String[]{"task", "col", "test", "0", "alex"};
         data = Data.getInstance();
 
