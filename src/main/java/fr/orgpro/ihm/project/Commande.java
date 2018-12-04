@@ -177,11 +177,19 @@ public class Commande {
                                 SQLSynchro synchro;
                                 Task taskTemp;
                                 String[] date;
+                                String dateAffichage;
 
                                 // Affiche les tâches que l'utilisateur peut ajouter
                                 System.out.println(Message.TACHE_API_GOOGLE_AFFICHAGE_LISTE);
                                 for (Task task : listeTaskTemp){
-                                    System.out.println("n°" + i + " : " + task.getTitle());
+                                    if(task.getDue() != null){
+                                        date = task.getDue().toString().split("T");
+                                        date = date[0].split("-");
+                                        dateAffichage = " ( DEADLINE : " + date[2] + "/" + date[1] + "/" + date[0] + " )";
+                                    }else{
+                                        dateAffichage = "";
+                                    }
+                                    System.out.println("n°" + i + " : " + task.getTitle() + dateAffichage);
                                     i++;
                                 }
 
@@ -235,7 +243,15 @@ public class Commande {
                                             System.out.println(Message.TACHE_API_GOOGLE_AFFICHAGE_LISTE);
                                             i = 0;
                                             for (Task task : listeTaskTemp){
-                                                System.out.println("n°" + i + " : " + task.getTitle());
+                                                if(task.getDue() != null){
+                                                    date = task.getDue().toString().split("T");
+                                                    date = date[0].split("-");
+                                                    dateAffichage = " ( DEADLINE : " + date[2] + "/" + date[1] + "/" + date[0] + " )";
+                                                }else{
+                                                    dateAffichage = "";
+                                                }
+                                                System.out.println("n°" + i + " : " + task.getTitle() + dateAffichage);
+                                                i++;
                                             }
                                         } catch (NumberFormatException e) {
                                             System.out.println(Message.TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC);
