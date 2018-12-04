@@ -1138,6 +1138,22 @@ public class Commande {
                         }
                         break;
 
+                    case "next":
+                        //SPRINT TASK NEXT <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        int result = Scrum.etatSuivant(data.getListeTache(),numTache);
+                        if(result == 1){
+                            data.getListeTache().get(numTache).setEtatSuivant();
+                            System.out.println(Message.SPRINT_TASK_NEXT_SUCCES);
+                        }else if(result == 0){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_0);
+                        }else if(result == 2){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_2);
+                        }else if(result == 3){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_3);
+                        }
+                        break;
+
                     default:
                         System.out.println(Message.ARGUMENT_INVALIDE);
                         break;
