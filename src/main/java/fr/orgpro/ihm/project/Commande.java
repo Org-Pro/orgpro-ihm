@@ -2,7 +2,6 @@ package fr.orgpro.ihm.project;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.tasks.model.Task;
-import fr.orgpro.api.collaborateur.Collaborateur;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -10,16 +9,16 @@ import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.google.GoogleList;
+import fr.orgpro.api.remote.google.GoogleStateEnum;
+import fr.orgpro.api.remote.google.GoogleTasksService;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
 
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Commande {
     private static final String trello = "trello";
@@ -91,6 +90,192 @@ public class Commande {
                         break;
                     }
 
+                    // TASK COL imp <trello/google> <col>
+                    case "imp": {}
+                    case "import": {
+                        if (verifBadNbArgument(5, args) || verifBadLectureFichier(data)) {
+                            return;
+                        }
+                        // Récupère les infos du collaborateur
+                        SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[4].trim());
+                        if(col == null) {
+                            System.out.println(Message.BDD_COLLABORATEUR_NULL);
+                            return;
+                        }
+                        // Pour google
+                        if (args[3].equalsIgnoreCase(google)) {
+                            if (!cdls.verifCredentialExist(args[4])) {
+                                return;
+                            }
+                            // Si la liste n'existe pas sur google task
+                            if(col.getGoogle_id_liste() == null){
+                                try {
+                                    // Création de la liste sur google task
+                                    col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                    SQLiteDataBase.updateCollaborateur(col);
+                                    System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
+                                    System.out.println(Message.TACHE_API_GOOGLE_LISTE_VIDE);
+                                    return;
+                                }catch (UnknownHostException e){
+                                    SQLiteConnection.closeConnection();
+                                    System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                    return;
+                                } catch (IOException e) {
+                                    SQLiteConnection.closeConnection();
+                                    System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                    return;
+                                }
+                            }
+
+                            try {
+                                // Récupère les tâches de google task selon le collaborateur
+                                List<Task> allTask = gl.getAllTask(col.getGoogle_id_liste(), col.getPseudo());
+                                if(allTask == null || allTask.size() == 0){
+                                    System.out.println(Message.TACHE_API_GOOGLE_LISTE_VIDE);
+                                    return;
+                                }
+                                // Récupère toutes les liaisons entre les tâches et le collaborateur
+                                List<SQLSynchro> listeSynchro = SQLiteDataBase.getAllSynchroByCollaborateur(col.getPseudo());
+                                List<Task> listeTaskTemp = new ArrayList<Task>();
+                                boolean tacheExiste;
+                                // Pour chaque tâche de google task
+                                for(Task task : allTask){
+                                    tacheExiste = false;
+                                    // Pour chaque liaison entre tâche et collaborateur déjà existante
+                                    for (SQLSynchro synchro : listeSynchro){
+                                        // Si la tâche de google task existe déjà en local
+                                        if(synchro.getGoogle_id_tache() != null && synchro.getGoogle_id_tache().equals(task.getId())){
+                                            // Empêche l'ajout de la tâche dans la liste temporaire
+                                            tacheExiste = true;
+                                            break;
+                                        }
+                                    }
+                                    // Si la tâche de google task n'existe pas en local
+                                    if(!tacheExiste){
+                                        // Ajoute la tâche dans une liste temporaire
+                                        listeTaskTemp.add(task);
+                                    }
+                                }
+
+                                // Vérifie si la liste temporaire est vide
+                                if (listeTaskTemp.size() == 0){
+                                    System.out.println(Message.TACHE_API_GOOGLE_AUCUNE_TACHE_IMPORTABLE);
+                                    return;
+                                }
+
+                                BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+                                String lecture;
+                                boolean quitter = false;
+                                int i = 0;
+                                Tache tache;
+                                SQLSynchro synchro;
+                                Task taskTemp;
+                                String[] date;
+                                String dateAffichage;
+
+                                // Affiche les tâches que l'utilisateur peut ajouter
+                                System.out.println(Message.TACHE_API_GOOGLE_AFFICHAGE_LISTE);
+                                for (Task task : listeTaskTemp){
+                                    if(task.getDue() != null){
+                                        date = task.getDue().toString().split("T");
+                                        date = date[0].split("-");
+                                        dateAffichage = " ( DEADLINE : " + date[2] + "/" + date[1] + "/" + date[0] + " )";
+                                    }else{
+                                        dateAffichage = "";
+                                    }
+                                    System.out.println("n°" + i + " : " + task.getTitle() + dateAffichage);
+                                    i++;
+                                }
+
+                                while(!quitter){
+                                    lecture = bufferRead.readLine();
+                                    // Si l'utilisateur ne veut plus ajouter de tâche en local
+                                    if(lecture.equalsIgnoreCase("quit")){
+                                        // Stop la boucle
+                                        quitter = true;
+                                    }else{
+                                    // Sinon
+                                        try {
+                                            // Parse et vérifie que l'entrée de l'utilisateur est bien un nombre
+                                            i = Integer.parseInt(lecture);
+                                            // Vérifie que le numéro la tâche existe dans la liste temporaire
+                                            if (i < 0 || i >= listeTaskTemp.size()){
+                                                System.out.println(Message.TACHE_API_GOOGLE_NUMERO_LISTE_INCORRECT_ECHEC);
+                                                continue;
+                                            }
+
+                                            System.out.println(Message.TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES);
+
+                                            // Création de la tâche en local + Création de la liaison entre la tâche et le collaborateur
+                                            taskTemp = listeTaskTemp.get(i);
+                                            tache = new Tache(taskTemp.getTitle());
+                                            tache.addCollaborateur(col.getPseudo());
+                                            if(taskTemp.getDue() != null){
+                                                date = taskTemp.getDue().toString().split("T");
+                                                date = date[0].split("-");
+                                                tache.addDateLimite(date[0] + "-" + date[1] + "-" + date[2]);
+                                            }
+                                            data.getListeTache().add(tache);
+                                            SQLiteDataBase.addTache(tache);
+                                            synchro = new SQLSynchro(tache.getId(), col.getPseudo());
+                                            synchro.setGoogle_est_synchro(true);
+                                            synchro.setGoogle_id_tache(taskTemp.getId());
+                                            SQLiteDataBase.addSynchroTacheCollaborateur(synchro);
+                                            data.ecritureListeTaches();
+
+                                            // Enlève la tâche de la liste temporaire
+                                            listeTaskTemp.remove(i);
+
+                                            // Vérifie si la liste temporaire est vide
+                                            if (listeTaskTemp.size() == 0){
+                                                SQLiteConnection.closeConnection();
+                                                System.out.println(Message.TACHE_API_GOOGLE_AUCUNE_TACHE_IMPORTABLE);
+                                                return;
+                                            }
+
+                                            // Affiche les tâches restantes que l'utilisateur peut ajouter
+                                            System.out.println(Message.TACHE_API_GOOGLE_AFFICHAGE_LISTE);
+                                            i = 0;
+                                            for (Task task : listeTaskTemp){
+                                                if(task.getDue() != null){
+                                                    date = task.getDue().toString().split("T");
+                                                    date = date[0].split("-");
+                                                    dateAffichage = " ( DEADLINE : " + date[2] + "/" + date[1] + "/" + date[0] + " )";
+                                                }else{
+                                                    dateAffichage = "";
+                                                }
+                                                System.out.println("n°" + i + " : " + task.getTitle() + dateAffichage);
+                                                i++;
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            System.out.println(Message.TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC);
+                                        }
+                                    }
+                                }
+
+                            } catch (GoogleJsonResponseException e) {
+                                col.setGoogle_id_liste(null);
+                                SQLiteDataBase.updateCollaborateur(col);
+                                SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
+                                SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
+                                SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC);
+                                return;
+                            }catch (UnknownHostException e){
+                                SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                return;
+                            }catch (IOException e) {
+                                SQLiteConnection.closeConnection();
+                                System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                return;
+                            }
+
+                        }
+                        SQLiteConnection.closeConnection();
+                        break;
+                    }
+
                     // TASK COL SEND <trello/google> <numTask> <nameCollabo>
                     case "send": {
                         if (verifBadNbArgument(6, args) || verifArgNotNombre(args[4]) || verifBadLectureFichier(data)) {
@@ -101,17 +286,21 @@ public class Commande {
                             return;
                         }
                         Tache tache = data.getListeTache().get(numTache);
+                        // Récupère les infos du collaborateur
                         SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[5].trim());
                         if(col == null) {
                             System.out.println(Message.BDD_COLLABORATEUR_NULL);
                             return;
                         }
+                        // Pour google
                         if (args[3].equalsIgnoreCase(google)) {
                             if (!cdls.verifCredentialExist(args[5])) {
                                 return;
                             }
+                            // Si la liste n'existe pas sur google task
                             if(col.getGoogle_id_liste() == null){
                                 try {
+                                    // Création de la liste sur google task
                                     col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
                                     SQLiteDataBase.updateCollaborateur(col);
                                     System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
@@ -121,11 +310,12 @@ public class Commande {
                                     return;
                                 } catch (IOException e) {
                                     SQLiteConnection.closeConnection();
-                                    System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                    System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
                                     return;
                                 }
                             }
 
+                            // Récupère la liaison entre la tâche et le collaborateur
                             SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
                             if (synchro == null){
                                 System.out.println(Message.BDD_SYNCHRO_NULL);
@@ -133,21 +323,27 @@ public class Commande {
                             }
 
                             try {
+                                // Si la tâche existe sur google task
                                 if(synchro.getGoogle_id_tache() != null) {
-                                    Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo());
+                                    Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo(), null);
+                                    // Si la tâche a été supprimée de google task
                                     if(t.getDeleted() != null && t.getDeleted() ){
                                         synchro.setGoogle_est_synchro(false);
                                         synchro.setGoogle_id_tache(null);
                                         SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
                                         SQLiteConnection.closeConnection();
-                                        System.out.println(Message.TACHE_API_GOOGLE_TACHE_SUPPRIMEE);
+                                        System.out.println(Message.TACHE_API_GOOGLE_TACHE_SUPPRIMEE_ECHEC);
                                         return;
+                                    // Sinon
                                     }else{
+                                        // Mise à jour de la tâche sur google task
                                         synchro.setGoogle_est_synchro(true);
                                         SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
                                         System.out.println(Message.TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES);
                                     }
+                                // Sinon
                                 }else{
+                                    // Création de la tâche sur google task
                                     Task t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
                                     synchro.setGoogle_id_tache(t.getId());
                                     synchro.setGoogle_est_synchro(true);
@@ -160,7 +356,7 @@ public class Commande {
                                 SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
                                 SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
                                 SQLiteConnection.closeConnection();
-                                System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE);
+                                System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC);
                                 return;
                             }catch (UnknownHostException e){
                                 SQLiteConnection.closeConnection();
@@ -603,8 +799,8 @@ public class Commande {
             // case task sync <num_task>
             case "sync":
                 System.out.println("Task sync");
-                int numtask = -1;
-                Tache tache = null;
+                int numtask;
+                Tache tache;
                 if(verifBadLectureFichier(data)) return;
                 if(verifBadNbArgument(3, args)) return;
                 if(verifArgNotNombre(args[2])){
@@ -621,18 +817,76 @@ public class Commande {
                 for (String colString: data.getListeTache().get(numtask).getCollaborateur()) {
                     cols.add(SQLiteDataBase.getCollaborateur(colString));
                 }
+                Map<SQLCollaborateur, Task> map = new HashMap<>();
                 try {
                     for (SQLCollaborateur sql: cols) {
                         if (sql.getGoogle_id_liste() != null) {
                             SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(sql, tache);
-                            if (tache.getEtat() == State.DONE) {
-                                Task task = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
-                                if ("completed".equals(task.getStatus())) {
-                                    System.out.println("Status identique pour les taches");
+                            if (synchro != null) {
+                                Task t = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
+                                System.out.println("status :  " + tache.getEtat() + " google status : " + t.getStatus());
+                                if (tache.getEtat().equals(State.ONGOING) || tache.getEtat().equals(State.TODO)) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.NEEDSACTION) {
+                                        System.out.println("map put " + t.getTitle());
+                                        map.put(sql, t);
+                                    }
+                                } else if (tache.getEtat().equals(State.CANCELLED) || tache.getEtat().equals(State.DONE)) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.COMPLETED) {
+                                        System.out.println("map put " + t.getTitle());
+                                        map.put(sql, t);
+                                    }
                                 }
-                            } else {
-                                Task task = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
-                                System.out.println(task.getStatus());
+                            }
+                        }
+                    }
+                    boolean quitter;
+                    BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+                    String lecture;
+                    int choix;
+                    for (Map.Entry<SQLCollaborateur, Task> entry : map.entrySet()) {
+                        System.out.print(Message.COLLABORATEUR_TASK_PAS_A_JOUR_1 + entry.getKey().getPseudo());
+                        System.out.print(Message.COLLABORATEUR_TASK_PAS_A_JOUR_2 + entry.getValue().getTitle());
+                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_3);
+                        lecture = bufferRead.readLine();
+                        // Si l'utilisateur ne veut plus ajouter de tâche en local
+                        if (lecture.equalsIgnoreCase("quit") || lecture.equalsIgnoreCase("q")) {
+                            break;
+                        } else {
+                            try {
+                                choix = Integer.parseInt(lecture);
+                                if (choix == 0) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.COMPLETED) {
+                                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_5);
+                                        lecture = bufferRead.readLine();
+                                        choix = Integer.parseInt(lecture);
+                                        if (choix == 0) {
+                                            tache.setEtat(State.DONE);
+                                            data.ecritureListeTaches();
+                                        } else if (choix == 1) {
+                                            tache.setEtat(State.CANCELLED);
+                                            data.ecritureListeTaches();
+                                        } else {
+                                            System.out.println(Message.ARGUMENT_INVALIDE);
+                                        }
+                                    }else if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.NEEDSACTION) {
+                                        System.out.println(Message.RETOUR_ON_GOING_IMPOSSIBLE);
+                                    }
+                                } else if (choix == 1) {
+                                    if (tache.getEtat().equals(State.ONGOING) || tache.getEtat().equals(State.TODO)) {
+                                        gl.updateTask(tache, entry.getValue().getId(),
+                                                entry.getKey().getGoogle_id_liste(), entry.getKey().getPseudo(),
+                                                GoogleStateEnum.NEEDSACTION);
+                                    }else if (tache.getEtat().equals(State.CANCELLED) || tache.getEtat().equals(State.DONE)) {
+                                        gl.updateTask(tache, entry.getValue().getId(),
+                                                entry.getKey().getGoogle_id_liste(), entry.getKey().getPseudo(),
+                                                GoogleStateEnum.COMPLETED);
+                                    }
+                                } else {
+                                    System.out.println(Message.ARGUMENT_INVALIDE);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                System.out.println(Message.ARGUMENT_INVALIDE);
                             }
                         }
                     }
@@ -1176,6 +1430,22 @@ public class Commande {
                             System.out.println(Message.SPRINT_TASK_ALL_SUCCES);
                         }else{
                             System.out.println(Message.SPRINT_TASK_ALL_ECHEC);
+                        }
+                        break;
+
+                    case "next":
+                        //SPRINT TASK NEXT <numTache>
+                        numTache = Integer.parseInt(args[3]);
+                        int result = Scrum.etatSuivant(data.getListeTache(),numTache);
+                        if(result == 1){
+                            data.getListeTache().get(numTache).setEtatSuivant();
+                            System.out.println(Message.SPRINT_TASK_NEXT_SUCCES);
+                        }else if(result == 0){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_0);
+                        }else if(result == 2){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_2);
+                        }else if(result == 3){
+                            System.out.println(Message.SPRINT_TASK_NEXT_ECHEC_3);
                         }
                         break;
 
