@@ -15,8 +15,8 @@ public enum Message {
             "HEAD ... -> command related to header\n" +
             "FILE ... -> command related to the read and write file\n" +
             "LIST ... -> command related to sort of task\n" +
-            "COST ... -> command related to the cost od an iteration\n" +
-            "TAG ... -> command that allow to mark task to functionnal or technical"),
+            "SPRINT ... -> command related to the sprint\n" +
+            "TAG ... -> command that allow to mark task to functionnal or technical\n"),
     MAIN_AUNCUN_FICHIER("You must create or upload a file.\n" +
             "Command : FILE SELECT <Name of the file to create / load>"),
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
@@ -77,7 +77,10 @@ public enum Message {
                 "TASK DELETE <numTask> -> delete a task\n" +
                 "TASK LIST -> llist all the task with their number\n" +
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
-                "TASK DEP DELETE <numTask> -> delete a dependency\n"),
+                "TASK DEP DELETE <numTask> -> delete a dependency\n" +
+                "TASK COL imp <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
+                "TASK COL SEND <trello/google> <numTask> <nameCol> -> send a task to google calendar or trello\n" +
+                "TASK COL SYNC <nameCol> optional:<ONGOING> -> send all the task of a collaborator to google calendar or only the ONGOING task\n"),
 
     BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
     BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
@@ -188,7 +191,16 @@ public enum Message {
     SPRINT_TASK_NEXT_ECHEC_0(COULEUR_ECHEC + "Le numero de la tache n'est pas dans la liste" + COULEUR_RESET),
     SPRINT_TASK_NEXT_ECHEC_2(COULEUR_ECHEC + "L'une des sous tache ne permet pas le changement d'etat" + COULEUR_RESET),
     SPRINT_TASK_NEXT_ECHEC_3(COULEUR_ECHEC + "La tache ne peut plus changer d'etat" + COULEUR_RESET),
-
+    SPRINT_HELP("SPRINT GET NUM -> Give the number of the actual sprint\n" +
+                "SPRINT GET DATE -> Give the deadline of the actual sprint\n" +
+                "SPRINT NEXT -> Increment the number of the sprint\n" +
+                "SPRINT DATE <YYYY-MM-DD> -> set the deadline of the actual sprint\n" +
+                "SPRINT TASK NUM <numTask> -> Add a task to the actual sprint\n" +
+                "SPRINT TASK DELNUM <numTask> -> Delete a task of the actual sprint\n" +
+                "SPRINT TASK DATE <numTask> -> Add the deadline of the sprint to a task\n" +
+                "SPRINT TASK ALL <numTask> -> Add a task to a sprint and add the deadline of the sprint to the task\n" +
+                "SPRINT TASK NEXT <numTask> -> Set the state of the task to the next logical state if it is possible\n" +
+                "SPRINT COST <value> -> Set cost of a sprint"),
 
     TAG_FUNC_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as fonctional." + COULEUR_RESET),
     TAG_TECH_SUCCES(COULEUR_SUCCES + "SUCCESS : Task added as technical." + COULEUR_RESET),
