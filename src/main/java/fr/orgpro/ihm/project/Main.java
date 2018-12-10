@@ -24,6 +24,7 @@ public class Main {
         //args = new String[]{"task", "col", "send", "0", "alex"};
         //args = new String[]{"task", "rename", "0", "test google"};
 
+        //args = new String[]{"task", "col", "list", "add", "google", "alex"};
         //args = new String[]{"task", "col", "send", "google", "0", "alex"};
         //args = new String[]{"task", "col", "imp", "google", "alex"};
         //args = new String[]{"task", "col", "test", "0", "alex"};

@@ -96,6 +96,87 @@ public class Commande {
                         break;
                     }
 
+                    case "list": {
+                        // TASK COL LIST ...
+                        if (verifBadNbArgument(4, args)){
+                            return;
+                        }
+                        switch (args[3].toLowerCase()) {
+                            case "add": {
+                                // TASK COL LIST ADD <google/trello> <col>
+                                if (verifBadNbArgument(6, args) || verifBadLectureFichier(data)) {
+                                    return;
+                                }
+                                // Récupère les infos du collaborateur
+                                SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[5].trim());
+                                if(col == null) {
+                                    System.out.println(Message.BDD_COLLABORATEUR_NULL);
+                                    return;
+                                }
+                                // Pour google
+                                if (args[4].equalsIgnoreCase(google)) {
+                                    if (!cdls.verifCredentialExist(args[5])) {
+                                        return;
+                                    }
+
+                                    // Si la liste n'existe pas sur google task
+                                    if (col.getGoogle_id_liste() == null) {
+                                        try {
+                                            // Création de la liste sur google task
+                                            col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                            SQLiteDataBase.updateCollaborateur(col);
+                                            System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
+                                            return;
+                                        }catch (UnknownHostException e){
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                            return;
+                                        } catch (IOException e) {
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                            return;
+                                        }
+                                    }else{
+                                        try {
+                                            gl.getList(col.getGoogle_id_liste(), col.getPseudo());
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_GOOGLE_LISTE_EXISTE);
+                                            return;
+                                        } catch (GoogleJsonResponseException e) {
+                                            try {
+                                                col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                                SQLiteDataBase.updateCollaborateur(col);
+
+                                                SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
+                                                SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
+
+                                                SQLiteConnection.closeConnection();
+                                                System.out.println(Message.TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES);
+                                                return;
+                                            } catch (IOException e1) {
+                                                SQLiteConnection.closeConnection();
+                                                System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                                return;
+                                            }
+                                        }catch (UnknownHostException e){
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                            return;
+                                        }catch (IOException e) {
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                            return;
+                                        }
+
+
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        break;
+                    }
+
                     // TASK COL imp <trello/google> <col>
                     case "imp": {}
                     case "import": {
