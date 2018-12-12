@@ -1376,6 +1376,10 @@ public class Commande {
                 break;
             }
 
+            case "help":
+                System.out.println(Message.SPRINT_HELP);
+                break;
+
             default:
                 System.out.println(Message.ARGUMENT_INVALIDE);
                 break;
