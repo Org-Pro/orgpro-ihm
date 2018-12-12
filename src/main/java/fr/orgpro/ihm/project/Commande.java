@@ -1,10 +1,7 @@
 package fr.orgpro.ihm.project;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.Task;
-import com.google.api.services.tasks.model.TaskList;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
@@ -12,19 +9,16 @@ import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.State;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.google.GoogleList;
+import fr.orgpro.api.remote.google.GoogleStateEnum;
+import fr.orgpro.api.remote.google.GoogleTasksService;
 import fr.orgpro.api.scrum.Scrum;
 import fr.orgpro.ihm.service.CollaborateurService;
 import fr.orgpro.ihm.service.CredentialService;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class Commande {
     private static final String trello = "trello";
@@ -412,7 +406,7 @@ public class Commande {
                             try {
                                 // Si la tâche existe sur google task
                                 if(synchro.getGoogle_id_tache() != null) {
-                                    Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo());
+                                    Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo(), null);
                                     // Si la tâche a été supprimée de google task
                                     if(t.getDeleted() != null && t.getDeleted() ){
                                         synchro.setGoogle_est_synchro(false);
@@ -883,7 +877,104 @@ public class Commande {
             case "help":
                 System.out.println(Message.TACHE_HELP);
                 break;
-
+            // case task sync <num_task>
+            case "sync":
+                System.out.println("Task sync");
+                int numtask;
+                Tache tache;
+                if(verifBadLectureFichier(data)) return;
+                if(verifBadNbArgument(3, args)) return;
+                if(verifArgNotNombre(args[2])){
+                    return;
+                } else {
+                    numtask = Integer.parseInt(args[2]);
+                }
+                if(verifTacheNotExiste(numtask, data)) {
+                    return;
+                }else{
+                    tache = data.getListeTache().get(numtask);
+                }
+                List<SQLCollaborateur> cols = new ArrayList<>();
+                for (String colString: data.getListeTache().get(numtask).getCollaborateur()) {
+                    cols.add(SQLiteDataBase.getCollaborateur(colString));
+                }
+                Map<SQLCollaborateur, Task> map = new HashMap<>();
+                try {
+                    for (SQLCollaborateur sql: cols) {
+                        if (sql.getGoogle_id_liste() != null) {
+                            SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(sql, tache);
+                            if (synchro != null) {
+                                Task t = gl.getTask(synchro.getGoogle_id_tache(), sql.getGoogle_id_liste(), sql.getPseudo());
+                                System.out.println("status :  " + tache.getEtat() + " google status : " + t.getStatus());
+                                if (tache.getEtat().equals(State.ONGOING) || tache.getEtat().equals(State.TODO)) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.NEEDSACTION) {
+                                        System.out.println("map put " + t.getTitle());
+                                        map.put(sql, t);
+                                    }
+                                } else if (tache.getEtat().equals(State.CANCELLED) || tache.getEtat().equals(State.DONE)) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.COMPLETED) {
+                                        System.out.println("map put " + t.getTitle());
+                                        map.put(sql, t);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    boolean quitter;
+                    BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+                    String lecture;
+                    int choix;
+                    for (Map.Entry<SQLCollaborateur, Task> entry : map.entrySet()) {
+                        System.out.print(Message.COLLABORATEUR_TASK_PAS_A_JOUR_1 + entry.getKey().getPseudo());
+                        System.out.print(Message.COLLABORATEUR_TASK_PAS_A_JOUR_2 + entry.getValue().getTitle());
+                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_3);
+                        lecture = bufferRead.readLine();
+                        // Si l'utilisateur ne veut plus ajouter de tâche en local
+                        if (lecture.equalsIgnoreCase("quit") || lecture.equalsIgnoreCase("q")) {
+                            break;
+                        } else {
+                            try {
+                                choix = Integer.parseInt(lecture);
+                                if (choix == 0) {
+                                    if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.COMPLETED) {
+                                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_5);
+                                        lecture = bufferRead.readLine();
+                                        choix = Integer.parseInt(lecture);
+                                        if (choix == 0) {
+                                            tache.setEtat(State.DONE);
+                                            data.ecritureListeTaches();
+                                        } else if (choix == 1) {
+                                            tache.setEtat(State.CANCELLED);
+                                            data.ecritureListeTaches();
+                                        } else {
+                                            System.out.println(Message.ARGUMENT_INVALIDE);
+                                        }
+                                    }else if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.NEEDSACTION) {
+                                        System.out.println(Message.RETOUR_ON_GOING_IMPOSSIBLE);
+                                    }
+                                } else if (choix == 1) {
+                                    if (tache.getEtat().equals(State.ONGOING) || tache.getEtat().equals(State.TODO)) {
+                                        gl.updateTask(tache, entry.getValue().getId(),
+                                                entry.getKey().getGoogle_id_liste(), entry.getKey().getPseudo(),
+                                                GoogleStateEnum.NEEDSACTION);
+                                    }else if (tache.getEtat().equals(State.CANCELLED) || tache.getEtat().equals(State.DONE)) {
+                                        gl.updateTask(tache, entry.getValue().getId(),
+                                                entry.getKey().getGoogle_id_liste(), entry.getKey().getPseudo(),
+                                                GoogleStateEnum.COMPLETED);
+                                    }
+                                } else {
+                                    System.out.println(Message.ARGUMENT_INVALIDE);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                System.out.println(Message.ARGUMENT_INVALIDE);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 System.out.println(Message.ARGUMENT_INVALIDE);
                 break;

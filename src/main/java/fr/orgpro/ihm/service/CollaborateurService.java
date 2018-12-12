@@ -12,6 +12,7 @@ public class CollaborateurService {
     private static CollaborateurService INSTANCE = new CollaborateurService();
     private static final String fs = File.separator;
     private static final String PATH = "src" + fs + "main" + fs + "resources" + fs;
+
     public boolean verifColaborateurExist(String name) {
         List<String> list = Tache.getCollaborateurEnTeteListe();
         if (list == null) {
