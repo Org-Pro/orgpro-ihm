@@ -96,6 +96,8 @@ public enum Message {
     TACHE_API_GOOGLE_NUMERO_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Le numéro indiqué n'est pas valide, veuillez réessayer." + COULEUR_RESET),
     TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Veuillez choisir un numéro ou taper 'QUIT' pour quitter." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "La tâche a bien été ajoutée dans le fichier local." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
+    TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
 
     TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
     TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
