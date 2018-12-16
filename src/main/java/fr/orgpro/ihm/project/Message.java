@@ -177,7 +177,8 @@ public enum Message {
     COLLABORATEUR_TASK_PAS_A_JOUR_1(COULEUR_ECHEC + "Collaborateur : " + COULEUR_RESET),
     COLLABORATEUR_TASK_PAS_A_JOUR_2(COULEUR_ECHEC + "Is not synchronized for task : " + COULEUR_RESET),
     COLLABORATEUR_TASK_PAS_A_JOUR_3(COULEUR_ECHEC + "Update local : 0, Update Collaborator : 1, Quit : q" + COULEUR_RESET),
-    COLLABORATEUR_TASK_PAS_A_JOUR_5(COULEUR_ECHEC + "Done : 0, Cancelled  : 1, Quit : q" + COULEUR_RESET),
+    COLLABORATEUR_TASK_PAS_A_JOUR_4(COULEUR_ECHEC + "Done : 0, Cancelled  : 1, Quit : q" + COULEUR_RESET),
+    COLLABORATEUR_TASK_PAS_A_JOUR_5(COULEUR_SUCCES + "Local already synchronized" + COULEUR_RESET),
     RETOUR_ON_GOING_IMPOSSIBLE(COULEUR_ECHEC + "ERROR : Impossible to go back from done" + COULEUR_RESET),
     NOT_SENDABLE(COULEUR_ECHEC + "FAILURE : datasource not found for : " + COULEUR_RESET),
 
