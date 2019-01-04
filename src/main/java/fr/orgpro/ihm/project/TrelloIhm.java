@@ -1,9 +1,11 @@
 package fr.orgpro.ihm.project;
 
 import com.google.api.client.util.DateTime;
+import fr.orgpro.api.collaborateur.Collaborateur;
 import fr.orgpro.api.local.SQLiteConnection;
 import fr.orgpro.api.local.SQLiteDataBase;
 import fr.orgpro.api.local.models.SQLCollaborateur;
+import fr.orgpro.api.local.models.SQLSynchro;
 import fr.orgpro.api.project.Tache;
 import fr.orgpro.api.remote.trello.TrelloApi;
 import fr.orgpro.api.remote.trello.models.TrelloBoard;
@@ -15,6 +17,7 @@ import fr.orgpro.api.remote.trello.services.TrelloListService;
 import fr.orgpro.ihm.service.CollaborateurService;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -157,6 +160,129 @@ public class TrelloIhm {
         }catch (Exception e){
             System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_FAILURE);
             e.printStackTrace();
+        }
+    }
+
+
+    public void send(SQLCollaborateur col, Tache tache){
+        if(!checkColCredential(col)) {
+            System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS);
+            return;
+        }
+        if (col.getTrello_id_board() == null) {
+            System.out.println(Message.COLLABORATEUR_SANS_TRELLO_BOARD);
+            try {
+                TrelloBoard board = TrelloApi.createService(TrelloBoardService.class)
+                        .addBoard(col.getTrello_key(), col.getTrello_token(), "OrgProBoard")
+                        .execute().body();
+                if(board == null){
+                    System.out.println(Message.TACHE_API_TRELLO_AJOUT_BOARD_ECHEC);
+                    SQLiteConnection.closeConnection();
+                    return;
+                }
+                col.setTrello_id_liste(null);
+                col.setTrello_id_board(board.getId());
+                SQLiteDataBase.updateCollaborateur(col);
+                System.out.println(Message.COLLABORATEUR_GENERATION_TRELLO_BOARD_SUCCESS);
+            }catch (UnknownHostException e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                return;
+            } catch (IOException e) {
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.COLLABORATEUR_GENERATION_TRELLO_BOARD_FAILURE);
+                return;
+            }
+        }
+        if (col.getTrello_id_liste() == null) {
+            try {
+                System.out.println(Message.COLLABORATEUR_SANS_TRELLO_LIST);
+                TrelloList list = TrelloApi.createService(TrelloListService.class)
+                        .addList(col.getTrello_key(), col.getTrello_token(),
+                                "OrgProList", col.getTrello_id_board())
+                        .execute().body();
+                if(list == null){
+                    System.out.println(Message.TACHE_API_TRELLO_AJOUT_LISTE_ECHEC);
+                    SQLiteConnection.closeConnection();
+                    return;
+                }
+                col.setTrello_id_liste(list.getId());
+                SQLiteDataBase.updateCollaborateur(col);
+                System.out.println(Message.COLLABORATEUR_GENERATION_TRELLO_LIST_SUCCESS);
+            }catch (UnknownHostException e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                return;
+            }catch (IOException e) {
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.COLLABORATEUR_GENERATION_TRELLO_LIST_FAILURE);
+                return;
+            }
+        }
+
+        // Récupère la liaison entre la tâche et le collaborateur
+        SQLSynchro synchro = SQLiteDataBase.getSynchroTacheCollaborateur(col, tache);
+        if (synchro == null){
+            System.out.println(Message.BDD_SYNCHRO_NULL);
+            return;
+        }
+
+        if(synchro.getTrello_id_card() == null){
+            try {
+                TrelloCard tc = setupCard(tache, col);
+                tc = TrelloApi.createService(TrelloCardService.class)
+                        .addCard(col.getTrello_key(), col.getTrello_token(),
+                                tc.getIdList(),
+                                tc.getName(),
+                                tc.getDate()).execute().body();
+                if(tc == null){
+                    System.out.println(Message.TACHE_API_TRELLO_AJOUT_CARD_ECHEC);
+                    SQLiteConnection.closeConnection();
+                    return;
+                }
+                synchro.setTrello_id_card(tc.getId());
+                synchro.setTrello_est_synchro(true);
+                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_SUCCESS);
+            }catch (UnknownHostException e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                return;
+            }catch (Exception e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_FAILURE);
+                return;
+            }
+        }else {
+            try {
+                TrelloCard tc = setupCard(tache, col);
+                tc = TrelloApi.createService(TrelloCardService.class)
+                        .updateCard(synchro.getTrello_id_card(), col.getTrello_key(), col.getTrello_token(),
+                                tc.getIdList(),
+                                tc.getName(),
+                                tc.getDate()).execute().body();
+                if(tc == null){
+                    System.out.println(Message.TACHE_API_TRELLO_MODIFIER_CARD_ECHEC);
+                    SQLiteConnection.closeConnection();
+                    return;
+                }
+                if(tc.isClosed()){
+                    System.out.println(Message.TACHE_API_TRELLO_AJOUT_CARD_ARCHIVER_ECHEC);
+                    SQLiteConnection.closeConnection();
+                    return;
+                }
+                synchro.setTrello_est_synchro(true);
+                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_UPDATE_SUCCESS);
+            }catch (UnknownHostException e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                return;
+            }catch (Exception e){
+                SQLiteConnection.closeConnection();
+                System.out.println(Message.COLLABORATEUR_TASK_TRELLO_SEND_FAILURE);
+                return;
+            }
         }
     }
 
