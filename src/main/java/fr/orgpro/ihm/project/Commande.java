@@ -879,7 +879,6 @@ public class Commande {
                 break;
             // case task sync <num_task>
             case "sync":
-                System.out.println("Task sync");
                 int numtask;
                 Tache tache;
                 if(verifBadLectureFichier(data)) return;
@@ -934,10 +933,13 @@ public class Commande {
                             break;
                         } else {
                             try {
+                                tache.addRegistre("- \"" + entry.getKey().getPseudo() + "\" => " +
+                                        entry.getValue().getStatus().toUpperCase() + " => \"" +
+                                        entry.getValue().getTitle() + "\" ");
                                 choix = Integer.parseInt(lecture);
                                 if (choix == 0) {
                                     if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.COMPLETED) {
-                                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_5);
+                                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_4);
                                         lecture = bufferRead.readLine();
                                         choix = Integer.parseInt(lecture);
                                         if (choix == 0) {
@@ -946,7 +948,7 @@ public class Commande {
                                         } else if (choix == 1) {
                                             tache.setEtat(State.CANCELLED);
                                             data.ecritureListeTaches();
-                                        } else {
+                                        } else{
                                             System.out.println(Message.ARGUMENT_INVALIDE);
                                         }
                                     }else if (GoogleStateEnum.stringIsGoogleStateEnum(entry.getValue().getStatus()) == GoogleStateEnum.NEEDSACTION) {
@@ -970,6 +972,9 @@ public class Commande {
                                 System.out.println(Message.ARGUMENT_INVALIDE);
                             }
                         }
+                    }
+                    if (map.isEmpty()) {
+                        System.out.println(Message.COLLABORATEUR_TASK_PAS_A_JOUR_5);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
