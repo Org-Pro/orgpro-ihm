@@ -21,6 +21,7 @@ public enum Message {
             "Command : FILE SELECT <Name of the file to create / load>"),
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
 
+    TACHE_LIBELLE("La tâche : "),
     TACHE_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created." + COULEUR_RESET),
     TACHE_AJOUT_AVEC_DEP_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created with dependency." + COULEUR_RESET),
     TACHE_AJOUT_DEADLINE_SUCCES(COULEUR_SUCCES + "SUCCESS : Deadline add/modified." + COULEUR_RESET),
@@ -84,6 +85,7 @@ public enum Message {
 
     BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
     BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
+    BDD_ALL_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : Aucune tâche attribuée au collaborateur indiqué." + COULEUR_RESET),
 
     TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste a bien été créée sur google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été créée sur google task." + COULEUR_RESET),
@@ -98,6 +100,10 @@ public enum Message {
     TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "La tâche a bien été ajoutée dans le fichier local." + COULEUR_RESET),
     TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
     TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
+
+    TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été mise à jour sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été supprimée de google task, elle a donc été créée à nouveau." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été créée sur google task." + COULEUR_RESET),
 
     TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
     TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
