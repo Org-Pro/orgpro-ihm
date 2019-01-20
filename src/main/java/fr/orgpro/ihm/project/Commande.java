@@ -449,7 +449,7 @@ public class Commande {
                                 return;
                             }
                         } else if (args[3].equalsIgnoreCase(trello)) {
-                            tihm.send(col.getPseudo(), tache);
+                            tihm.send(col.getPseudo(), tache, data);
                         } else {
                             System.out.println(Message.NOT_SENDABLE + args[3]);
                         }
@@ -907,12 +907,10 @@ public class Commande {
                                 System.out.println("status :  " + tache.getEtat() + " google status : " + t.getStatus());
                                 if (tache.getEtat().equals(State.ONGOING) || tache.getEtat().equals(State.TODO)) {
                                     if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.NEEDSACTION) {
-                                        System.out.println("map put " + t.getTitle());
                                         map.put(sql, t);
                                     }
                                 } else if (tache.getEtat().equals(State.CANCELLED) || tache.getEtat().equals(State.DONE)) {
                                     if (GoogleStateEnum.stringIsGoogleStateEnum(t.getStatus()) != GoogleStateEnum.COMPLETED) {
-                                        System.out.println("map put " + t.getTitle());
                                         map.put(sql, t);
                                     }
                                 }
