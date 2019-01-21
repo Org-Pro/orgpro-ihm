@@ -274,7 +274,29 @@ public class Commande {
                                     if(lecture.equalsIgnoreCase("quit")){
                                         // Stop la boucle
                                         quitter = true;
-                                    }else{
+                                    }else if(lecture.equalsIgnoreCase("all")) {
+
+                                        for(Task task : listeTaskTemp){
+                                            taskTemp = task;
+                                            tache = new Tache(taskTemp.getTitle());
+                                            tache.addCollaborateur(col.getPseudo());
+                                            if(taskTemp.getDue() != null){
+                                                date = taskTemp.getDue().toString().split("T");
+                                                date = date[0].split("-");
+                                                tache.addDateLimite(date[0] + "-" + date[1] + "-" + date[2]);
+                                            }
+                                            data.getListeTache().add(tache);
+                                            SQLiteDataBase.addTache(tache);
+                                            synchro = new SQLSynchro(tache.getId(), col.getPseudo());
+                                            synchro.setGoogle_est_synchro(true);
+                                            synchro.setGoogle_id_tache(taskTemp.getId());
+                                            SQLiteDataBase.addSynchroTacheCollaborateur(synchro);
+                                            data.ecritureListeTaches();
+                                        }
+                                        System.out.println(Message.TACHE_API_GOOGLE_IMPORT_ALL);
+                                        break;
+                                    }else
+                                    {
                                     // Sinon
                                         try {
                                             // Parse et vérifie que l'entrée de l'utilisateur est bien un nombre
