@@ -16,19 +16,19 @@ public class Main {
 
         //args = new String[]{"task", "list"};
         //args = new String[]{"file", "select", "test"};
-        //args = new String[]{"task", "add", "te654"};
+        //args = new String[]{"task", "add", "te666"};
         //args = new String[]{"task", "delete", "0"};
         //args = new String[]{"col", "add", "alex"};
         //args = new String[]{"task", "col", "delete", "0", "alex"};
-        //args = new String[]{"task", "col", "add", "1", "alex"};
+        //args = new String[]{"task", "col", "add", "3", "alex"};
         //args = new String[]{"task", "clock", "use", "1"};
         //args = new String[]{"task", "dep", "set", "0", "2"};
         //args = new String[]{"col", "set", "baptiste", "batrayer"};
         //args = new String[]{"task", "col", "send", "0", "alex"};
-        //args = new String[]{"task", "rename", "0", "test google"};
+        //args = new String[]{"task", "rename", "1", "test google1"};
 
         //args = new String[]{"task", "col", "list", "add", "google", "alex"};
-        //args = new String[]{"task", "col", "send", "google", "0", "alex"};
+        //args = new String[]{"task", "col", "send", "google", "all", "alex"};
         //args = new String[]{"task", "col", "imp", "google", "alex"};
         //args = new String[]{"task", "col", "test", "0", "alex"};
         data = Data.getInstance();

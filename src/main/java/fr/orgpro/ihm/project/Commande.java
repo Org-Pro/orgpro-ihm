@@ -379,22 +379,130 @@ public class Commande {
                         break;
                     }
 
-                    // TASK COL SEND <trello/google> <numTask> <nameCollabo>
+                    // TASK COL SEND <trello/google> <numTask>/all <nameCollabo>
                     case "send": {
-                        if (verifBadNbArgument(6, args) || verifArgNotNombre(args[4]) || verifBadLectureFichier(data)) {
+                        if (verifBadNbArgument(6, args) || verifBadLectureFichier(data)) {
                             return;
                         }
-                        int numTache = Integer.parseInt(args[4]);
-                        if(verifTacheNotExiste(numTache, data)) {
-                            return;
-                        }
-                        Tache tache = data.getListeTache().get(numTache);
+
                         // Récupère les infos du collaborateur
                         SQLCollaborateur col = SQLiteDataBase.getCollaborateur(args[5].trim());
-                        if(col == null) {
+                        if (col == null) {
                             System.out.println(Message.BDD_COLLABORATEUR_NULL);
                             return;
                         }
+
+                        Tache tache = null;
+
+                        // ---------------------------------------------------------------------------
+                        // Dans le cas où l'on envoie toutes les tâches d'un collaborateur
+                        if(args[4].equals("all")) {
+                            if (args[3].equalsIgnoreCase(google)) {
+                                if (!cdls.verifCredentialExist(args[5])) {
+                                    return;
+                                }
+
+                                // Si la liste n'existe pas sur google task
+                                if(col.getGoogle_id_liste() == null){
+                                    try {
+                                        // Création de la liste sur google task
+                                        col.setGoogle_id_liste(gl.insertList(col.getPseudo()).getId());
+                                        SQLiteDataBase.updateCollaborateur(col);
+                                        System.out.println(Message.TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES);
+                                    }catch (UnknownHostException e){
+                                        SQLiteConnection.closeConnection();
+                                        System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                        return;
+                                    } catch (IOException e) {
+                                        SQLiteConnection.closeConnection();
+                                        System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                        return;
+                                    }
+                                }
+
+                                List<SQLSynchro> listeSynchro = SQLiteDataBase.getAllSynchroByCollaborateur(col.getPseudo());
+                                if (listeSynchro.size() == 0){
+                                    System.out.println(Message.BDD_ALL_SYNCHRO_NULL);
+                                    return;
+                                }
+
+                                for (SQLSynchro synchro : listeSynchro) {
+                                    if(!synchro.isGoogle_est_synchro()){
+                                        tache = data.getTacheByUuid(synchro.getUuid_tache());
+                                        if(tache == null){
+                                            continue;
+                                        }
+                                        try {
+                                            // Si la tâche existe sur google task
+                                            if(synchro.getGoogle_id_tache() != null) {
+                                                Task t = gl.updateTask(tache, synchro.getGoogle_id_tache(), col.getGoogle_id_liste(), col.getPseudo(), null);
+                                                // Si la tâche a été supprimée de google task
+                                                if(t.getDeleted() != null && t.getDeleted() ){
+                                                    synchro.setGoogle_est_synchro(false);
+                                                    synchro.setGoogle_id_tache(null);
+                                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                                    // Création de la tâche sur google task
+                                                    t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
+                                                    synchro.setGoogle_id_tache(t.getId());
+                                                    synchro.setGoogle_est_synchro(true);
+                                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                                    System.out.println(Message.TACHE_LIBELLE + "'" + tache.getTitre() + "'" + Message.TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES);
+
+                                                // Sinon
+                                                }else{
+                                                    // Mise à jour de la tâche sur google task
+                                                    synchro.setGoogle_est_synchro(true);
+                                                    SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                                    System.out.println(Message.TACHE_LIBELLE + "'" + tache.getTitre() + "'" + Message.TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES);
+                                                }
+                                            // Sinon
+                                            }else{
+                                                // Création de la tâche sur google task
+                                                Task t = gl.insertTask(tache, col.getGoogle_id_liste(), col.getPseudo());
+                                                synchro.setGoogle_id_tache(t.getId());
+                                                synchro.setGoogle_est_synchro(true);
+                                                SQLiteDataBase.updateSynchroTacheCollaborateur(synchro);
+                                                System.out.println( Message.TACHE_LIBELLE + "'" + tache.getTitre() + "'" + Message.TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES);
+                                            }
+                                        } catch (GoogleJsonResponseException e) {
+                                            col.setGoogle_id_liste(null);
+                                            SQLiteDataBase.updateCollaborateur(col);
+                                            SQLiteDataBase.updateAllSynchroGoogleIdTacheNullByCollaborateur(col);
+                                            SQLiteDataBase.updateAllSynchroGoogleEstSynchroByCollaborateur(col, false);
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC);
+                                            return;
+                                        }catch (UnknownHostException e){
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_AUCUNE_CONNEXION);
+                                            return;
+                                        }catch (IOException e) {
+                                            SQLiteConnection.closeConnection();
+                                            System.out.println(Message.TACHE_API_ERREUR_INCONNUE);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }else{
+                                System.out.println(Message.NOT_SENDABLE + args[3]);
+                                return; // TODO trello ?
+                            }
+                            System.out.println("Toutes les tâches ont été synchronisées.");
+                            SQLiteConnection.closeConnection();
+                            return;
+                        }
+                        // ---------------------------------------------------------------------------
+
+                        if (verifArgNotNombre(args[4])) {
+                            return;
+                        }
+
+                        int numTache = Integer.parseInt(args[4]);
+                        if (verifTacheNotExiste(numTache, data)) {
+                            return;
+                        }
+                        tache = data.getListeTache().get(numTache);
+
                         // Pour google
                         if (args[3].equalsIgnoreCase(google)) {
                             if (!cdls.verifCredentialExist(args[5])) {

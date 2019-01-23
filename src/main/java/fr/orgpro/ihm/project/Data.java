@@ -99,6 +99,13 @@ public class Data {
         return listeTache;
     }
 
+    public Tache getTacheByUuid(String uuid){
+        for (Tache tache : listeTache) {
+            if(tache.getId().equals(uuid)) return tache;
+        }
+        return null;
+    }
+
     public String getPath() {
         return path;
     }
