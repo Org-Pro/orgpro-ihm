@@ -14,7 +14,9 @@ import fr.orgpro.api.remote.trello.services.TrelloCardService;
 import fr.orgpro.api.remote.trello.services.TrelloListService;
 import fr.orgpro.ihm.service.CollaborateurService;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.List;
 
@@ -61,7 +63,10 @@ public class TrelloIhm {
         }
         if(!checkColCredential(col)) {
             System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS);
-            return;
+            String[] args = this.askCredentials(col);
+            this.setupCredentialTrelloUser(args, col);
+            checkColCredential(col);
+            this.chooseWork(args, data);
         }
         String boardID = null;
         String listID = null;
@@ -70,7 +75,7 @@ public class TrelloIhm {
             try {
                 col.setTrello_id_liste(null);
                 TrelloBoard board = TrelloApi.createService(TrelloBoardService.class)
-                        .addBoard(col.getTrello_key(), col.getTrello_token(), "OrgProBoard")
+                        .addBoard(col.getTrello_key(), col.getTrello_token(), getProjectName(data))
                         .execute().body();
                 boardID = board.getId();
                 System.out.println(Message.COLLABORATEUR_GENERATION_TRELLO_BOARD_SUCCESS);
@@ -137,14 +142,16 @@ public class TrelloIhm {
         }
     }
 
-    public void send(String name, Tache tache) {
+    public void send(String name, Tache tache, Data data) {
         SQLCollaborateur col = checkColExist(name);
         if(col == null) {
             return;
         }
         if(!checkColCredential(col)) {
             System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS);
-            return;
+            String[] args = this.askCredentials(col);
+            col = this.setupCredentialTrelloUser(args, col);
+            this.generate(col, data);
         }
         try {
             TrelloCard tc = setupCard(tache, col);
@@ -186,15 +193,34 @@ public class TrelloIhm {
     private boolean checkColCredential(SQLCollaborateur col) {
         return col.getTrello_key() != null && col.getTrello_token() != null;
     }
-    private void setupCredentialTrelloUser(String[] args, SQLCollaborateur col) {
+    private String[] askCredentials(SQLCollaborateur col) {
+        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS_ADD_APIKEY);
+            String apiKey =  bufferRead.readLine();
+            System.out.println(Message.COLLABORATEUR_NO_TRELLLO_CREDENTIALS_ADD_TOKEN);
+            String apiToken = bufferRead.readLine();
+            String[] args = {"col", "trello", col.getPseudo(), "credentials", apiKey, apiToken};
+            return args;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private SQLCollaborateur setupCredentialTrelloUser(String[] args, SQLCollaborateur col) {
         if (col == null) {
-            return;
+            return null;
         }
         col.setTrello_key(args[4]);
         col.setTrello_token(args[5]);
         SQLiteDataBase.updateCollaborateur(col);
         System.out.println(Message.COLLABORATEUR_UPDATED);
+        return col;
     }
+    private String getProjectName(Data data) {
+        return data.getFichierCourant().substring(0, data.getFichierCourant().length()-4);
+    }
+
     public static TrelloIhm getInstance() {
         return INSTANCE;
     }
