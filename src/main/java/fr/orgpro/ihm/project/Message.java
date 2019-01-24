@@ -21,6 +21,7 @@ public enum Message {
             "Command : FILE SELECT <Name of the file to create / load>"),
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
 
+    TACHE_LIBELLE("La tâche : "),
     TACHE_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created." + COULEUR_RESET),
     TACHE_AJOUT_AVEC_DEP_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created with dependency." + COULEUR_RESET),
     TACHE_AJOUT_DEADLINE_SUCCES(COULEUR_SUCCES + "SUCCESS : Deadline add/modified." + COULEUR_RESET),
@@ -84,6 +85,7 @@ public enum Message {
 
     BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
     BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
+    BDD_ALL_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : Aucune tâche attribuée au collaborateur indiqué." + COULEUR_RESET),
 
     TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste a bien été créée sur google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été créée sur google task." + COULEUR_RESET),
@@ -91,19 +93,26 @@ public enum Message {
     TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : La liste provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle liste sur google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_TACHE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : La tâche provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle tâche sur google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_LISTE_VIDE("La liste sur google task ne contient aucune tâche."),
+    TACHE_API_GOOGLE_IMPORT_ALL("Toutes les taches ont été importées"),
     TACHE_API_GOOGLE_AUCUNE_TACHE_IMPORTABLE("Toutes les tâches de la liste sur google task sont déjà sur le fichier local."),
-    TACHE_API_GOOGLE_AFFICHAGE_LISTE("Liste des tâches ajoutables : (Veuillez choisir un numéro ou taper 'QUIT' pour quitter)"),
+    TACHE_API_GOOGLE_AFFICHAGE_LISTE("Liste des tâches ajoutables : (Veuillez choisir un numéro ou taper all pour tout importer ou taper 'QUIT' pour quitter)"),
     TACHE_API_GOOGLE_NUMERO_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Le numéro indiqué n'est pas valide, veuillez réessayer." + COULEUR_RESET),
     TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Veuillez choisir un numéro ou taper 'QUIT' pour quitter." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "La tâche a bien été ajoutée dans le fichier local." + COULEUR_RESET),
     TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
     TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
 
+
     TACHE_API_TRELLO_AJOUT_BOARD_ECHEC("Les credentials trello ne sont plus valides."),
     TACHE_API_TRELLO_AJOUT_LISTE_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
     TACHE_API_TRELLO_AJOUT_CARD_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
     TACHE_API_TRELLO_MODIFIER_CARD_ECHEC("Les credentials trello ne sont plus valides ou la card ciblée a été supprimé."),
     TACHE_API_TRELLO_AJOUT_CARD_ARCHIVER_ECHEC("La card a été archiver."),
+
+    TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été mise à jour sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été supprimée de google task, elle a donc été créée à nouveau." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été créée sur google task." + COULEUR_RESET),
+
 
     TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
     TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
@@ -181,10 +190,13 @@ public enum Message {
     COLLABORATEUR_TASK_TRELLO_SEND_FAILURE(COULEUR_ECHEC + "FAILURE : Task could not be send to trello" + COULEUR_RESET),
     COLLABORATEUR_UPDATED(COULEUR_SUCCES + "SUCCESS : Collaborator updated" + COULEUR_RESET),
     COLLABORATEUR_NO_TRELLLO_CREDENTIALS(COULEUR_ECHEC + "FAILURE : Collaborator has no trello credentials" + COULEUR_RESET),
+    COLLABORATEUR_NO_TRELLLO_CREDENTIALS_ADD_APIKEY(COULEUR_SUCCES + "Please input your API KEY for trello" + COULEUR_RESET),
+    COLLABORATEUR_NO_TRELLLO_CREDENTIALS_ADD_TOKEN(COULEUR_SUCCES + "Please input your TOKEN for trello" + COULEUR_RESET),
     COLLABORATEUR_TASK_PAS_A_JOUR_1(COULEUR_ECHEC + "Collaborateur : " + COULEUR_RESET),
     COLLABORATEUR_TASK_PAS_A_JOUR_2(COULEUR_ECHEC + "Is not synchronized for task : " + COULEUR_RESET),
     COLLABORATEUR_TASK_PAS_A_JOUR_3(COULEUR_ECHEC + "Update local : 0, Update Collaborator : 1, Quit : q" + COULEUR_RESET),
-    COLLABORATEUR_TASK_PAS_A_JOUR_5(COULEUR_ECHEC + "Done : 0, Cancelled  : 1, Quit : q" + COULEUR_RESET),
+    COLLABORATEUR_TASK_PAS_A_JOUR_4(COULEUR_ECHEC + "Done : 0, Cancelled  : 1, Quit : q" + COULEUR_RESET),
+    COLLABORATEUR_TASK_PAS_A_JOUR_5(COULEUR_SUCCES + "Local already synchronized" + COULEUR_RESET),
     RETOUR_ON_GOING_IMPOSSIBLE(COULEUR_ECHEC + "ERROR : Impossible to go back from done" + COULEUR_RESET),
     NOT_SENDABLE(COULEUR_ECHEC + "FAILURE : datasource not found for : " + COULEUR_RESET),
 
