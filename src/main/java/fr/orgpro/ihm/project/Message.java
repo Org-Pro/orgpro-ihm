@@ -102,9 +102,17 @@ public enum Message {
     TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
     TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
 
+
+    TACHE_API_TRELLO_AJOUT_BOARD_ECHEC("Les credentials trello ne sont plus valides."),
+    TACHE_API_TRELLO_AJOUT_LISTE_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
+    TACHE_API_TRELLO_AJOUT_CARD_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
+    TACHE_API_TRELLO_MODIFIER_CARD_ECHEC("Les credentials trello ne sont plus valides ou la card ciblée a été supprimé."),
+    TACHE_API_TRELLO_AJOUT_CARD_ARCHIVER_ECHEC("La card a été archiver."),
+
     TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été mise à jour sur google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été supprimée de google task, elle a donc été créée à nouveau." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été créée sur google task." + COULEUR_RESET),
+
 
     TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
     TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
@@ -178,6 +186,7 @@ public enum Message {
     COLLABORATEUR_SYNC_TRELLO_SUCCESS(COULEUR_SUCCES + "SUCCESS : Task(s) added to trello" + COULEUR_RESET),
     COLLABORATEUR_SYNC_TRELLO_FAILURE(COULEUR_ECHEC + "FAILURE : Task(s) could not be added to trello" + COULEUR_RESET),
     COLLABORATEUR_TASK_TRELLO_SEND_SUCCESS(COULEUR_SUCCES + "SUCCESS : Task send to trello" + COULEUR_RESET),
+    COLLABORATEUR_TASK_TRELLO_SEND_UPDATE_SUCCESS(COULEUR_SUCCES + "SUCCESS : Task updated to trello" + COULEUR_RESET),
     COLLABORATEUR_TASK_TRELLO_SEND_FAILURE(COULEUR_ECHEC + "FAILURE : Task could not be send to trello" + COULEUR_RESET),
     COLLABORATEUR_UPDATED(COULEUR_SUCCES + "SUCCESS : Collaborator updated" + COULEUR_RESET),
     COLLABORATEUR_NO_TRELLLO_CREDENTIALS(COULEUR_ECHEC + "FAILURE : Collaborator has no trello credentials" + COULEUR_RESET),

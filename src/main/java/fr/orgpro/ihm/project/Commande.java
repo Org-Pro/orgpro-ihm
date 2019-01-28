@@ -579,7 +579,7 @@ public class Commande {
                                 return;
                             }
                         } else if (args[3].equalsIgnoreCase(trello)) {
-                            tihm.send(col.getPseudo(), tache, data);
+                            tihm.send(col, tache);
                         } else {
                             System.out.println(Message.NOT_SENDABLE + args[3]);
                         }
