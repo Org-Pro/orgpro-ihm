@@ -379,7 +379,7 @@ public class Commande {
                         break;
                     }
 
-                    // TASK COL SEND <trello/google> <numTask>/all <nameCollabo>
+                    // TASK COL SEND <trello/google> (<numTask> <col>) ou (ALL <col>) ou (<tag> <col>)
                     case "send": {
                         if (verifBadNbArgument(6, args) || verifBadLectureFichier(data)) {
                             return;
@@ -393,10 +393,18 @@ public class Commande {
                         }
 
                         Tache tache = null;
+                        boolean estUnNombre;
 
-                        // ---------------------------------------------------------------------------
+                        try {
+                            Integer.parseInt(args[4]);
+                            estUnNombre = true;
+                        } catch (NumberFormatException e) {
+                            estUnNombre = false;
+                        }
+
+                        // ------------------------------------ ALL / TAG ---------------------------------------
                         // Dans le cas où l'on envoie toutes les tâches d'un collaborateur
-                        if(args[4].equals("all")) {
+                        if(!estUnNombre) {
                             if (args[3].equalsIgnoreCase(google)) {
                                 if (!cdls.verifCredentialExist(args[5])) {
                                     return;
@@ -426,12 +434,36 @@ public class Commande {
                                     return;
                                 }
 
+                                boolean all = true;
+                                boolean tagExiste;
+
+                                if(!args[4].equalsIgnoreCase("all")){
+                                    all = false;
+                                    System.out.println(Message.TACHE_API_GOOGLE_TAG_LIBELLE + args[4]);
+                                }
+
                                 for (SQLSynchro synchro : listeSynchro) {
                                     if(!synchro.isGoogle_est_synchro()){
                                         tache = data.getTacheByUuid(synchro.getUuid_tache());
                                         if(tache == null){
                                             continue;
                                         }
+                                        // Si ce n'est pas "ALL"
+                                        if(!all){
+                                            // On vérifie le TAG
+                                            tagExiste = false;
+                                            for(String tag : tache.getTagListe()){
+                                                if(tag.equalsIgnoreCase(args[4])){
+                                                    tagExiste = true;
+                                                    break;
+                                                }
+                                            }
+                                            // Si pas de tag valide
+                                            if(!tagExiste){
+                                                continue;
+                                            }
+                                        }
+
                                         try {
                                             // Si la tâche existe sur google task
                                             if(synchro.getGoogle_id_tache() != null) {
@@ -493,9 +525,9 @@ public class Commande {
                         }
                         // ---------------------------------------------------------------------------
 
-                        if (verifArgNotNombre(args[4])) {
+                        /*if (verifArgNotNombre(args[4])) {
                             return;
-                        }
+                        }*/
 
                         int numTache = Integer.parseInt(args[4]);
                         if (verifTacheNotExiste(numTache, data)) {

@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         //args = new String[]{"file", "select", "google"};
-        //args = new String[]{"task", "add", "salut"};
+        //args = new String[]{"task", "tag", "add", "0", "revision"};
         //args = new String[]{"col", "add", "thibault"};
         //args = new String[]{"task", "col", "import", "google", "thibault"};
         //args = new String[]{"col", "directory"};
@@ -31,7 +31,7 @@ public class Main {
         //args = new String[]{"task", "col", "list", "add", "google", "alex"};
         //args = new String[]{"task", "col", "send", "google", "0", "alex"};
         //args = new String[]{"task", "col", "send", "trello", "0", "alex"};
-        //args = new String[]{"task", "col", "send", "google", "all", "alex"};
+        //args = new String[]{"task", "col", "send", "google", "revision", "alex"};
         //args = new String[]{"task", "col", "imp", "google", "alex"};
         //args = new String[]{"task", "col", "test", "0", "alex"};
         data = Data.getInstance();
