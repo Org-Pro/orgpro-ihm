@@ -101,6 +101,7 @@ public enum Message {
     TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "La tâche a bien été ajoutée dans le fichier local." + COULEUR_RESET),
     TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
     TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_TAG_LIBELLE("Tag utilisé : "),
 
 
     TACHE_API_TRELLO_AJOUT_BOARD_ECHEC("Les credentials trello ne sont plus valides."),
