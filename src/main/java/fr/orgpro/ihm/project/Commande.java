@@ -792,7 +792,7 @@ public class Commande {
                     Tache tache = data.getListeTache().get(numTache);
                     SQLiteDataBase.updateAllSynchroEstSynchroByTache(tache, false);
                     SQLiteConnection.closeConnection();
-                    
+
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_DEADLINE_SUCCES);
                 } else {
