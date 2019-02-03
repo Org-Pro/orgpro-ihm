@@ -788,6 +788,11 @@ public class Commande {
 
                 String date = args[3].replace("/", "-");
                 if (data.getListeTache().get(numTache).addDateLimite(date)) {
+
+                    Tache tache = data.getListeTache().get(numTache);
+                    SQLiteDataBase.updateAllSynchroEstSynchroByTache(tache, false);
+                    SQLiteConnection.closeConnection();
+                    
                     data.ecritureListeTaches();
                     System.out.println(Message.TACHE_AJOUT_DEADLINE_SUCCES);
                 } else {
