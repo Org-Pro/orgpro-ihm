@@ -79,13 +79,27 @@ public enum Message {
                 "TASK LIST -> llist all the task with their number\n" +
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
                 "TASK DEP DELETE <numTask> -> delete a dependency\n" +
-                "TASK COL imp <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
+                "TASK COL IMP <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
                 "TASK COL SEND <trello/google> <numTask> <nameCol> -> send a task to google calendar or trello\n" +
                 "TASK COL SYNC <nameCol> optional:<ONGOING> -> send all the task of a collaborator to google calendar or only the ONGOING task\n"),
+
+    TACHE_COL_HELP(
+                "TASK COL ADD <numTask> <nameCol> -> add a collaborator to a task if the collaborator exist in the header\n" +
+                "TASK COL DELETE <numTask> <nameCol> -> delete a collaborator to a task\n" +
+                "TASK COL IMP <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
+                "TASK COL SEND <trello/google> <numTask> <nameCol> -> send a task to google calendar or trello\n" +
+                "TASK COL SYNC <nameCol> optional:<ONGOING> -> send all the task of a collaborator to google calendar or only the ONGOING task\n"),
+    COL_TRELLO_HELP(
+                "COL TRELLO <nameCol> credentials <apikey> <token> -> setup the trello credentials for user nameCol \n" +
+                "COL TRELLO <nameCol> generate -> generate board and list on trello for user nameCol \n" +
+                "DEPRECATED : COL TRELLO <nameCol> sync -> sync trelloboard with orgproboard for user nameCol. Do not update local database \n"
+    ),
+
 
     BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Collaborator does not exist." + COULEUR_RESET),
     BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : The task is not assigned to the specified collaborator." + COULEUR_RESET),
     BDD_ALL_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : No task assigned to the specified collaborator." + COULEUR_RESET),
+
 
     TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : \n" + "The list was created on google task." + COULEUR_RESET),
     TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : \n" + "The task was created on google task\n." + COULEUR_RESET),
