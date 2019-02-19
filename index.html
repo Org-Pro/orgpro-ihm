@@ -54,6 +54,27 @@
 		      <td>task collaborator/col delete "numéro de la tâche" "nom du collaborateur"</td>
 		      <td>Supprimer un collaborateur d'une tâche.</td>
 		    </tr>
+			<tr>
+				<td>task col imp google "nameCol"</td>
+				<td>Importe les tache sur google dans la liste orgpro de l'utilisateur "nameCol"</td>
+			</tr>
+			<tr>
+				<td>task col send "google|trello" "numTask" "nameCol"</td>
+				<td>Envoi la tache sur google ou trello à l'utilisateur "nameCol" </td>
+			</tr>
+			<tr>
+				<td>task col sync "nameCol" optional:"ONGOING"</td>
+				<td>Envoi Toutes les taches sur google à le collaborateur "nameCol" ou les taches ongoing /!\ n'incorpore pas la syncro  </td>
+			</tr>
+			<tr>
+				<td>col trello "nameCol" generate</td>
+				<td>Génère le board trello de l'utilisateur et le sauvegarde dans la base de données locale</td>
+			</tr>
+			<tr>
+				<td>col trello "nameCol" credentials "apikey" "token"</td>
+				<td>Sauvegarde les identifiants trello de l'utilisateur (la clé d'api ainsi que son token)</td>
+			</tr>
+
 		    <tr>
 		      <td>task clock use "numéro de la tâche"</td>
 		      <td>Lancer/stopper le chronomètre d'une tâche.</td>
