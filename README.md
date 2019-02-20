@@ -60,7 +60,7 @@ Les commandes :
 
 Afin de se connecter à l'api de google calendar : 
 
-* Ajouter un dossier ```src/resources/"NomDuCollaborateur"/``` avec le nom du collaborateur utilisé dans orgpro
+* Ajouter un dossier ```src/resources/"NomDuCollaborateur"/``` avec le nom du collaborateur utilisé dans orgpro (générer à la création du collaborateur)
 * Se rendre sur ```https://developers.google.com/calendar/quickstart/java``` puis cliquer sur Enable The Google Calendar API 
 * Valider l'utilisation de l'api puis récupérer les configuration du client sous la forme de fichier en cliquant sur Download.
 * Insérer le fichier credentials.json obtenu dans ```src/resources/"NomDuCollaborateur"/```
