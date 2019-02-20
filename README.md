@@ -25,9 +25,12 @@ Puis :
 ### Lancer l'application
 A partir du répertoire courant du projet :  
 Les commandes :  
-- java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main  
+- ```java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main```
 Ou :  
-- alias op="java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main"
+- ```alias op="java -classpath build/classes/java/main:libs/* fr.orgpro.ihm.project.Main"```
+
+Vous pouvez aussi utiliser le script orgpro.sh plutôt que de taper la commande entière. Exemple : 
+- ```sh orgpro.sh FILE SELECT PROJET```
     
 ## Pour Windows
 
