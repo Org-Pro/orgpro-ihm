@@ -52,3 +52,27 @@ Lancer le fichier "run.bat"
 Ou depuis un terminal :  
 Les commandes :  
 - java -classpath build/classes/java/main;libs/* fr.orgpro.ihm.project.Main
+
+### Connection à google
+
+Afin de se connecter à l'api de google calendar : 
+
+* Ajouter un dossier ```src/resources/"NomDuCollaborateur"/``` avec le nom du collaborateur utilisé dans orgpro
+* Se rendre sur ```https://developers.google.com/calendar/quickstart/java``` puis cliquer sur Enable The Google Calendar API 
+* Valider l'utilisation de l'api puis récupérer les configuration du client sous la forme de fichier en cliquant sur Download.
+* Insérer le fichier credentials.json obtenu dans ```src/resources/"NomDuCollaborateur"/```
+* Lors de la première connexion à google, le navigateur par défaut s'ouvrira et demandera la validation de l'utilisateur. 
+* Une fois accepter un dossier token est créer automatiquement qui contient les identifiants pour se connecter
+* Vous pouvez à présent envoyer des taches sur google
+
+### Connection à Trello
+
+Afin de se connecter à l'api de Trello : 
+
+* Connectez vous à Trello sur votre navigateur
+* Allez sur la page ```https://trello.com/app-key```
+* Validez que vous souhaitez utiliser l'api de trello et cliquer sur afficher la clé. Mémoriser cette clé.
+* Sur cette page cliquez sur ```générer manuellement un jeton.``` et autoriser l'utilisation du token. Un token de sera alors générer. Mémoriser le token.
+* Dans OrgPro afin de rentrer ces identifiants taper :```col trello "nameCol" credentials "apikey" "token"``` . Remplacer nameCol, apiKey, token par les attributs correspondant
+* Dans Orgpro taper ```col trello "nameCol" generate```. Cela permet à orgpro de générer le board qui sera utilisé par OrgPro pour stocker les taches 
+
