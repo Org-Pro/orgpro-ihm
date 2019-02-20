@@ -57,6 +57,9 @@ public class TrelloIhm {
                 this.syncUser(col, data);
                 return;
             }
+            default: {
+                System.out.println(Message.ARGUMENT_MANQUANT);
+            }
         }
     }
 

@@ -649,6 +649,10 @@ public class Commande {
                         return;
 
                     }
+                    case "help" : {
+                        System.out.println(Message.TACHE_COL_HELP);
+                        break;
+                    }
                     default:
                         System.out.println(Message.ARGUMENT_INVALIDE);
                         break;
@@ -1454,6 +1458,14 @@ public class Commande {
             case "trello": {
                 if(verifBadLectureFichier(data)) {
                     return;
+                }
+                if (args.length < 3) {
+                    System.out.println(Message.ARGUMENT_MANQUANT);
+                    return;
+                }
+                if (args[2].equalsIgnoreCase("help")) {
+                    System.out.println(Message.COL_TRELLO_HELP);
+                    break;
                 }
                 if (!cls.verifColaborateurExist(args[2])){
                     return;

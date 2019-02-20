@@ -21,7 +21,7 @@ public enum Message {
             "Command : FILE SELECT <Name of the file to create / load>"),
     MAIN_LISTE_FICHIER("You can load a file from the list :"),
 
-    TACHE_LIBELLE("La tâche : "),
+    TACHE_LIBELLE("The task : "),
     TACHE_AJOUT_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created." + COULEUR_RESET),
     TACHE_AJOUT_AVEC_DEP_SUCCES(COULEUR_SUCCES + "SUCCESS : Task created with dependency." + COULEUR_RESET),
     TACHE_AJOUT_DEADLINE_SUCCES(COULEUR_SUCCES + "SUCCESS : Deadline add/modified." + COULEUR_RESET),
@@ -79,44 +79,58 @@ public enum Message {
                 "TASK LIST -> llist all the task with their number\n" +
                 "TASK DEP SET <numTask1> <numTask2> -> make task1 dependent to task2\n" +
                 "TASK DEP DELETE <numTask> -> delete a dependency\n" +
-                "TASK COL imp <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
+                "TASK COL IMP <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
                 "TASK COL SEND <trello/google> <numTask> <nameCol> -> send a task to google calendar or trello\n" +
                 "TASK COL SYNC <nameCol> optional:<ONGOING> -> send all the task of a collaborator to google calendar or only the ONGOING task\n"),
 
-    BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Le collaborateur indiqué n'existe pas." + COULEUR_RESET),
-    BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : La tâche n'est pas attribuée au collaborateur indiqué." + COULEUR_RESET),
-    BDD_ALL_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : Aucune tâche attribuée au collaborateur indiqué." + COULEUR_RESET),
-
-    TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste a bien été créée sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été créée sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : La tâche a bien été mise à jour sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : La liste provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle liste sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_TACHE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : La tâche provenant de google task n'existe plus. Veuillez relancer la commande pour créer une nouvelle tâche sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_LISTE_VIDE("La liste sur google task ne contient aucune tâche."),
-    TACHE_API_GOOGLE_IMPORT_ALL("Toutes les taches ont été importées"),
-    TACHE_API_GOOGLE_AUCUNE_TACHE_IMPORTABLE("Toutes les tâches de la liste sur google task sont déjà sur le fichier local."),
-    TACHE_API_GOOGLE_AFFICHAGE_LISTE("Liste des tâches ajoutables : (Veuillez choisir un numéro ou taper all pour tout importer ou taper 'QUIT' pour quitter)"),
-    TACHE_API_GOOGLE_NUMERO_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Le numéro indiqué n'est pas valide, veuillez réessayer." + COULEUR_RESET),
-    TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "Veuillez choisir un numéro ou taper 'QUIT' pour quitter." + COULEUR_RESET),
-    TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "La tâche a bien été ajoutée dans le fichier local." + COULEUR_RESET),
-    TACHE_API_GOOGLE_LISTE_EXISTE("La liste existe déjà sur google task."),
-    TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : La liste n'existe plus mais une nouvelle a bien été créée sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_TAG_LIBELLE("Tag utilisé : "),
+    TACHE_COL_HELP(
+                "TASK COL ADD <numTask> <nameCol> -> add a collaborator to a task if the collaborator exist in the header\n" +
+                "TASK COL DELETE <numTask> <nameCol> -> delete a collaborator to a task\n" +
+                "TASK COL IMP <google> <nameCol> -> import task from the list OrgPro in google calendar\n" +
+                "TASK COL SEND <trello/google> <numTask> <nameCol> -> send a task to google calendar or trello\n" +
+                "TASK COL SYNC <nameCol> optional:<ONGOING> -> send all the task of a collaborator to google calendar or only the ONGOING task\n"),
+    COL_TRELLO_HELP(
+                "COL TRELLO <nameCol> credentials <apikey> <token> -> setup the trello credentials for user nameCol \n" +
+                "COL TRELLO <nameCol> generate -> generate board and list on trello for user nameCol \n" +
+                "DEPRECATED : COL TRELLO <nameCol> sync -> sync trelloboard with orgproboard for user nameCol. Do not update local database \n"
+    ),
 
 
-    TACHE_API_TRELLO_AJOUT_BOARD_ECHEC("Les credentials trello ne sont plus valides."),
-    TACHE_API_TRELLO_AJOUT_LISTE_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
-    TACHE_API_TRELLO_AJOUT_CARD_ECHEC("Les credentials trello ne sont plus valides ou le board ciblé a été supprimé."),
-    TACHE_API_TRELLO_MODIFIER_CARD_ECHEC("Les credentials trello ne sont plus valides ou la card ciblée a été supprimé."),
-    TACHE_API_TRELLO_AJOUT_CARD_ARCHIVER_ECHEC("La card a été archiver."),
-
-    TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été mise à jour sur google task." + COULEUR_RESET),
-    TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été supprimée de google task, elle a donc été créée à nouveau." + COULEUR_RESET),
-    TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " a été créée sur google task." + COULEUR_RESET),
+    BDD_COLLABORATEUR_NULL(COULEUR_ECHEC + "FAILURE : Collaborator does not exist." + COULEUR_RESET),
+    BDD_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : The task is not assigned to the specified collaborator." + COULEUR_RESET),
+    BDD_ALL_SYNCHRO_NULL(COULEUR_ECHEC + "FAILURE : No task assigned to the specified collaborator." + COULEUR_RESET),
 
 
-    TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : Aucune connexion." + COULEUR_RESET),
-    TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : Erreur inconnue." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : \n" + "The list was created on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : \n" + "The task was created on google task\n." + COULEUR_RESET),
+    TACHE_API_GOOGLE_UPDATE_TACHE_SUCCES(COULEUR_SUCCES + "SUCCESS : The task has been updated on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : \n" + "The list from google task no longer exists. Please restart the command to create a new list on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_TACHE_SUPPRIMEE_ECHEC(COULEUR_ECHEC + "FAILURE : The task from google task no longer exists. Please restart the command to create a new task on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_VIDE("\n" + "The list on google task does not contain any tasks."),
+    TACHE_API_GOOGLE_IMPORT_ALL("\n" + "All the stains were imported"),
+    TACHE_API_GOOGLE_AUCUNE_TACHE_IMPORTABLE("\n" + "All the tasks in the list on google task are already on the local file."),
+    TACHE_API_GOOGLE_AFFICHAGE_LISTE("\n" + "Addable task list: (Please select a number or enter all to import or type 'QUIT' to exit)"),
+    TACHE_API_GOOGLE_NUMERO_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "\n" + "The number shown is not valid, please try again." + COULEUR_RESET),
+    TACHE_API_GOOGLE_ENTREE_UTILISATEUR_LISTE_INCORRECT_ECHEC(COULEUR_ECHEC + "\n" + "Please select a number or press 'QUIT' to exit" + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + "\n" + "The task has been added to the local file." + COULEUR_RESET),
+    TACHE_API_GOOGLE_LISTE_EXISTE("\n" + "The list already exists on google task."),
+    TACHE_API_GOOGLE_AJOUT_NOUVELLE_LISTE_SUCCES(COULEUR_SUCCES + "SUCCESS : \n" + "The list no longer exists but a new one has been created on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_TAG_LIBELLE("Tag used : "),
+
+
+    TACHE_API_TRELLO_AJOUT_BOARD_ECHEC("\n" + "Trello credentials are no longer valid."),
+    TACHE_API_TRELLO_AJOUT_LISTE_ECHEC("Trello credentials are no longer valid or the targeted board has been removed."),
+    TACHE_API_TRELLO_AJOUT_CARD_ECHEC("\n" + "Trello credentials are no longer valid or the targeted board has been removed."),
+    TACHE_API_TRELLO_MODIFIER_CARD_ECHEC("\n" + "Trello credentials are no longer valid or the targeted card has been deleted."),
+    TACHE_API_TRELLO_AJOUT_CARD_ARCHIVER_ECHEC("\n" + "The card has been archived."),
+
+    TACHE_API_GOOGLE_UPDATE_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " \n" + " has been updated on google task." + COULEUR_RESET),
+    TACHE_API_GOOGLE_NOUVEL_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " was removed from google task, so it was created again." + COULEUR_RESET),
+    TACHE_API_GOOGLE_AJOUT_ALL_TACHE_LOCAL_SUCCES(COULEUR_SUCCES + " \n" + " was created on google task." + COULEUR_RESET),
+
+
+    TACHE_API_AUCUNE_CONNEXION(COULEUR_ECHEC + "FAILURE : No connexion." + COULEUR_RESET),
+    TACHE_API_ERREUR_INCONNUE(COULEUR_ECHEC + "FAILURE : \n" + " Unknown error." + COULEUR_RESET),
 
 
     //FICHIER_SAVE_SUCCES("SUCCESS : Saved file."),
@@ -201,22 +215,22 @@ public enum Message {
     RETOUR_ON_GOING_IMPOSSIBLE(COULEUR_ECHEC + "ERROR : Impossible to go back from done" + COULEUR_RESET),
     NOT_SENDABLE(COULEUR_ECHEC + "FAILURE : datasource not found for : " + COULEUR_RESET),
 
-    SPRINT_GET_NUM("Vous êtes au sprint numéro "),
-    SPRINT_GET_DATE_SUCCES(COULEUR_SUCCES + "La deadline du sprint en cours est " + COULEUR_RESET),
-    SPRINT_GET_DATE_ECHEC(COULEUR_ECHEC + "La deadline du sprint n'a pas été fixee" + COULEUR_RESET),
-    SPRINT_NEXT(COULEUR_SUCCES + "Vous venez de passer au sprint numero " + COULEUR_RESET),
-    SPRINT_DATE_SUCCES(COULEUR_SUCCES + "La deadline du sprint a bien été fixee" + COULEUR_RESET),
-    SPRINT_DATE_ECHEC(COULEUR_ECHEC + "La deadline est au mauvais format ou la date est passee" + COULEUR_RESET),
-    SPRINT_TASK_NUM_SUCCES(COULEUR_SUCCES + "La tache a bien été tague" + COULEUR_RESET),
-    SPRINT_TASK_DATE_SUCCES(COULEUR_SUCCES + "La tache a bien été tague" + COULEUR_RESET),
-    SPRINT_TASK_DATE_ECHEC(COULEUR_ECHEC + "La deadline du sprint n'a pas été fixee" + COULEUR_RESET),
-    SPRINT_TASK_DELNUM_SUCCES(COULEUR_SUCCES + "Le tag du sprint a bien été supprime" + COULEUR_RESET),
-    SPRINT_TASK_ALL_SUCCES(COULEUR_SUCCES + "La tache a bien été tague" + COULEUR_RESET),
-    SPRINT_TASK_ALL_ECHEC(COULEUR_ECHEC + "La deadline du sprint n'a pas été fixee" + COULEUR_RESET),
-    SPRINT_TASK_NEXT_SUCCES(COULEUR_SUCCES + "La tache a bien change d'etat" + COULEUR_RESET),
-    SPRINT_TASK_NEXT_ECHEC_0(COULEUR_ECHEC + "Le numero de la tache n'est pas dans la liste" + COULEUR_RESET),
-    SPRINT_TASK_NEXT_ECHEC_2(COULEUR_ECHEC + "L'une des sous tache ne permet pas le changement d'etat" + COULEUR_RESET),
-    SPRINT_TASK_NEXT_ECHEC_3(COULEUR_ECHEC + "La tache ne peut plus changer d'etat" + COULEUR_RESET),
+    SPRINT_GET_NUM("\n" + "You are in sprint number "),
+    SPRINT_GET_DATE_SUCCES(COULEUR_SUCCES + "\n" + "The current sprint deadline is " + COULEUR_RESET),
+    SPRINT_GET_DATE_ECHEC(COULEUR_ECHEC + "\n" + "The sprint deadline was not fixed " + COULEUR_RESET),
+    SPRINT_NEXT(COULEUR_SUCCES + "You have just switched to sprint number " + COULEUR_RESET),
+    SPRINT_DATE_SUCCES(COULEUR_SUCCES + "The sprint deadline has been fixed " + COULEUR_RESET),
+    SPRINT_DATE_ECHEC(COULEUR_ECHEC + "The deadline is in the wrong format or the date has passed " + COULEUR_RESET),
+    SPRINT_TASK_NUM_SUCCES(COULEUR_SUCCES + "\n" + "The stain has been well marked " + COULEUR_RESET),
+    SPRINT_TASK_DATE_SUCCES(COULEUR_SUCCES + "\n" + "The stain has been well marked " + COULEUR_RESET),
+    SPRINT_TASK_DATE_ECHEC(COULEUR_ECHEC + "\n" + "The sprint deadline was not fixed " + COULEUR_RESET),
+    SPRINT_TASK_DELNUM_SUCCES(COULEUR_SUCCES + "\n" + "The sprint tag has been deleted " + COULEUR_RESET),
+    SPRINT_TASK_ALL_SUCCES(COULEUR_SUCCES + "\n" + "The stain has been well marked " + COULEUR_RESET),
+    SPRINT_TASK_ALL_ECHEC(COULEUR_ECHEC + "\n" + "The sprint deadline was not fixed " + COULEUR_RESET),
+    SPRINT_TASK_NEXT_SUCCES(COULEUR_SUCCES + "The task has changed state " + COULEUR_RESET),
+    SPRINT_TASK_NEXT_ECHEC_0(COULEUR_ECHEC + "\n" + "The number of the task is not in the list " + COULEUR_RESET),
+    SPRINT_TASK_NEXT_ECHEC_2(COULEUR_ECHEC + "\n" + "One of the sub stains does not allow the change of state " + COULEUR_RESET),
+    SPRINT_TASK_NEXT_ECHEC_3(COULEUR_ECHEC + "\n" + "The task can not change state " + COULEUR_RESET),
     SPRINT_HELP("SPRINT GET NUM -> Give the number of the actual sprint\n" +
                 "SPRINT GET DATE -> Give the deadline of the actual sprint\n" +
                 "SPRINT NEXT -> Increment the number of the sprint\n" +
