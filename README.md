@@ -3,6 +3,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/Org-Pro/orgpro-ihm/badge.svg?branch=master)](https://coveralls.io/github/Org-Pro/orgpro-ihm?branch=master)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/CodeChillAlluna/code-chill/blob/master/LICENSE)
 
+
+Liste des commandes : https://org-pro.github.io/orgpro-ihm/
+
 # Guide d'installation
 
 ## Pour Linux
